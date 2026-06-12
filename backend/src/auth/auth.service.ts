@@ -285,8 +285,8 @@ export class AuthService {
       try {
         const user = await this.prisma.user.findUnique({ where: { email } });
         if (user?.otpCode && user?.otpExpiresAt) {
-          if (user.otpCode !== otp && otp !== '123456') throw new UnauthorizedException('Invalid OTP code');
-          if (new Date() > user.otpExpiresAt && otp !== '123456') throw new UnauthorizedException('OTP has expired. Request a new one.');
+          if (user.otpCode !== otp) throw new UnauthorizedException('Invalid OTP code');
+          if (new Date() > user.otpExpiresAt) throw new UnauthorizedException('OTP has expired. Request a new one.');
           return true; // OTP found and verified in DB
         }
       } catch (err) {
@@ -299,8 +299,8 @@ export class AuthService {
     // Fallback to in-memory store (for new users who haven't been created in DB yet)
     const stored = this.otpStore.get(email);
     if (!stored) throw new UnauthorizedException('No OTP was requested for this email');
-    if (stored.code !== otp && otp !== '123456') throw new UnauthorizedException('Invalid OTP code');
-    if (new Date() > stored.expiresAt && otp !== '123456') throw new UnauthorizedException('OTP has expired. Request a new one.');
+    if (stored.code !== otp) throw new UnauthorizedException('Invalid OTP code');
+    if (new Date() > stored.expiresAt) throw new UnauthorizedException('OTP has expired. Request a new one.');
 
     this.otpStore.delete(email);
     return false; // OTP was from in-memory store, user needs to be created
@@ -409,7 +409,7 @@ export class AuthService {
 
   async verifyPhoneOtp(phone: string, otp: string, name?: string) {
     const stored = this.otpStore.get(phone);
-    if (otp !== stored?.code && otp !== '123456') {
+    if (otp !== stored?.code) {
       throw new UnauthorizedException('Invalid OTP code');
     }
 
