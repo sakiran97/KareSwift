@@ -21,9 +21,11 @@ import { AdminModule } from './admin/admin.module';
 import { AiModule } from './ai/ai.module';
 import { PaymentModule } from './payment/payment.module';
 import { WalletModule } from './wallet/wallet.module';
-import { PricingModule } from './pricing/pricing.module';
 import { SearchModule } from './search/search.module';
 import { FranchiseModule } from './franchise/franchise.module';
+import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -31,9 +33,13 @@ import { FranchiseModule } from './franchise/franchise.module';
       ttl: 60000,
       limit: 100,
     }]),
-    CacheModule.register({
+    ConfigModule.forRoot({
       isGlobal: true,
-      ttl: 60000, // 60 seconds default caching
+      envFilePath: '.env',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'admin-dashboard', 'dist', 'admin-dashboard', 'browser'),
+      serveRoot: '/admin',
     }),
     PrismaModule,
     AuthModule,
@@ -53,7 +59,6 @@ import { FranchiseModule } from './franchise/franchise.module';
     AiModule,
     PaymentModule,
     WalletModule,
-    PricingModule,
     SearchModule,
     FranchiseModule,
   ],

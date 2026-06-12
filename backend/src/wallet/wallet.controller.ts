@@ -2,12 +2,14 @@ import { Controller, Get, Post, Body, UseGuards, Request, Param } from '@nestjs/
 import { WalletService } from './wallet.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { PrismaService } from '../prisma.service';
+import { ConfigService } from '../config/config.service';
 
 @Controller('wallet')
 export class WalletController {
   constructor(
     private readonly walletService: WalletService,
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private configService: ConfigService
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -59,8 +61,15 @@ export class WalletController {
       return { success: true, method: 'wallet', wallet };
     } else if (method === 'cash') {
       // Customer paid in cash directly to technician.
-      // Deduct 15% commission from the Technician's Wallet.
-      const commission = Number((amount * 0.15).toFixed(2));
+      // Deduct dynamic commission from the Technician's Wallet.
+      let commissionRate = 15; // default 15%
+      try {
+        commissionRate = await this.configService.getNumber('platform_commission_rate');
+      } catch (err) {
+        console.warn('Could not fetch commission rate from config, defaulting to 15%');
+      }
+
+      const commission = Number((amount * (commissionRate / 100)).toFixed(2));
       
       if (order.technicianId) {
         try {

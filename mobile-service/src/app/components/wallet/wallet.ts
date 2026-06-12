@@ -14,8 +14,8 @@ import { firstValueFrom } from 'rxjs';
 export class WalletComponent implements OnInit {
   wallet: Wallet | null = null;
   isLoading = true;
-  isAddingFunds = false;
-  addAmount: number = 50;
+  addAmount: number = 0;
+  selectedPaymentMethod: string = 'card';
 
   // Mock payment gateway variables
   showPaymentModal = false;

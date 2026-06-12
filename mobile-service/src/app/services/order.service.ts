@@ -45,4 +45,10 @@ export class OrderService {
   }
 
   // getInvoice was removed in accordance with Phase 5
+
+  checkServiceAvailability(lat: number, lng: number): Observable<{ available: boolean, techniciansCount: number }> {
+    return this.http.get<{ available: boolean, techniciansCount: number }>(`/api/geo/check-availability`, {
+      params: { lat: String(lat), lng: String(lng) }
+    });
+  }
 }

@@ -89,6 +89,15 @@
                 <span class="label">Phone Number</span>
                 <span class="val">{{ selectedTech().user?.phone || 'Not Provided' }}</span>
               </div>
+              <div class="meta-item" *ngIf="selectedTech().shopLatitude && selectedTech().shopLongitude">
+                <span class="label">Registered Shop / Service Location</span>
+                <span class="val" style="display: flex; align-items: center; gap: 8px;">
+                  📍 {{ selectedTech().shopLatitude }}, {{ selectedTech().shopLongitude }}
+                  <a [href]="'https://www.google.com/maps/search/?api=1&query=' + selectedTech().shopLatitude + ',' + selectedTech().shopLongitude" target="_blank" style="color: #3b82f6; text-decoration: underline; font-size: 0.9em;">
+                    View on Map
+                  </a>
+                </span>
+              </div>
               <div class="meta-item">
                 <span class="label">Account Created</span>
                 <span class="val">{{ selectedTech().createdAt | date:'medium' }}</span>

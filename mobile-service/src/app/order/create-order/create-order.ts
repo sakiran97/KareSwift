@@ -418,6 +418,33 @@ export class CreateOrder implements OnInit {
       this.orderForm.get('scheduledDate')?.markAsTouched();
       this.orderForm.get('scheduledSlot')?.markAsTouched();
       if (this.orderForm.get('address')?.invalid || this.orderForm.get('latitude')?.invalid || this.orderForm.get('scheduledDate')?.invalid || this.orderForm.get('scheduledSlot')?.invalid) return;
+      
+      this.isLocating = true;
+      const lat = this.orderForm.get('latitude')?.value;
+      const lng = this.orderForm.get('longitude')?.value;
+      
+      this.orderService.checkServiceAvailability(lat, lng).subscribe({
+        next: (res: any) => {
+          this.isLocating = false;
+          if (!res.available) {
+            this.errorMessage = 'Service is currently unavailable in your area. We do not have any registered technicians nearby.';
+            this.cdr.detectChanges();
+          } else {
+            this.errorMessage = null;
+            this.currentStep++;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.cdr.detectChanges();
+          }
+        },
+        error: () => {
+          this.isLocating = false;
+          this.errorMessage = null;
+          this.currentStep++;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.cdr.detectChanges();
+        }
+      });
+      return;
     }
     this.currentStep++;
     window.scrollTo({ top: 0, behavior: 'smooth' });

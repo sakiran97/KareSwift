@@ -11,6 +11,7 @@ export class ConfigService {
     max_active_orders_per_technician: { value: '1', description: 'Max active orders a technician can hold' },
     technician_location_ping_sec: { value: '30', description: 'Location update frequency in seconds' },
     search_timeout_sec: { value: '120', description: 'How long to search for nearby technicians' },
+    platform_commission_rate: { value: '15', description: 'Platform commission percentage for cash orders' },
   };
 
   constructor(private prisma: PrismaService) {}
@@ -48,15 +49,22 @@ export class ConfigService {
   }
 
   /**
-   * List all config entries (admin view).
+   * List all config entries (admin view). Merges DB values with mock defaults.
    */
   async findAll(): Promise<{ key: string; value: string; description: string | null }[]> {
     if (!this.useMock) {
       try {
-        return await this.prisma.appConfig.findMany({
+        const dbConfigs = await this.prisma.appConfig.findMany({
           select: { key: true, value: true, description: true },
           orderBy: { key: 'asc' },
         });
+        
+        // Merge with mockConfig defaults
+        const result = Object.entries(this.mockConfig).map(([key, def]) => {
+          const dbConf = dbConfigs.find(c => c.key === key);
+          return dbConf || { key, value: def.value, description: def.description || null };
+        });
+        return result;
       } catch (err: any) {
         if (this.isDbOffline(err)) {
           this.useMock = true;
@@ -74,22 +82,26 @@ export class ConfigService {
   }
 
   /**
-   * Update a config value (admin only).
+   * Update a config value (admin only). Uses upsert to create it if it doesn't exist.
    */
   async update(key: string, value: string): Promise<{ key: string; value: string; description: string | null }> {
     if (!this.useMock) {
       try {
-        const existing = await this.prisma.appConfig.findUnique({ where: { key } });
-        if (!existing) throw new NotFoundException(`Config key '${key}' not found`);
+        const mockDef = this.mockConfig[key];
+        const description = mockDef ? mockDef.description : null;
 
-        const updated = await this.prisma.appConfig.update({
+        const updated = await this.prisma.appConfig.upsert({
           where: { key },
-          data: { value },
+          update: { value },
+          create: {
+            key,
+            value,
+            description,
+          },
           select: { key: true, value: true, description: true },
         });
         return updated;
       } catch (err: any) {
-        if (err instanceof NotFoundException) throw err;
         if (this.isDbOffline(err)) {
           this.useMock = true;
         } else {
