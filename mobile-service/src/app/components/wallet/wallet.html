@@ -1,0 +1,110 @@
+<div class="wallet-container page-container">
+  <div class="page-header">
+    <h1>My Wallet</h1>
+    <p>Manage your funds and view transaction history</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading wallet...</p>
+  </div>
+
+  <div *ngIf="!isLoading && wallet" class="wallet-content">
+    
+    <!-- Balance Card -->
+    <div class="balance-card glass-card">
+      <div class="balance-info">
+        <span class="label">Available Balance</span>
+        <h2 class="amount">{{ wallet.currency === 'INR' ? '₹' : '$' }}{{ wallet.balance }}</h2>
+      </div>
+      
+      <div class="add-funds-section">
+        <div class="input-group">
+          <span class="currency-symbol">{{ wallet.currency === 'INR' ? '₹' : '$' }}</span>
+          <input type="number" [(ngModel)]="addAmount" min="1" placeholder="Amount" />
+        </div>
+        <button class="btn primary" (click)="openPaymentModal()" [disabled]="addAmount <= 0">
+          Add Funds
+        </button>
+      </div>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="transactions-section">
+      <h3>Recent Transactions</h3>
+      
+      <div *ngIf="wallet.transactions.length === 0" class="empty-state">
+        <p>No transactions yet.</p>
+      </div>
+
+      <div class="transaction-list">
+        <div class="transaction-item glass-card" *ngFor="let tx of wallet.transactions">
+          <div class="tx-icon" [ngClass]="tx.type">
+            <svg *ngIf="tx.type === 'credit'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 4.5l-15 15m0 0h11.25m-11.25 0V8.25" />
+            </svg>
+            <svg *ngIf="tx.type === 'debit'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </div>
+          <div class="tx-details">
+            <h4>{{ tx.description }}</h4>
+            <span class="tx-date">{{ tx.createdAt | date:'medium' }}</span>
+            <span class="tx-ref" *ngIf="tx.referenceId">Ref: {{ tx.referenceId }}</span>
+          </div>
+          <div class="tx-amount" [ngClass]="tx.type">
+            {{ tx.type === 'credit' ? '+' : '-' }}{{ wallet.currency === 'INR' ? '₹' : '$' }}{{ tx.amount }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock Payment Modal -->
+  <div class="modal-backdrop" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+    <div class="modal-content payment-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Secure Checkout</h3>
+        <button class="icon-btn" (click)="closePaymentModal()">&times;</button>
+      </div>
+      
+      <div class="modal-body" *ngIf="!isProcessingPayment">
+        <div class="payment-summary">
+          <span>Amount to Add:</span>
+          <h2>{{ wallet?.currency === 'INR' ? '₹' : '$' }}{{ addAmount }}</h2>
+        </div>
+        
+        <p class="mock-warning">This is a simulated Razorpay/Stripe checkout environment.</p>
+        
+        <div class="mock-card-details">
+          <div class="input-group">
+            <label>Card Number</label>
+            <input type="text" value="**** **** **** 4242" disabled />
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+              <label>Expiry</label>
+              <input type="text" value="12/28" disabled />
+            </div>
+            <div class="input-group">
+              <label>CVV</label>
+              <input type="password" value="123" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body processing" *ngIf="isProcessingPayment">
+        <div class="spinner large"></div>
+        <p>Processing payment securely...</p>
+      </div>
+
+      <div class="modal-footer" *ngIf="!isProcessingPayment">
+        <button class="btn outline" (click)="closePaymentModal()">Cancel</button>
+        <button class="btn primary checkout-btn" (click)="confirmPayment()">
+          Pay {{ wallet?.currency === 'INR' ? '₹' : '$' }}{{ addAmount }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

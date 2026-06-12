@@ -1,0 +1,73 @@
+# Fix OTP Error Handling, Order Creation & Live Notification Sync
+
+This plan addresses the following issues identified during testing:
+1. **Wrong OTP Handling:** Entering a wrong OTP keeps the loading spinner spinning and doesn't display the validation error until the user clicks in an input.
+2. **Order Creation Fail (500):** Creating an order fails on `/api/orders` with a 500 status code, and the UI status jumps directly to "COMPLETED" (due to a frontend simulation fallback triggering when the API fails).
+3. **Real-time Notifications & Dashboard Sync:** Notifications (new order badges, toast popups) are not sync'd or visible in real-time unless the user interacts/clicks.
+
+---
+
+## Root Cause Analysis
+
+### Issue 1 & 3: Zoneless Change Detection
+The Angular frontend (`mobile-service`) is configured and built without ZoneJS (the standard Angular polyfill that automatically detects async changes like HTTP calls, timeouts, and SSE). 
+Because the application runs in **zoneless mode**, change detection does not automatically run after asynchronous operations (such as HTTP response streams, `setTimeout` blocks, or EventSource messages) resolve.
+* **Impact on OTP:** The subscription error handler sets `this.isLoading = false` and `this.errorMessage = '...'`, but the UI doesn't redraw until a DOM event (like clicking the input) triggers change detection.
+* **Impact on Notifications:** SSE events (`order-available`, `order-accepted`) update `this.newOrdersCount` in the navbar and call `toast.notify()` in the dashboard, but since no change detection pass is triggered, the notification badges and toast components do not render in real-time.
+
+### Issue 2: Empty Database Tables
+* **Impact on Order Creation:** The PostgreSQL database was completely empty (`ServiceCategory` and `Device` tables). Requesting `serviceCategoryId: 4` (Water Damage Repair) and `deviceId: 1` caused a foreign key constraint violation (500 error) in Prisma. We successfully resolved this by seeding the database tables.
+* **Impact on Order Status jumping to Completed:** When the `/api/orders` call fails, the `CreateOrder` component falls back to a simulated demo order tracking mode. The tracking page (`TrackOrder`) then increments its tracking steps every 12 seconds, causing the status to jump straight to "COMPLETED" as a mock demonstration.
+
+---
+
+## Proposed Changes
+
+### Frontend Change Detection (Zoneless Support)
+
+We will inject `ChangeDetectorRef` (CDR) and invoke `this.cdr.detectChanges()` in all key components inside their asynchronous subscriptions (HTTP calls and SSE listeners).
+
+#### [MODIFY] [register.ts](file:///d:/Work/App/mobile-service/src/app/auth/register/register.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `onRequestOtp()` (success and error) and `onSubmit()` (error callback).
+
+#### [MODIFY] [login.ts](file:///d:/Work/App/mobile-service/src/app/auth/login/login.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `onRequestOtp()` (success and error) and `onSubmit()` (error callback).
+
+#### [MODIFY] [technician-login.ts](file:///d:/Work/App/mobile-service/src/app/technician/login/technician-login.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `onSubmit()` (error callback).
+
+#### [MODIFY] [profile.ts](file:///d:/Work/App/mobile-service/src/app/components/profile/profile.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `loadProfile()` (success), `loadOrders()` (success), and `saveProfile()` (success/error).
+
+#### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `loadAvailableSlots()` (success/error), `getCurrentLocation()` (success/error callbacks), and `onSubmit()` (error callback).
+
+#### [MODIFY] [navbar.ts](file:///d:/Work/App/mobile-service/src/app/components/navbar/navbar.ts)
+* Inject `ChangeDetectorRef` in constructor.
+* Invoke `this.cdr.detectChanges()` in `refreshNewOrdersCount()` and inside the SSE `connect().subscribe` callback.
+
+#### [MODIFY] [technician-dashboard.ts](file:///d:/Work/App/mobile-service/src/app/technician/dashboard/technician-dashboard.ts)
+* Invoke `this.cdr.detectChanges()` inside the SSE `connect().subscribe` callback for both `order-available` and `order-accepted` events.
+
+#### [MODIFY] [technician-orders.ts](file:///d:/Work/App/mobile-service/src/app/technician/orders/technician-orders.ts)
+* Invoke `this.cdr.detectChanges()` inside the SSE `connect().subscribe` callback.
+
+---
+
+## Verification Plan
+
+### Automated Verification
+* Run `npm run build` on `mobile-service` to ensure zero compilation or dependency errors.
+
+### Manual Verification
+1. **Wrong OTP Test:** Enter a wrong OTP on the registration page and click verify. Verify that the loading spinner terminates immediately and the error banner displays without clicking anything else.
+2. **Order Creation:** Log in as a customer, submit a new order (Water Damage Repair). Verify that it creates successfully in the DB and redirects to the track page.
+3. **SSE Notification & Count:** Log in as a technician. Create an order from a customer account. Verify that:
+   * A toast notification pops up immediately on the technician's screen.
+   * Clicking "Accept" updates the order and adds it to the technician's dashboard orders.
+   * The navbar "New Orders" badge updates immediately in real-time.

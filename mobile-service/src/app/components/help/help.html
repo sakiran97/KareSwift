@@ -1,0 +1,49 @@
+<div class="help-container">
+  <div class="help-hero">
+    <h1>Help Center & FAQs</h1>
+    <p class="subtitle">Search our database or explore commonly asked questions.</p>
+    
+    <!-- Search Bar -->
+    <div class="search-box">
+      <div class="search-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M784-120 532-372q-30 24-74 38t-90 14q-117 0-198.5-81.5T88-600q0-117 81.5-198.5T368-880q117 0 198.5 81.5T648-600q0 46-14 90t-38 74l252 252-64 64ZM368-292q128 0 218-90t90-218q0-128-90-218t-218-90q-128 0-218 90t-90 218q0 128 90 218t218 90Z"/>
+        </svg>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Type a keyword (e.g. warranty, safety, cost)..."
+      />
+    </div>
+  </div>
+
+  <div class="faq-list">
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredFaqs().length === 0">
+      <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor">
+        <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q167 0 283.5-116.5T800-480q0-167-116.5-283.5T480-800q-167 0-283.5 116.5T80-480q0 167 116.5 283.5T480-160Zm0-320Z"/>
+      </svg>
+      <p>No results found for "{{ searchQuery }}". Please try another search term or write us a custom message in Contact Us.</p>
+    </div>
+
+    <!-- Accordion Items -->
+    <div 
+      *ngFor="let faq of filteredFaqs(); let i = index" 
+      class="faq-item"
+      [class.open]="faq.isOpen"
+    >
+      <button class="faq-header" (click)="toggleFaq(i)">
+        <span>{{ faq.question }}</span>
+        <div class="expand-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+            <path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/>
+          </svg>
+        </div>
+      </button>
+      <div class="faq-body" *ngIf="faq.isOpen">
+        <p>{{ faq.answer }}</p>
+      </div>
+    </div>
+  </div>
+</div>

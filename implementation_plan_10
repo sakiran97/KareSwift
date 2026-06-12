@@ -1,0 +1,613 @@
+# 🔧 Doorstep Device Repair — Real-World Enhancement Plan
+
+## Overview
+
+Transform the existing MVP into a **real-world Rapido/Swiggy-style service marketplace** with:
+- Technician KYC verification (Aadhaar/PAN/Govt ID) with **admin-gated registration**
+- Workshop/shop photo verification with GPS proximity validation
+- Geo-based nearby technician discovery & order broadcast
+- **Capacitor-powered mobile + web** app with background location tracking
+- Configurable slot booking limits (admin-controlled)
+- Removal of online payment and price estimation (app acts as pure middleware)
+- **Subscription model** (placeholder — currently free for all, ready for future monetization)
+
+---
+
+## Current State Summary
+
+| Area | Status | What Changes |
+|---|---|---|
+| **Auth/Registration** | ✅ Working | 🔄 Add KYC fields for technicians, multi-step verification |
+| **Order Creation** | ✅ Working | 🔄 Add geo-based technician discovery, remove price estimation |
+| **Technician Matching** | ⚠️ Basic broadcast | 🔄 Filter by proximity (Haversine), configurable radius |
+| **Slot Booking** | ✅ Working (1-at-a-time) | 🔄 Configurable max per slot from admin/backend |
+| **Payment/Invoice** | ✅ Working | ❌ Remove entirely — app is middleware only |
+| **Chat** | ✅ Working | ✅ Keep as-is (enhance later) |
+| **Admin Panel** | ⚠️ Only create-technician | 🔄 Add KYC review, config management, workshop verification |
+
+---
+
+## Resolved Decisions
+
+| Decision | Resolution |
+|---|---|
+| **Payment Removal** | ✅ Confirmed. Remove all pricing, invoices, and payment logic. App is pure middleware — customer & technician negotiate pricing offline. |
+| **Location Tracking** | ✅ **Capacitor Geolocation** for both web and mobile. Background location service on native (Android/iOS), periodic foreground ping on web. "Go Online" toggle + continuous GPS updates. |
+| **KYC API Integration** | ✅ **Manual admin review** for now. Technician uploads docs → Admin reviews → Approves/Rejects. Placeholder for future automated API (Surepass/IDfy). |
+| **Registration Gating** | ✅ **Admin-gated**. Technician registers → Uploads KYC + shop → Admin reviews & approves → Only then registration is "complete" and technician can receive orders. |
+| **Workshop Validation** | ✅ **Admin visual review + GPS proximity check**. Photos auto-tagged with current GPS. Admin sees map overlay of photo location vs. registered shop address. Flagged if distance > 500m. |
+| **Admin Panel** | ✅ **Separate admin dashboard app/module**. All admin features (KYC review, shop verification, config management) in a dedicated separate app, not in the existing Angular customer/technician module. |
+| **Verification Timing** | ✅ **Register → Upload docs → Admin reviews → Approved → Can go online**. Technician is blocked from the dashboard until admin approves. |
+| **Subscription Model** | ✅ **Placeholder for future**. Currently free for both customers and technicians. Schema and architecture prepared for future subscription tiers. |
+
+> [!WARNING]
+> **Breaking Change**: Existing orders in the database with invoice/quote data will remain untouched, but the UI to view them will be removed. Any in-progress orders with quoted prices will lose their display.
+
+---
+
+## Proposed Changes
+
+### Phase 1: Database Schema Evolution
+
+#### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+
+Add the following new models and modify existing ones:
+
+```prisma
+// ── New: Technician KYC Profile ──────────────────────────
+model TechnicianProfile {
+  id                Int       @id @default(autoincrement())
+  userId            Int       @unique
+  
+  // KYC Documents
+  aadhaarNumber     String?   
+  panNumber         String?
+  govtIdType        String?   // "aadhaar", "pan", "voter_id", "driving_license", "passport"
+  govtIdNumber      String?
+  govtIdFrontUrl    String?   // uploaded image URL/path
+  govtIdBackUrl     String?   // uploaded image URL/path
+  
+  // Workshop/Shop Details
+  shopName          String?
+  shopAddress       String?
+  shopLatitude      Float?
+  shopLongitude     Float?
+  shopPhotos        String[]  // array of image URLs
+  
+  // Verification Status
+  kycStatus         String    @default("pending") // "pending", "under_review", "approved", "rejected"
+  kycReviewNotes    String?   // admin review notes
+  kycReviewedAt     DateTime?
+  kycReviewedBy     Int?      // admin user ID
+  
+  shopVerified      Boolean   @default(false)
+  shopReviewNotes   String?
+  shopReviewedAt    DateTime?
+  
+  // Live Location (for nearby matching)
+  currentLatitude   Float?
+  currentLongitude  Float?
+  isOnline          Boolean   @default(false)
+  lastLocationAt    DateTime?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  user              User      @relation(fields: [userId], references: [id])
+}
+
+// ── New: Admin Configuration ─────────────────────────────
+model AppConfig {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+// Seeded with:
+//   { key: "service_radius_km", value: "10", description: "Max distance in km to match nearby technicians" }
+//   { key: "max_orders_per_slot", value: "3", description: "Max orders allowed per time slot before disabling" }
+//   { key: "technician_location_ping_interval_sec", value: "30", description: "How often technicians send location updates" }
+
+// ── Modify: User model ──────────────────────────────────
+// Add to User model:
+//   technicianProfile  TechnicianProfile?
+```
+
+**Remove / Deprecate**:
+- The `Quote` model will be **left in schema** but no longer used by any new code (backward compatibility for existing data)
+- No changes to `Quote` model itself — just stop referencing it
+
+---
+
+### Phase 2: Technician KYC Registration (Admin-Gated)
+
+> **Registration is NOT complete until admin approves.** Flow: Register with basic info → Upload KYC documents → Upload shop photos → OTP verify → Admin reviews → Admin approves → Technician account activated → Can go online and receive orders.
+
+---
+
+#### [MODIFY] [auth.service.ts](file:///d:/Work/App/backend/src/auth/auth.service.ts) (Backend)
+
+- After creating a technician user, auto-create a `TechnicianProfile` with `kycStatus: "pending"`
+- Add new method: `uploadKycDocuments(userId, documents)` — accepts Aadhaar/PAN number + image URLs, updates the `TechnicianProfile`
+- Add new method: `uploadShopDetails(userId, shopData)` — accepts shop name, address, lat/lng, photo URLs
+
+#### [NEW] `backend/src/technician-kyc/` module
+
+New module with:
+- **technician-kyc.controller.ts**
+  - `POST /technician/kyc/upload` — Upload KYC documents (Aadhaar/PAN/Govt ID number + images)
+  - `GET /technician/kyc/status` — Check current KYC verification status
+  - `POST /technician/kyc/shop` — Upload workshop/shop details + photos
+  - `POST /technician/kyc/location` — Update live GPS location (periodic ping from Capacitor)
+  - `POST /technician/kyc/toggle-online` — Toggle online/offline status
+  
+- **technician-kyc.service.ts**
+  - `uploadDocuments()` — Validate document format (Aadhaar: 12 digits, PAN: XXXXX0000X pattern), store in TechnicianProfile
+  - `getKycStatus()` — Return current verification state + rejection reason if any
+  - `uploadShopDetails()` — Store shop info + validate GPS proximity to uploaded photos
+  - `updateLocation()` — Update `currentLatitude`, `currentLongitude`, `lastLocationAt` (called by Capacitor background service)
+  - `toggleOnline()` — Set `isOnline` flag (only if `kycStatus === "approved" && shopVerified === true`)
+
+- **Admin review endpoints** (in separate admin backend controller):
+  - `GET /admin/kyc/pending` — List technicians awaiting review
+  - `POST /admin/kyc/:userId/approve` — Approve KYC + activate technician account
+  - `POST /admin/kyc/:userId/reject` — Reject KYC with reason
+  - `GET /admin/shops/pending` — List shops awaiting verification
+  - `POST /admin/shops/:userId/approve` — Verify shop
+  - `POST /admin/shops/:userId/reject` — Reject shop with notes
+
+#### [MODIFY] [register.ts](file:///d:/Work/App/mobile-service/src/app/auth/register/register.ts) (Frontend)
+
+Convert from single-step to **multi-step registration** for technicians:
+
+- **Step 1**: Basic Info (name, email, phone, password) — same as now
+- **Step 2**: KYC Documents
+  - Govt ID type selector (Aadhaar / PAN / Voter ID / Driving License / Passport)
+  - ID number input with format validation
+  - Front & back photo upload (camera capture or file pick)
+- **Step 3**: Workshop/Shop Details
+  - Shop name
+  - Shop address (with "Use Current Location" button)
+  - Shop photos upload (min 2, max 5) — with GPS tagging
+- **Step 4**: OTP verification + Submit
+
+After submission, redirect to a **"Verification Pending"** screen instead of the dashboard. **The technician cannot access any dashboard features until admin approves.**
+
+#### [NEW] `mobile-service/src/app/technician/verification-pending/`
+
+A waiting/blocking screen shown to technicians whose KYC is pending/under review:
+- Multi-stage status indicator (Documents Submitted → Under Review → Approved ✅ / Rejected ❌)
+- SSE listener for real-time status update from admin
+- If rejected: show rejection reason + "Re-submit Documents" button
+- If approved: celebration animation + auto-redirect to technician dashboard
+- **Route guard**: If `kycStatus !== "approved"`, ALL technician routes redirect here
+
+#### [MODIFY] [register.html](file:///d:/Work/App/mobile-service/src/app/auth/register/register.html) + [register.scss](file:///d:/Work/App/mobile-service/src/app/auth/register/register.scss)
+
+- Add step indicator (progress bar with 4 steps)
+- Add file upload UI for documents and photos
+- Add camera capture button for mobile devices (using Capacitor Camera plugin)
+- GPS-tagged photo capture using Capacitor Geolocation
+
+#### [NEW] Capacitor Integration for Mobile
+
+Add Capacitor to the Angular project for native mobile capabilities:
+- `@capacitor/geolocation` — Background GPS tracking for technicians (works on web too via browser API)
+- `@capacitor/camera` — Photo capture for KYC documents and shop photos
+- `@capacitor/filesystem` — Local file storage for captured images before upload
+- **Web fallback**: All Capacitor plugins gracefully fall back to browser APIs (navigator.geolocation, MediaDevices, etc.)
+
+---
+
+### Phase 3: Geo-Based Technician Discovery (Rapido/Swiggy Style)
+
+> When a customer books an order, the system finds all **online, KYC-approved** technicians within the configured radius and broadcasts the order to them.
+
+---
+
+#### [NEW] `backend/src/geo/geo.service.ts`
+
+Utility service for geolocation:
+
+```typescript
+// Haversine formula to calculate distance between two GPS coordinates
+calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number
+// Returns distance in kilometers
+
+// Find nearby online technicians within radius
+async findNearbyTechnicians(latitude: number, longitude: number, radiusKm?: number): Promise<TechnicianProfile[]>
+// Queries TechnicianProfile where:
+//   isOnline = true
+//   kycStatus = "approved"
+//   shopVerified = true (optional, based on config)
+//   Haversine distance <= radiusKm (from AppConfig or parameter)
+// Sorted by distance (nearest first)
+```
+
+#### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts) (Backend)
+
+**In `create()` method:**
+1. After creating the order, call `geoService.findNearbyTechnicians(order.latitude, order.longitude)`
+2. If nearby technicians found:
+   - Emit `'order-available'` event with the order data + list of target technician user IDs
+   - Create notifications for each nearby technician
+3. If no nearby technicians:
+   - Notify customer: "No technicians available nearby. We'll notify you when one becomes available."
+   - Queue the order for periodic re-check
+
+**In `getAvailableOrders()` method:**
+- Add optional `latitude`/`longitude` parameters
+- Filter orders to show only those within the technician's configured service radius
+- Sort by distance (nearest first)
+
+#### [MODIFY] [events.service.ts](file:///d:/Work/App/backend/src/events/events.service.ts) + [events.controller.ts](file:///d:/Work/App/backend/src/events/events.controller.ts)
+
+- Add technician-specific event filtering: each SSE connection should include the technician's user ID
+- Only emit `'order-available'` to technicians who are within the service radius of the order
+- Add new event type: `'kyc-status-update'` for verification status changes
+
+#### [MODIFY] [technician-new-orders.ts](file:///d:/Work/App/mobile-service/src/app/technician/new-orders/technician-new-orders.ts) (Frontend)
+
+- Show distance from technician to customer for each available order (e.g., "2.3 km away")
+- Add a map preview showing the customer's location relative to the technician
+- Sort orders by proximity (nearest first)
+- Show order notifications with distance info in toast
+
+#### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts) (Frontend)
+
+- **Make location capture mandatory** (currently optional)
+- After order submission, show a "Finding nearby technicians..." animation (like Rapido's searching screen)
+- Show number of nearby technicians found: "3 technicians near you"
+- Real-time updates as technicians accept/decline
+
+#### [NEW] `mobile-service/src/app/order/searching-technician/`
+
+New page shown after order creation (like Rapido's driver search):
+- Animated radar/pulse effect centered on customer's location
+- "Searching for nearby technicians..." message
+- Shows count of technicians notified
+- Real-time update when a technician accepts
+- Transition to tracking page when accepted
+- Timeout with "No technicians found, try again later" after configurable duration
+
+---
+
+### Phase 4: Broadcast Order System & Accept Flow
+
+> All nearby technicians get the same order notification. First to accept wins. Others are notified that the order was taken.
+
+---
+
+#### [MODIFY] [technician.service.ts](file:///d:/Work/App/backend/src/technician/technician.service.ts) (Backend)
+
+**Enhanced `acceptOrder()`:**
+1. Atomic check-and-update (prevent race conditions with database-level locking)
+2. On successful accept:
+   - Emit `'order-accepted'` to ALL technicians who were notified (not just the acceptor)
+   - Include `acceptedBy` technician name/ID in the event
+   - Notify customer with technician details + ETA
+3. On conflict (already accepted):
+   - Return clear error: "This order was accepted by another technician"
+
+#### [MODIFY] [technician-dashboard.ts](file:///d:/Work/App/mobile-service/src/app/technician/dashboard/technician-dashboard.ts) (Frontend)
+
+- **KYC gate check**: On init, check `kycStatus` — redirect to verification-pending if not approved
+- Add "Go Online / Go Offline" toggle at the top
+- Show online status indicator (green dot when online)
+- When offline: hide available orders, show "Go online to receive orders"
+- When online: start **Capacitor background location** updates to backend
+  - **Native mobile**: Uses `@capacitor/geolocation` `watchPosition()` for continuous background tracking
+  - **Web**: Uses `navigator.geolocation.watchPosition()` with periodic API ping
+- Location update interval from `AppConfig.technician_location_ping_sec`
+
+#### [MODIFY] [technician-new-orders.ts](file:///d:/Work/App/mobile-service/src/app/technician/new-orders/technician-new-orders.ts) (Frontend)
+
+- Real-time order feed via SSE with distance display
+- When another technician accepts an order, remove it from the list with a slide-out animation + toast "Order #X was accepted by [Name]"
+- **Configurable active order limit**: Instead of hardcoded `hasActiveOrder` blocking all accepts, check against `AppConfig.max_active_orders_per_technician` (default: 1, configurable)
+
+---
+
+### Phase 5: Remove Payment & Price Estimation
+
+> The app becomes pure middleware — connecting customer to technician. No pricing, no payment, no invoices.
+
+---
+
+#### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts) (Backend)
+
+- **Remove**: `generateInvoice()` method entirely
+- **Remove**: All pricing/cost calculation logic
+- **Keep**: Order creation, status management, slot booking
+
+#### [MODIFY] [order.controller.ts](file:///d:/Work/App/backend/src/order/order.controller.ts) (Backend)
+
+- **Remove**: `GET /orders/:id/invoice` endpoint
+- **Keep**: All other order CRUD endpoints
+
+#### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts) (Frontend)
+
+- **Remove**: `estimatedPrice` property and `calculatePrice()` method
+- **Remove**: All price display in the template (estimated cost section)
+- **Remove**: `services` array `basePrice` fields (keep service names for selection)
+- **Keep**: Device selection, service category selection, address, scheduling, notes
+
+#### [MODIFY] [create-order.html](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.html) (Frontend)
+
+- Remove "Estimated Cost" card/section
+- Remove price breakdown display
+
+#### [MODIFY] [order.service.ts](file:///d:/Work/App/mobile-service/src/app/services/order.service.ts) (Frontend)
+
+- **Remove**: `getInvoice()` method
+- **Keep**: All other methods
+
+#### [MODIFY] Track Order & Order History pages (Frontend)
+
+- Remove invoice download button
+- Remove price/payment sections from order detail view
+- Remove "Pay" button from completed orders
+
+---
+
+### Phase 6: Configurable Slot Booking
+
+> Admin-configurable maximum orders per time slot. Currently hardcoded to disable a slot after 1 booking.
+
+---
+
+#### [MODIFY] [order.controller.ts](file:///d:/Work/App/backend/src/order/order.controller.ts) (Backend)
+
+**In `getAvailableSlots()`:**
+
+```typescript
+// Current: slot is unavailable if ANY booking exists
+// New: slot is unavailable only when booking count >= max_orders_per_slot (from AppConfig)
+
+const maxPerSlot = await configService.get('max_orders_per_slot') || 3;
+const bookedSlots = await orderService.findBookedSlots(date);
+
+// Count occurrences of each slot
+const slotCounts = bookedSlots.reduce((acc, slot) => {
+  acc[slot] = (acc[slot] || 0) + 1;
+  return acc;
+}, {});
+
+return allSlots.map(slot => ({
+  slot,
+  available: (slotCounts[slot] || 0) < maxPerSlot,
+  bookedCount: slotCounts[slot] || 0,
+  maxCount: maxPerSlot
+}));
+```
+
+#### [NEW] `backend/src/config/config.module.ts`, `config.service.ts`, `config.controller.ts`
+
+Admin configuration management:
+- `GET /config` — List all config key-value pairs (admin only)
+- `GET /config/:key` — Get specific config value (authenticated)
+- `PATCH /config/:key` — Update config value (admin only)
+
+Seed default values:
+| Key | Default | Description |
+|---|---|---|
+| `service_radius_km` | `10` | Max distance to match technicians |
+| `max_orders_per_slot` | `3` | Orders allowed per time slot |
+| `max_active_orders_per_technician` | `1` | Active orders a technician can hold |
+| `technician_location_ping_sec` | `30` | Location update frequency |
+| `search_timeout_sec` | `120` | How long to search for technicians |
+
+#### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts) (Frontend)
+
+- Update slot display to show availability count: "2 of 3 slots remaining"
+- Slots show as yellow (limited) when 1 remaining, red (full) when 0
+
+---
+
+### Phase 7: Separate Admin Dashboard App
+
+> **The admin panel will be a separate Angular app** (`admin-dashboard/`), not part of the existing `mobile-service/` customer/technician app. This keeps concerns separated and allows independent deployment.
+
+#### [NEW] `admin-dashboard/` — Separate Angular Application
+
+A brand new Angular app created alongside `mobile-service/` and `backend/`.
+
+##### Admin Auth
+- Admin login page (email + password, no OTP needed)
+- JWT-based auth reusing the existing backend `/api/auth/login` endpoint
+- Admin role guard on all routes
+
+##### KYC Review Dashboard (`/admin/kyc-review`)
+- List of technicians with pending KYC verification
+- Card view with: technician name, email, phone, submitted date
+- Expandable document viewer (Aadhaar/PAN images — zoomable)
+- Side-by-side comparison: uploaded ID number vs. document image
+- **Approve** button → activates technician account, sends SSE notification
+- **Reject** button → opens reason textarea, sends rejection notification
+- Filter by status: Pending, Under Review, Approved, Rejected
+- Search by name/email/phone
+
+##### Workshop Verification (`/admin/shop-review`)
+- List of technicians with unverified shops
+- Photo gallery viewer (uploaded shop photos)
+- **Interactive map** showing:
+  - 📍 Registered shop address pin
+  - 📸 Photo GPS location pin(s)
+  - Distance line between them
+  - ⚠️ Warning banner if distance > 500m
+- Approve / Reject with notes
+
+##### App Configuration (`/admin/config`)
+- Form to edit all `AppConfig` values:
+  - Service radius slider (1–50 km) with map circle preview
+  - Max orders per slot (1–20)
+  - Max active orders per technician (1–10)
+  - Technician location ping interval (10–120 sec)
+  - Technician search timeout (30–300 sec)
+- Save with validation + confirmation
+
+##### Technician Management (`/admin/technicians`)
+- Full list of all registered technicians
+- Status indicators: KYC status, online/offline, active orders count
+- Ability to suspend/reactivate technicians
+- View technician's order history and ratings
+
+##### Dashboard Home (`/admin`)
+- Overview stats: Total technicians, pending KYC count, active orders, online technicians
+- Recent activity feed
+
+#### [NEW] Backend Admin Controller (`backend/src/admin/`)
+
+- `admin.module.ts`, `admin.controller.ts`, `admin.service.ts`
+- All endpoints guarded with `@Roles('admin')`
+- Endpoints:
+  - `GET /admin/dashboard/stats` — Overview statistics
+  - `GET /admin/kyc/pending` — Pending KYC reviews
+  - `GET /admin/kyc/:userId` — Full KYC details for a technician
+  - `POST /admin/kyc/:userId/approve` — Approve KYC
+  - `POST /admin/kyc/:userId/reject` — Reject KYC with reason
+  - `GET /admin/shops/pending` — Pending shop verifications
+  - `POST /admin/shops/:userId/approve` — Approve shop
+  - `POST /admin/shops/:userId/reject` — Reject shop with reason
+  - `GET /admin/technicians` — List all technicians with filters
+  - `PATCH /admin/technicians/:userId/suspend` — Suspend a technician
+  - `PATCH /admin/technicians/:userId/activate` — Reactivate a technician
+
+---
+
+### Phase 8: Subscription Model (Placeholder)
+
+> **Currently free for all users.** This phase adds the database schema and backend structure to support future subscription tiers without implementing payment integration yet.
+
+#### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+
+```prisma
+// ── New: Subscription Model (Future Use) ─────────────────
+model SubscriptionPlan {
+  id            Int       @id @default(autoincrement())
+  name          String    @unique  // "free", "basic", "premium", "enterprise"
+  displayName   String               // "Free", "Basic Plan", "Premium Plan"
+  targetRole    String               // "customer", "technician", "both"
+  priceMonthly  Decimal   @db.Decimal(10,2) @default(0.00)
+  priceYearly   Decimal   @db.Decimal(10,2) @default(0.00)
+  currency      String    @default("INR")
+  features      String[]             // ["unlimited_orders", "priority_matching", "analytics"]
+  maxOrdersPerMonth Int?             // null = unlimited
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  subscriptions UserSubscription[]
+}
+
+model UserSubscription {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  planId          Int
+  status          String    @default("active") // "active", "expired", "cancelled", "trial"
+  startDate       DateTime  @default(now())
+  endDate         DateTime?
+  autoRenew       Boolean   @default(true)
+  paymentMethod   String?   // placeholder for future payment integration
+  transactionId   String?   // placeholder for payment gateway reference
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id])
+  plan            SubscriptionPlan @relation(fields: [planId], references: [id])
+}
+
+// ── Modify: User model ──────────────────────────────────
+// Add: subscriptions  UserSubscription[]
+```
+
+**Seed default "Free" plan:**
+```
+{ name: "free", displayName: "Free Plan", targetRole: "both", priceMonthly: 0, priceYearly: 0, features: ["basic_orders", "chat"], maxOrdersPerMonth: null }
+```
+
+#### What This Enables (Future)
+- Admin can create subscription tiers in the config panel
+- Middleware checks `UserSubscription` before order creation
+- Rate limiting based on `maxOrdersPerMonth`
+- Premium features gating (priority matching, analytics, etc.)
+- Payment gateway integration point via `paymentMethod` + `transactionId`
+
+> [!NOTE]
+> No payment gateway integration is built now. This is purely schema + backend structure so that when you decide to add Razorpay/Stripe/PhonePe, the data model is ready.
+
+---
+
+## Implementation Order & Estimates
+
+| Phase | Feature | Priority | Estimated Effort | Dependencies |
+|---|---|---|---|---|
+| 1 | Schema Evolution (Prisma + Subscription placeholder) | 🔴 Critical | ~1.5 hours | None |
+| 2 | Technician KYC Registration (Admin-Gated) + Capacitor Setup | 🔴 Critical | ~6 hours | Phase 1 |
+| 3 | Geo-Based Discovery (Capacitor Geolocation) | 🔴 Critical | ~4 hours | Phase 1, 2 |
+| 4 | Broadcast Order System | 🔴 Critical | ~3 hours | Phase 3 |
+| 5 | Remove Payment/Pricing | 🟡 Medium | ~2 hours | None (independent) |
+| 6 | Configurable Slot Booking | 🟡 Medium | ~2 hours | Phase 1 |
+| 7 | Separate Admin Dashboard App | 🟡 Medium | ~6 hours | Phase 1, 2, 6 |
+| 8 | Subscription Model (Schema + Seed only) | 🟢 Placeholder | ~1 hour | Phase 1 |
+
+> **Total estimated**: ~25.5 hours of implementation
+
+---
+
+## Additional Scenarios & Edge Cases Identified
+
+These are scenarios your requirements imply but didn't explicitly state. I've included them in the plan:
+
+### 1. **Technician Goes Offline Mid-Order**
+- If a technician has an active order and goes offline, the order stays assigned (don't re-broadcast)
+- Show warning: "You have an active order. Going offline won't affect it."
+
+### 2. **No Nearby Technicians**
+- If zero technicians are online within the radius when an order is placed:
+  - Notify the customer immediately
+  - Queue the order and re-check every 60 seconds for up to `search_timeout_sec`
+  - If a technician comes online in range, auto-broadcast the queued order to them
+
+### 3. **KYC Expiry / Re-verification**
+- For future: Add `kycExpiresAt` field for periodic re-verification
+- For now: KYC approval is permanent until admin manually revokes
+
+### 4. **Multiple Govt ID Support**
+- Technician can upload Aadhaar OR PAN OR any valid govt ID
+- Not all three required — at least one mandatory
+
+### 5. **Photo Geotagging Validation**
+- When a technician uploads shop photos, if browser geolocation is available, auto-tag the photo with current GPS
+- On admin review, show distance between photo's GPS tag and the registered shop address
+- Flag if distance > 500m as "Location Mismatch"
+
+### 6. **Slot Booking — Time-Based Disable**
+- Slots in the past (for today's date) should be auto-disabled regardless of count
+- If current time is 2:00 PM, the "01:00 PM - 03:00 PM" slot should be disabled for today
+
+### 7. **Technician Concurrent Order Limit**
+- Currently hardcoded to 1 active order. The new `max_active_orders_per_technician` config allows admins to increase this (e.g., a shop with multiple technicians might handle 3 concurrent orders)
+
+### 8. **Order Cancellation by Customer**
+- If a customer cancels after a technician accepts, notify the technician
+- Order returns to the available pool (or is marked cancelled based on status)
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+# Backend build verification
+cd d:\Work\App\backend && npm run build
+
+# Frontend build verification
+cd d:\Work\App\mobile-service && npx ng build
+```
+
+### Manual Verification
+1. **KYC Flow**: Register as technician → Upload documents → Verify admin can see pending review → Approve → Confirm technician can go online
+2. **Geo Discovery**: Create order with location → Verify only nearby online technicians receive notification → Accept → Verify other technicians see "order taken"
+3. **Slot Limits**: Change `max_orders_per_slot` to 2 → Book 2 orders in same slot → Verify 3rd booking shows slot as full
+4. **Payment Removal**: Verify no price/invoice UI visible anywhere in the app
+5. **Broadcast**: Login as 3 technicians → Place 1 order → Verify all 3 receive notification → 1 accepts → Verify other 2 see "Order accepted by X"

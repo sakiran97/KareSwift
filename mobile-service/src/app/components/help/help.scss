@@ -1,0 +1,171 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.help-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.help-hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 50%, rgba(#fff, 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: rgba($color-on-background, 0.6);
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+// Search bar
+.search-box {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 1.25rem;
+    color: rgba($color-on-background, 0.4);
+    display: flex;
+    align-items: center;
+  }
+
+  input {
+    width: 100%;
+    padding: 1rem 1.5rem 1rem 3.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: $color-on-background;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    @include transition((background, border-color, box-shadow));
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba($color-primary, 0.5);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15), 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+// FAQ list
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.faq-item {
+  @include glass-card(12px, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  @include transition((border-color, background));
+
+  &.open {
+    border-color: rgba($color-primary, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+
+    .expand-icon {
+      transform: rotate(180deg);
+      color: $color-primary-light;
+    }
+  }
+}
+
+.faq-header {
+  width: 100%;
+  padding: 1.5rem;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  span {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $color-on-background;
+    padding-right: 1.5rem;
+  }
+
+  .expand-icon {
+    color: rgba($color-on-background, 0.5);
+    display: flex;
+    align-items: center;
+    @include transition(transform);
+  }
+}
+
+.faq-body {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  box-sizing: border-box;
+  animation: slideDown 0.3s ease;
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba($color-on-background, 0.6);
+    margin: 0;
+  }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  color: rgba($color-on-background, 0.4);
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 500px;
+    margin: 0;
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .help-hero h1 {
+    font-size: 2.2rem;
+  }
+  .faq-header span {
+    font-size: 1rem;
+  }
+}

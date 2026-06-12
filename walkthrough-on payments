@@ -1,0 +1,32 @@
+# Phase 2: Hybrid Payment & Commission Walkthrough
+
+We have successfully refactored the checkout flow to a **Hybrid Payment System**. This gives ultimate flexibility to the customer while ensuring the platform's revenue stream is protected.
+
+## What was Accomplished
+
+### 1. Database Streamlining
+- We **removed** the rigid `Quote` model.
+- We added a flexible `finalAmount` and `paymentMethod` directly to the `Order` model. This allows the technician to set the exact negotiated price when completing the job.
+
+### 2. The Hybrid Payment Logic
+The backend now supports two checkout methods with distinct financial outcomes:
+- **Wallet Payment:** If the customer pays via Wallet, the full negotiated `finalAmount` is deducted from the customer's wallet.
+- **Cash / Direct UPI:** If the customer pays the technician directly, the platform automatically intercepts the transaction by **deducting a 15% commission** directly from the *Technician's Wallet*. 
+
+### 3. Customer UI Updates
+When the repair finishes (reaches the `COMPLETED` stage), the customer now sees the dynamically fetched final bill and two options:
+1. **Pay from Wallet**
+2. **Paid in Cash/UPI to Technician**
+
+### 4. Booking Fee Foundation (Commented)
+As requested, I have written the code to deduct a ₹99 booking fee from the customer's wallet upon order creation. It is currently commented out in `OrderService.create`, ready to be enabled whenever you want to activate it!
+
+## How to Test the Flow
+
+1. **Wait for Completion:** Open the Track Order screen and wait for the demo timer to reach "Repair Completed".
+2. **Dynamic Price:** Notice that the price is no longer a hardcoded ₹50, but instead pulled dynamically from the backend (defaulting to ₹50 if not specified by a technician).
+3. **Choose an Option:**
+   - Click **Pay from Wallet**: The amount is deducted from your balance.
+   - Click **Paid in Cash/UPI**: The app registers the cash payment and silently deducts the 15% commission from the technician's account in the background.
+
+This sets up a brilliant, scalable financial ecosystem for your platform! What would you like to build next?

@@ -1,0 +1,406 @@
+.warranty-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+// Glassmorphism Base Styles
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(19, 26, 36, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+}
+
+// Header Card
+.header-card {
+  padding: 2rem;
+  margin-bottom: 2rem;
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .title-section {
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 0 0.5rem 0;
+    }
+
+    [data-theme="dark"] h1 {
+      background: linear-gradient(135deg, #4dabf7 0%, #228be6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p {
+      color: #495057;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    [data-theme="dark"] p {
+      color: #adb5bd;
+    }
+  }
+}
+
+// Alert Boxes
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  &.alert-danger {
+    background: rgba(220, 53, 69, 0.15);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+    [data-theme="dark"] & {
+      color: #ff6b6b;
+    }
+  }
+
+  &.alert-success {
+    background: rgba(40, 167, 69, 0.15);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+    [data-theme="dark"] & {
+      color: #51cf66;
+    }
+  }
+}
+
+// Loading & Empty States
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(0, 123, 255, 0.15);
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+  margin-bottom: 1.5rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+// Warranties Grid & Card
+.warranties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.warranty-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+    [data-theme="dark"] & {
+      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  &.expired {
+    opacity: 0.85;
+    .card-badge {
+      background-color: #6c757d !important;
+    }
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .device-icon {
+      font-size: 2.25rem;
+      background: rgba(0, 123, 255, 0.1);
+      padding: 0.6rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .device-info {
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #212529;
+        [data-theme="dark"] & {
+          color: #f8f9fa;
+        }
+      }
+
+      .service-name {
+        margin: 0.2rem 0 0 0;
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+        [data-theme="dark"] & {
+          color: #adb5bd;
+        }
+      }
+    }
+  }
+
+  .card-body {
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  // Progress Bar
+  .progress-container {
+    margin-bottom: 1.5rem;
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+      [data-theme="dark"] & {
+        color: #ced4da;
+      }
+
+      .pct {
+        font-weight: 700;
+      }
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      [data-theme="dark"] & {
+        background: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease-in-out;
+    }
+  }
+
+  // Details List
+  .details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    padding: 1rem;
+    [data-theme="dark"] & {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+
+      .label {
+        color: #6c757d;
+        font-weight: 500;
+        [data-theme="dark"] & {
+          color: #adb5bd;
+        }
+      }
+
+      .val {
+        color: #212529;
+        font-weight: 600;
+        [data-theme="dark"] & {
+          color: #e9ecef;
+        }
+      }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+
+    .btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid transparent;
+
+  &.btn-primary {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+
+    &:hover:not(:disabled) {
+      background: #0069d9;
+      transform: translateY(-1px);
+    }
+    
+    &:disabled {
+      background: #6c757d;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    border-color: rgba(0, 123, 255, 0.5);
+    color: #007bff;
+
+    &:hover {
+      background: rgba(0, 123, 255, 0.05);
+      border-color: #007bff;
+    }
+  }
+
+  &.btn-outline-alt {
+    background: transparent;
+    border-color: #dee2e6;
+    color: #495057;
+
+    [data-theme="dark"] & {
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #ced4da;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.03);
+      [data-theme="dark"] & {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+  }
+
+  &.btn-disabled {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6c757d;
+    cursor: not-allowed;
+    box-shadow: none;
+    border-color: transparent;
+
+    [data-theme="dark"] & {
+      background: rgba(255, 255, 255, 0.05);
+      color: #828282;
+    }
+  }
+}
+
+// Button spinner
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s infinite linear;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-width: 768px) {
+  .header-card {
+    padding: 1.5rem;
+    .header-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .back-link {
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}

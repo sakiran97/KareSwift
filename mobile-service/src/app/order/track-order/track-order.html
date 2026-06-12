@@ -1,0 +1,154 @@
+<div class="track-container">
+  <!-- Cancel Banner -->
+  <div *ngIf="isCancelled" class="alert alert-danger glass animate-fade" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: rgba(220, 53, 69, 0.15); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 16px; color: #dc3545;">
+    <span style="font-size: 2rem;">🚫</span>
+    <div>
+      <h3 style="margin: 0; font-weight: 700; font-size: 1.25rem;">This order has been cancelled</h3>
+      <p style="margin: 0.25rem 0 0 0; font-size: 0.95rem; opacity: 0.8;">The service request has been cancelled by the technician or administrator due to service unavailability or other internal reasons.</p>
+    </div>
+  </div>
+
+  <div class="header-card" [style.border-color]="isCancelled ? 'rgba(220, 53, 69, 0.3)' : null">
+    <div class="order-info">
+      <span class="badge active-badge" [style.background-color]="isCancelled ? '#dc3545' : null">{{ isCancelled ? 'Cancelled' : 'Live Tracking' }}</span>
+      <h2>Repair Status: {{ isCancelled ? 'Cancelled' : statusSteps[currentStepIndex].label }}</h2>
+      <p class="order-id">Order Reference: <strong>{{ orderId }}</strong></p>
+    </div>
+  </div>
+
+  <div *ngIf="completionOtp && currentStepIndex === 3" class="otp-banner" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1)); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; padding: 1.5rem; text-align: center;">
+    <h3 style="margin: 0 0 0.5rem 0; color: #60a5fa;">Completion OTP</h3>
+    <p style="margin: 0 0 1rem 0; color: #e2e8f0; font-size: 0.95rem;">The technician is completing the job for <strong>₹{{ orderAmount }}</strong>.<br>Share this OTP to finalize:</p>
+    <div style="font-size: 2.5rem; font-weight: 800; letter-spacing: 8px; color: #fff; background: rgba(0,0,0,0.3); display: inline-block; padding: 0.5rem 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+      {{ completionOtp }}
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Timeline -->
+    <div class="timeline-card">
+      <h3>Progress Timeline</h3>
+      <p class="subtitle">Real-time status of your repair specialist</p>
+
+      <div class="timeline">
+        <div 
+          *ngFor="let step of statusSteps; let i = index" 
+          class="timeline-item"
+          [class.completed]="i < currentStepIndex"
+          [class.active]="i === currentStepIndex"
+          [class.pending]="i > currentStepIndex"
+        >
+          <div class="timeline-indicator">
+            <div class="dot-wrapper">
+              <span class="inner-dot"></span>
+              <span class="pulse-ring" *ngIf="i === currentStepIndex"></span>
+              <svg *ngIf="i < currentStepIndex" class="check-icon" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor">
+                <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+              </svg>
+            </div>
+            <div class="line" *ngIf="i < statusSteps.length - 1"></div>
+          </div>
+          <div class="timeline-content">
+            <h4>{{ step.label }}</h4>
+            <p>{{ step.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Tech Profile & Map & Payment -->
+    <div class="sidebar-layout">
+      <!-- Technician Info -->
+      <div class="tech-card" *ngIf="currentStepIndex > 0">
+        <h3>Your Technician</h3>
+        <div class="tech-profile">
+          <div class="tech-avatar">{{ technician.avatar }}</div>
+          <div class="tech-details">
+            <h4 style="display: flex; align-items: center; gap: 4px;">
+              {{ technician.name }}
+              <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="var(--color-success)">
+                <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm-66-226 226-226-56-56-170 170-86-86-56 56 142 142Z"/>
+              </svg>
+            </h4>
+            <p class="tech-rating">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="gold">
+                <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/>
+              </svg>
+              {{ technician.rating }} • {{ technician.completedRepairs }} repairs
+            </p>
+            <p class="tech-vehicle">{{ technician.vehicle }}</p>
+          </div>
+        </div>
+        
+        <div class="tech-actions" *ngIf="!isCancelled">
+          <button class="btn-action-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+              <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 8.5t13 21.5l26 140q2 14-1.5 27t-11.5 19l-97 98q53 93 125 165t165 125l99-97q10-10 22.5-13.5t26.5-1.5l138 28q14 4 22.5 14.5T840-222v162q0 18-12 30t-30 12Z"/>
+            </svg>
+            Call Specialist
+          </button>
+          <button class="btn-action-secondary" [routerLink]="['/order/chat', orderId]">Message</button>
+        </div>
+        <div class="tech-actions-cancelled" *ngIf="isCancelled" style="padding: 1rem; text-align: center; color: #6c757d; font-weight: 600; font-size: 0.95rem;">
+          Specialist contact unavailable for cancelled orders
+        </div>
+      </div>
+
+      <!-- Doorstep Simulated Map -->
+      <div class="map-card" *ngIf="!isCancelled && (currentStepIndex === 2 || currentStepIndex === 3)">
+        <div class="simulated-map">
+          <div class="map-grid"></div>
+          <div class="destination-marker">
+            <span class="marker-pulse"></span>
+            <div class="marker-icon home-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="16" fill="currentColor">
+                <path d="M160-120v-480l320-240 320 240v480H560v-240H400v240H160Z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="tech-van-marker" [class.enroute]="currentStepIndex === 2" [class.arrived]="currentStepIndex === 3">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="var(--color-secondary)">
+              <path d="M240-200q-33 0-56.5-23.5T160-280q0-33 23.5-56.5T240-360q33 0 56.5 23.5T320-280q0 33-23.5 56.5T240-200Zm480 0q-33 0-56.5-23.5T640-280q0-33 23.5-56.5T720-360q33 0 56.5 23.5T800-280q0 33-23.5 56.5T720-200ZM120-640v200h40v120h44q12-32 39.5-51T303-390q32 0 59.5 19t39.5 51h156q12-32 39.5-51t59.5-19q32 0 59.5 19t39.5 51h48v-200l-80-160H360v80h-80v-80H120Zm320 80h120v-80H440v80Z"/>
+            </svg>
+          </div>
+          <div class="map-overlay">
+            <span>Specialist En-Route</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repair Completed state -->
+      <div class="payment-card glass-card" *ngIf="!isCancelled && currentStepIndex === 4">
+        <h3>Repair Completed</h3>
+        
+        <div *ngIf="!hasPaid">
+          <p class="desc">The service request has been completed successfully. Your total is <strong>₹{{ orderAmount }}</strong>.</p>
+          
+          <div *ngIf="paymentError" class="payment-error">
+            {{ paymentError }} <br>
+            <a routerLink="/wallet" style="color: var(--color-error); font-weight: bold; text-decoration: underline;">Top-up Wallet</a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+            <button (click)="payOrder('wallet')" class="btn-pay" [disabled]="isPaying">
+              <span *ngIf="!isPaying">Pay ₹{{ orderAmount }} from Wallet</span>
+              <span *ngIf="isPaying">Processing...</span>
+            </button>
+            <button (click)="payOrder('cash')" class="btn-pay-outline" [disabled]="isPaying" style="background: transparent; color: var(--color-on-background); border: 1px solid var(--border-color); padding: 0.9rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+              Paid in Cash/UPI to Technician
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="hasPaid" class="payment-success">
+          <div class="success-icon" style="color: var(--color-success);">✓</div>
+          <h4>Payment Successful!</h4>
+          <p class="desc">Paid via {{ paymentMethod === 'wallet' ? 'Wallet' : 'Cash/Direct UPI' }}. Thank you for choosing KareSwift. Please share your feedback about the technician.</p>
+          <button (click)="navigateToFeedback()" class="btn-pay" style="background: linear-gradient(135deg, #10b981, #059669); margin-top: 16px;">
+            Submit Feedback
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

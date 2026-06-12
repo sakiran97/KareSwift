@@ -1,0 +1,224 @@
+.orders-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-primary, #1e293b);
+  }
+}
+
+.btn-refresh {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1e293b);
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background: var(--bg-hover, #f1f5f9);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.loading-state, .error-state, .empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary, #64748b);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-color, #e2e8f0);
+  border-top-color: var(--primary, #3b82f6);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.table-container {
+  overflow-x: auto;
+  background: var(--bg-card, #fff);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    white-space: nowrap;
+  }
+
+  th {
+    background: var(--bg-secondary, #f8fafc);
+    font-weight: 600;
+    color: var(--text-secondary, #64748b);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tbody tr:hover {
+    background: var(--bg-hover, #f8fafc);
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-confirmed { background: #dbeafe; color: #1e40af; }
+.badge-enroute { background: #e0e7ff; color: #3730a3; }
+.badge-progress { background: #c7d2fe; color: #312e81; }
+.badge-completed { background: #d1fae5; color: #065f46; }
+.badge-cancelled { background: #fecaca; color: #991b1b; }
+
+.btn-cancel {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #fecaca;
+  color: #991b1b;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+
+  &:hover {
+    background: #fca5a5;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-card, #fff);
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: var(--text-primary, #1e293b);
+  }
+}
+
+.modal-desc {
+  margin: 0 0 16px;
+  color: var(--text-secondary, #64748b);
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary, #1e293b);
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #1e293b);
+  resize: vertical;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary, #3b82f6);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1e293b);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+
+  &:hover {
+    background: var(--bg-hover, #f1f5f9);
+  }
+}
+
+.btn-danger {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+
+  &:hover {
+    background: #b91c1c;
+  }
+
+  &:disabled {
+    background: #fca5a5;
+    cursor: not-allowed;
+  }
+}

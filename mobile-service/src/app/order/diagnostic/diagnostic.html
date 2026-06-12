@@ -1,0 +1,138 @@
+<div class="diagnostic-container">
+  <!-- Header -->
+  <header class="diag-header">
+    <button class="back-btn" routerLink="/order/device-select">
+      &larr; Back
+    </button>
+    <h1>AI Smart Diagnostic Pre-Check</h1>
+    <p class="subtitle">Diagnose your device hardware issues and get repair cost estimations instantly.</p>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="(step / 4) * 100"></div>
+    <div class="steps-indicators">
+      <span [class.active]="step >= 1">1. Category</span>
+      <span [class.active]="step >= 2">2. Symptoms</span>
+      <span [class.active]="step >= 3">3. Checklist</span>
+      <span [class.active]="step >= 4">4. Diagnosis</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Select Category -->
+  <div class="step-card fade-in" *ngIf="step === 1">
+    <h2>What seems to be the problem?</h2>
+    <p class="step-desc">Select the primary issue category below to start triage.</p>
+    
+    <div class="category-grid">
+      <div 
+        class="category-card" 
+        *ngFor="let cat of categories" 
+        (click)="selectCategory(cat.id)"
+      >
+        <span class="cat-icon">{{ cat.icon }}</span>
+        <h3>{{ cat.name }}</h3>
+        <p>{{ cat.desc }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Describe Symptoms -->
+  <div class="step-card fade-in" *ngIf="step === 2">
+    <h2>Provide additional details</h2>
+    <p class="step-desc">Describe what happened or how the issue started (e.g. dropped in water, fell on concrete, started heating up yesterday).</p>
+
+    <div class="input-section">
+      <textarea 
+        [(ngModel)]="notes" 
+        placeholder="Type details here... (e.g., screen has black lines, battery drains from 50% to 0% in minutes)"
+        rows="5"
+      ></textarea>
+    </div>
+
+    <div class="step-actions">
+      <button class="btn-secondary" (click)="prevStep()">Back</button>
+      <button class="btn-primary" (click)="nextStep()" [disabled]="!notes.trim()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Troubleshooting Checklist -->
+  <div class="step-card fade-in" *ngIf="step === 3">
+    <h2>Basic Triage Checklist</h2>
+    <p class="step-desc">Have you tried any of the following standard troubleshooting steps? (Helps rule out software issues)</p>
+
+    <div class="checklist-section">
+      <label class="check-item">
+        <input type="checkbox" [(ngModel)]="restarted" />
+        <span class="custom-checkbox"></span>
+        <div class="item-text">
+          <strong>Restarted the device</strong>
+          <p>Did a full power off and turn back on</p>
+        </div>
+      </label>
+
+      <label class="check-item">
+        <input type="checkbox" [(ngModel)]="updated" />
+        <span class="custom-checkbox"></span>
+        <div class="item-text">
+          <strong>Software is updated</strong>
+          <p>Running the latest OS version</p>
+        </div>
+      </label>
+
+      <label class="check-item" *ngIf="selectedCategoryId === 2 || selectedCategoryId === 5">
+        <input type="checkbox" [(ngModel)]="originalCharger" />
+        <span class="custom-checkbox"></span>
+        <div class="item-text">
+          <strong>Tried different original charger/cable</strong>
+          <p>Confirmed it is not a faulty adapter</p>
+        </div>
+      </label>
+    </div>
+
+    <div class="step-actions">
+      <button class="btn-secondary" (click)="prevStep()">Back</button>
+      <button class="btn-primary" (click)="nextStep()">Generate Diagnosis</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Diagnosis Report -->
+  <div class="step-card fade-in diagnosis-report" *ngIf="step === 4">
+    <div class="report-header">
+      <span class="report-badge">AI REPORT</span>
+      <h2>Smart Diagnosis Report</h2>
+    </div>
+
+    <div class="report-body">
+      <div class="result-box">
+        <label>Suspected Issue</label>
+        <h3>{{ diagnosedIssue }}</h3>
+      </div>
+
+      <div class="estimate-grid">
+        <div class="est-item">
+          <span class="est-label">Estimated Repair Time</span>
+          <span class="est-value">{{ estimatedTime }} mins</span>
+        </div>
+        <div class="est-item">
+          <span class="est-label">Estimated Cost Range</span>
+          <span class="est-value cost-highlight">{{ estimatedCostRange }}</span>
+        </div>
+      </div>
+
+      <div class="triage-summary">
+        <h4>Diagnosis Summary</h4>
+        <p>Our algorithms suggest a hardware fault. Based on user logs: <em>"{{ notes }}"</em>. Software triaging is complete (Device restarted: {{ restarted ? 'Yes' : 'No' }}).</p>
+      </div>
+
+      <div class="guarantee-box">
+        🛡️ <strong>Doorstep Warranty:</strong> Includes full 90-day doorstep warranty on replacement spare parts and labor.
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button class="btn-secondary" (click)="prevStep()">Back</button>
+      <button class="btn-primary pulse-btn" (click)="bookRepair()">Book Doorstep Repair</button>
+    </div>
+  </div>
+</div>

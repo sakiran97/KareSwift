@@ -1,0 +1,105 @@
+# Fix Compilation Errors
+
+## Goal Description
+Resolve all compilation/runtime errors in both the NestJS backend and Angular frontend. This includes correcting Prisma import paths, creating missing NgRx store files, updating Angular configuration to use standalone providers, fixing Sass import deprecations, ensuring shared components (navbar/footer) are imported, typing HTTP responses in AuthService, and fixing the environment import for SocketService.
+
+## User Review Required
+> [!IMPORTANT]
+> The plan adds new files under `src/app/store` and modifies several existing files. Please confirm that you are comfortable with these structural changes before we proceed.
+
+## Open Questions
+> [!WARNING]
+> 1. Do you want the NgRx store split into feature modules (`auth`, `order`) now, or keep them as simple placeholders? (Recommended: keep placeholders for now.)
+> 2. Should we generate a `prisma.d.ts` type declaration for the generated client, or rely on the existing generated types?
+
+---
+
+## Proposed Changes
+
+### Backend
+#### [MODIFY] [prisma.service.ts](file:///d:/Work/App/backend/src/prisma.service.ts)
+- Change import to `import { PrismaClient } from '../../generated/prisma';`
+
+#### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts)
+- Update import to `import { Order, OrderStatus } from '../../generated/prisma';`
+
+#### [MODIFY] [order.controller.ts](file:///d:/Work/App/backend/src/order/order.controller.ts)
+- Update import to `import { Order } from '../../generated/prisma';`
+
+### Frontend
+#### [NEW] [src/app/store/app.state.ts](file:///d:/Work/App/mobile-service/src/app/store/app.state.ts)
+```ts
+export interface AppState {
+  auth: any;
+  order: any;
+}
+```
+
+#### [NEW] [src/app/store/app.reducer.ts](file:///d:/Work/App/mobile-service/src/app/store/app.reducer.ts)
+```ts
+import { Action, combineReducers } from '@ngrx/store';
+import * as fromAuth from '../auth/store/auth.reducer';
+import * as fromOrder from '../order/store/order.reducer';
+
+export const reducers = {
+  auth: fromAuth.authReducer,
+  order: fromOrder.orderReducer,
+};
+
+export function appReducer(state: any, action: Action) {
+  return combineReducers(reducers)(state, action);
+}
+```
+
+#### [NEW] [src/app/store/app.effects.ts](file:///d:/Work/App/mobile-service/src/app/store/app.effects.ts)
+```ts
+import { Injectable } from '@angular/core';
+import { AuthEffects } from '../auth/store/auth.effects';
+import { OrderEffects } from '../order/store/order.effects';
+
+@Injectable()
+export class AppEffects {
+  constructor(public auth: AuthEffects, public order: OrderEffects) {}
+}
+```
+
+#### [MODIFY] [app.config.ts](file:///d:/Work/App/mobile-service/src/app/app.config.ts)
+- Replace `StoreModule.forRoot` / `EffectsModule.forRoot` with `provideStore(appReducer)` and `provideEffects([AppEffects])`.
+- Adjust import paths to the new files.
+
+#### [MODIFY] [app.ts](file:///d:/Work/App/mobile-service/src/app/app.ts)
+- Add `Navbar` and `Footer` components to the `imports` array.
+
+#### [MODIFY] [glass-card.scss](file:///d:/Work/App/mobile-service/src/app/shared/glass-card/glass-card.scss)
+- Ensure correct `@use` paths (already fixed).
+
+#### [MODIFY] [_mixins.scss](file:///d:/Work/App/mobile-service/src/styles/_mixins.scss)
+- Add `@use './variables' as *;` at the top to provide `$elevation-1`.
+
+#### [MODIFY] [styles.scss](file:///d:/Work/App/mobile-service/src/styles.scss)
+- Replace deprecated `@import` with `@use` statements:
+```scss
+@use 'src/styles/variables' as *;
+@use 'src/styles/mixins' as *;
+```
+
+#### [MODIFY] [auth.service.ts](file:///d:/Work/App/mobile-service/src/app/services/auth.service.ts)
+- Define an interface `LoginResponse { access_token: string; }` and type the HTTP calls accordingly to remove `unknown` errors.
+
+#### [MODIFY] [socket.service.ts](file:///d:/Work/App/mobile-service/src/app/services/socket.service.ts)
+- Change import to `import { environment } from '../../environments/environment';`
+
+---
+
+## Verification Plan
+### Automated Tests
+- Run `npm run start:dev` in `backend` – expect no runtime module‑not‑found errors.
+- Run `npm run build` in `mobile-service` – expect successful compilation.
+- Start Angular dev server (`npm run start`) and verify the app loads without console errors.
+
+### Manual Verification
+- Open the app in the browser, navigate to a page that uses `<app-navbar>` and `<app-footer>` – they should render.
+- Use the Order creation UI to trigger a request; confirm the backend returns data.
+- Open browser console to ensure no Sass or NgRx warnings.
+
+Please review the plan and answer the open questions. Once approved, I will apply the changes.

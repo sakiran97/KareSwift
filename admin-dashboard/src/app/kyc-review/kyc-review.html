@@ -1,0 +1,194 @@
+<div class="kyc-container">
+  <!-- Alerts -->
+  <div class="alerts-container" *ngIf="errorMsg() || successMsg()">
+    <div class="alert error" *ngIf="errorMsg()">
+      <span>⚠️ {{ errorMsg() }}</span>
+    </div>
+    <div class="alert success" *ngIf="successMsg()">
+      <span>✨ {{ successMsg() }}</span>
+    </div>
+  </div>
+
+  <div class="workspace-grid">
+    <!-- Left Panel: Pending List -->
+    <div class="list-panel glass-panel">
+      <div class="panel-header">
+        <h3>Pending Requests</h3>
+        <span class="badge pending">{{ pendingList().length }}</span>
+      </div>
+
+      <div class="list-body">
+        <div class="loading-state" *ngIf="loading() && pendingList().length === 0">
+          <span class="spinner"></span>
+          <p>Loading records...</p>
+        </div>
+
+        <div class="empty-state" *ngIf="!loading() && pendingList().length === 0">
+          <div class="empty-icon">🎉</div>
+          <h4>All Caught Up!</h4>
+          <p>No technician accounts are currently awaiting KYC verification.</p>
+        </div>
+
+        <div 
+          *ngFor="let item of pendingList()" 
+          class="tech-item" 
+          [class.selected]="selectedTech()?.userId === item.userId"
+          (click)="selectTechnician(item)">
+          <div class="tech-avatar">
+            {{ item.user?.name?.slice(0,2)?.toUpperCase() || 'TC' }}
+          </div>
+          <div class="tech-meta">
+            <div class="name">{{ item.user?.name || 'Unknown Technician' }}</div>
+            <div class="sub">{{ item.user?.email }}</div>
+            <div class="date">{{ item.createdAt | date:'shortDate' }}</div>
+          </div>
+          <div class="arrow">➡️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Review Workspace -->
+    <div class="workspace-panel glass-panel">
+      <!-- No Technician Selected State -->
+      <div class="empty-workspace" *ngIf="!selectedTech() && !loading()">
+        <div class="workspace-icon">🛡️</div>
+        <h3>Verification Desk</h3>
+        <p>Select a technician from the pending requests list on the left to begin checking their credentials.</p>
+      </div>
+
+      <!-- Selected Technician Review Details -->
+      <div class="review-details" *ngIf="selectedTech()">
+        <div class="detail-header">
+          <div class="title-wrap">
+            <button class="btn-back" (click)="deselect()">⬅️ Back</button>
+            <h2>Reviewing: {{ selectedTech().user?.name }}</h2>
+          </div>
+          <span class="badge" [class.pending]="selectedTech().kycStatus === 'pending' || selectedTech().kycStatus === 'under_review'">
+            {{ selectedTech().kycStatus }}
+          </span>
+        </div>
+
+        <div class="details-body">
+          <!-- Profile Card -->
+          <div class="details-section">
+            <h4>Basic Profile</h4>
+            <div class="meta-grid">
+              <div class="meta-item">
+                <span class="label">System User ID</span>
+                <span class="val">{{ selectedTech().userId }}</span>
+              </div>
+              <div class="meta-item" *ngIf="selectedTech().user?.technicianId">
+                <span class="label">Technician ID</span>
+                <span class="val highlight">{{ selectedTech().user.technicianId }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">Email Address</span>
+                <span class="val">{{ selectedTech().user?.email }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">Phone Number</span>
+                <span class="val">{{ selectedTech().user?.phone || 'Not Provided' }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="label">Account Created</span>
+                <span class="val">{{ selectedTech().createdAt | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Document Review Card -->
+          <div class="details-section">
+            <h4>KYC Document Verification</h4>
+            
+            <div class="doc-meta">
+              <div class="meta-item">
+                <span class="label">Provided ID Document Type</span>
+                <span class="val text-capitalize">{{ selectedTech().govtIdType || 'Unknown' }}</span>
+              </div>
+              <div class="meta-item" *ngIf="selectedTech().govtIdNumber">
+                <span class="label">ID Card Number</span>
+                <span class="val font-mono">{{ selectedTech().govtIdNumber }}</span>
+              </div>
+              <div class="meta-item" *ngIf="selectedTech().aadhaarNumber">
+                <span class="label">Verified Aadhaar Number</span>
+                <span class="val font-mono">
+                  {{ selectedTech().aadhaarNumber }}
+                  <span *ngIf="selectedTech().aadhaarVerified" style="color: #10b981; font-weight: 600; margin-left: 8px; font-size: 0.85em;">✓ OTP Verified</span>
+                </span>
+              </div>
+              <div class="meta-item" *ngIf="selectedTech().panNumber">
+                <span class="label">Verified PAN Number</span>
+                <span class="val font-mono">{{ selectedTech().panNumber }}</span>
+              </div>
+            </div>
+
+            <div class="document-gallery">
+              <div class="doc-preview" *ngIf="selectedTech().govtIdFrontUrl">
+                <div class="doc-title">Front Side Photo</div>
+                <div class="doc-img-container" (click)="zoomImage(selectedTech().govtIdFrontUrl)">
+                  <img [src]="selectedTech().govtIdFrontUrl" alt="Govt ID Front">
+                  <div class="zoom-overlay">🔍 Click to zoom</div>
+                </div>
+              </div>
+
+              <div class="doc-preview" *ngIf="selectedTech().govtIdBackUrl">
+                <div class="doc-title">Back Side Photo</div>
+                <div class="doc-img-container" (click)="zoomImage(selectedTech().govtIdBackUrl)">
+                  <img [src]="selectedTech().govtIdBackUrl" alt="Govt ID Back">
+                  <div class="zoom-overlay">🔍 Click to zoom</div>
+                </div>
+              </div>
+
+              <div class="no-docs-warning" *ngIf="!selectedTech().govtIdFrontUrl && !selectedTech().govtIdBackUrl">
+                ⚠️ No verification photos were uploaded by this technician.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn-danger" (click)="openRejectModal()" [disabled]="actionLoading()">
+            Reject Application
+          </button>
+          <button class="btn-primary" (click)="approve()" [disabled]="actionLoading()">
+            {{ actionLoading() ? 'Approving...' : 'Approve & Activate' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Modal -->
+  <div class="modal-backdrop" *ngIf="showRejectModal()">
+    <div class="modal-card glass-panel">
+      <h3>Reject KYC Application</h3>
+      <p class="modal-desc">Please specify the reasons for rejecting this application. This message will be sent to the technician's notifications feed so they can fix their details.</p>
+      
+      <div class="form-group">
+        <label for="reject-reason">Rejection Notes</label>
+        <textarea 
+          id="reject-reason" 
+          class="form-control" 
+          rows="4" 
+          placeholder="e.g. Uploaded PAN card photo is blurry. Please capture clearly and re-submit." 
+          [(ngModel)]="rejectReason">
+        </textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeRejectModal()" [disabled]="actionLoading()">Cancel</button>
+        <button class="btn-danger" (click)="reject()" [disabled]="actionLoading() || !rejectReason.trim()">
+          {{ actionLoading() ? 'Processing...' : 'Submit Rejection' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Modal -->
+  <div class="zoom-backdrop" *ngIf="zoomImgUrl()" (click)="closeZoom()">
+    <div class="zoom-content" (click)="$event.stopPropagation()">
+      <button class="close-zoom-btn" (click)="closeZoom()">✕ Close</button>
+      <img [src]="zoomImgUrl()" alt="Enlarged Document">
+    </div>
+  </div>
+</div>

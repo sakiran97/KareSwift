@@ -1,0 +1,26 @@
+# Finish Front‑end & Back‑end Integration
+
+**Goal** – Get both NestJS backend and Angular/Ionic front‑end compiling and running with all missing pieces implemented.
+
+## Backend fixes
+- Update `order.controller.ts` and `order.service.ts` to import Prisma types from the generated client (`../../generated/prisma`).
+- Add DTOs (`CreateOrderDto`, `UpdateOrderStatusDto`).
+- Implement minimal service methods: `findDevices()`, `create()`, `findById()`, `updateStatus()`.
+- Ensure `PrismaService` is injected and used.
+
+## Front‑end fixes
+- Add NgRx root store (`app.state.ts`, `app.reducer.ts`, `app.effects.ts`).
+- Add feature stores for Auth and Order (actions, reducer, effects, selectors).
+- Switch `app.config.ts` to standalone providers (`provideStore`, `provideEffects`).
+- Add `HttpClientModule` import.
+- Create `src/environments/environment.ts` (and prod stub).
+- Fix SCSS import paths in `glass-card.scss`.
+- Import shared `Navbar` and `Footer` components in `app.ts`.
+- Fix `environment` import in `socket.service.ts`.
+- Type the response in `auth.service.ts` to avoid TS18046 errors.
+- Ensure all component `imports` arrays include required modules.
+
+## Verification
+- Run `npm run start:dev` (backend) – no TS errors.
+- Run `npm run build` (frontend) – no compile errors.
+- Quick runtime test: login → device select → create order → real‑time status.

@@ -1,0 +1,322 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba($color-primary, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 80%, rgba($color-secondary, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 20% at 50% 50%, rgba($color-primary-light, 0.05) 0%, transparent 50%);
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($color-primary, 0.06) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($color-secondary, 0.04) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+    animation: float 10s ease-in-out 3s infinite;
+    pointer-events: none;
+  }
+}
+
+.login-card {
+  @include glass-card(20px, 0.08);
+  width: 100%;
+  max-width: 440px;
+  padding: 3rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-sizing: border-box;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.login-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .logo-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-on-primary;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 8px 24px rgba($color-primary, 0.3);
+    animation: pulseGlow 3s infinite ease-in-out;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $color-on-background;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: rgba($color-on-background, 0.6);
+    margin: 0;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #fca5a5;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  animation: shake 0.4s ease;
+}
+
+.demo-otp-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba($color-secondary, 0.1);
+  border: 1px solid rgba($color-secondary, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  color: $color-on-background;
+  font-size: 0.95rem;
+
+  .badge {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: $color-secondary;
+    color: $color-on-secondary;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    margin: 0;
+    strong {
+      color: $color-secondary;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba($color-on-background, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+
+  input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: $color-on-background;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    @include transition((background, border-color, box-shadow));
+
+    &::placeholder {
+      color: rgba($color-on-background, 0.3);
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba($color-primary, 0.5);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+    }
+
+    &.invalid {
+      border-color: rgba(239, 68, 68, 0.5);
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+      }
+    }
+  }
+}
+
+.validation-error {
+  font-size: 0.8rem;
+  color: #fca5a5;
+  margin-top: 0.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, $color-primary-dark, $color-primary);
+  color: $color-on-primary;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba($color-primary-dark, 0.25);
+  @include transition((transform, box-shadow, background));
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($color-primary, 0.4);
+    background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba($color-primary-dark, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba($color-on-background, 0.4);
+    box-shadow: none;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba($color-on-primary, 0.3);
+  border-radius: 50%;
+  border-top-color: $color-on-primary;
+  animation: spin 0.8s linear infinite;
+}
+
+.login-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba($color-on-background, 0.6);
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+    font-weight: 600;
+    @include transition(color);
+
+    &:hover {
+      color: $color-primary-light;
+      text-decoration: underline;
+    }
+  }
+
+  .technician-link {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    a {
+      color: $color-secondary;
+      font-size: 0.85rem;
+      &:hover { color: $color-secondary; }
+    }
+  }
+}
+
+// Animations
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba($color-primary, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 36px rgba($color-primary, 0.6), 0 0 12px rgba($color-secondary, 0.3);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}

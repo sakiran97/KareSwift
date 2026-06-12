@@ -1,0 +1,111 @@
+<div class="profile-container">
+  <div class="profile-layout">
+    
+    <!-- User Card -->
+    <div class="user-card">
+      <div class="avatar-large">
+        {{ (user.name || 'U').charAt(0) }}
+      </div>
+      <h2>{{ user.name }}</h2>
+      <span class="role-badge">{{ user.role }}</span>
+
+      <div class="user-meta">
+        <div class="meta-row">
+          <span class="label">Email:</span>
+          <span class="val">{{ user.email || '—' }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="label">Phone:</span>
+          <span class="val">{{ user.phone || '—' }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="label">Member Since:</span>
+          <span class="val">{{ user.createdAt ? (user.createdAt | date:'MMM yyyy') : '—' }}</span>
+        </div>
+        <div class="meta-row" *ngIf="user.technicianId">
+          <span class="label">Tech ID:</span>
+          <span class="val">{{ user.technicianId }}</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="profile-nav-links" *ngIf="user.role === 'customer'">
+        <a routerLink="/order/warranty" class="btn-profile-link">🛡️ Warranty Tracker</a>
+        <a routerLink="/rewards" class="btn-profile-link">✨ Rewards & Loyalty</a>
+      </div>
+
+      <button class="btn-edit" (click)="toggleEdit()">
+        {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+      </button>
+    </div>
+
+    <!-- Edit Card -->
+    <div class="edit-card" *ngIf="isEditing">
+      <h3>Edit Profile</h3>
+      <div *ngIf="editError" class="error-banner">{{ editError }}</div>
+      <div *ngIf="editSuccess" class="success-banner">{{ editSuccess }}</div>
+
+      <form [formGroup]="editForm" (ngSubmit)="saveProfile()">
+        <div class="form-group">
+          <label for="editName">Full Name</label>
+          <input id="editName" type="text" formControlName="name"
+            [class.invalid]="editForm.get('name')?.touched && editForm.get('name')?.invalid" />
+          <div *ngIf="editForm.get('name')?.touched && editForm.get('name')?.invalid" class="validation-error">
+            Name is required (min 2 chars).
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editPhone">Phone Number</label>
+          <input id="editPhone" type="tel" formControlName="phone" placeholder="9876543210"
+            [class.invalid]="editForm.get('phone')?.touched && editForm.get('phone')?.invalid" />
+          <div *ngIf="editForm.get('phone')?.touched && editForm.get('phone')?.invalid" class="validation-error">
+            Phone must be 10 digits.
+          </div>
+        </div>
+        <button type="submit" class="btn-save" [disabled]="editForm.invalid || isSaving">
+          <span *ngIf="!isSaving">Save Changes</span>
+          <div *ngIf="isSaving" class="spinner"></div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Orders Section -->
+    <div class="orders-card">
+      <div class="active-order-section" *ngIf="activeOrderId">
+        <h3>Active Service Request</h3>
+        <div class="active-card">
+          <div class="active-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+              <path d="m344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm34-102 102-44 102 44 56-96 110-24-10-112 74-86-74-86 10-112-110-24-56-96-102 44-102-44-56 96-110 24 10 112-74 86 74 86-10 112 110 24 56 96Zm102-198 226-226-56-56-170 170-86-86-56 56 142 142Zm0-120Z"/>
+            </svg>
+          </div>
+          <div class="active-details">
+            <h4>Doorstep Repair In Progress</h4>
+            <p>Order ID: <strong>{{ activeOrderId }}</strong></p>
+          </div>
+          <a [routerLink]="['/order/track', activeOrderId]" class="btn-track">Track Live</a>
+        </div>
+      </div>
+
+      <div class="past-orders-section">
+        <h3>Past Services</h3>
+        <div class="orders-list">
+          <div *ngFor="let order of pastOrders" class="order-item">
+            <div class="order-left">
+              <strong>{{ order.service }}</strong>
+              <p>{{ order.device }} • {{ order.date }}</p>
+            </div>
+            <div class="order-right">
+              <span class="price">${{ order.price }}</span>
+              <span class="status-badge" [class]="order.status.toLowerCase()">{{ order.status }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="view-history-container">
+          <a routerLink="/order/history" class="btn-history">View Full Order History</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

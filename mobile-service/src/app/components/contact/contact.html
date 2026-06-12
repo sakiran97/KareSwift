@@ -1,0 +1,117 @@
+<div class="contact-container">
+  <div class="contact-hero">
+    <h1>Contact Our Specialists</h1>
+    <p class="subtitle">Have questions or custom query requests? Get in touch with us.</p>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Info Side -->
+    <div class="info-card">
+      <h3>Contact Information</h3>
+      <p class="desc">Reach out via email or support line, or fill out the query form.</p>
+
+      <div class="info-items">
+        <div class="info-item">
+          <div class="item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+              <path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 8.5t13 21.5l26 140q2 14-1.5 27t-11.5 19l-97 98q53 93 125 165t165 125l99-97q10-10 22.5-13.5t26.5-1.5l138 28q14 4 22.5 14.5T840-222v162q0 18-12 30t-30 12Z"/>
+            </svg>
+          </div>
+          <div class="item-text">
+            <strong>24/7 Support Hotline</strong>
+            <p><a href="tel:18005550199">1-800-555-0199</a></p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+              <path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-680v440h640v-440L480-440Zm0-80 320-200H160l320 200ZM160-680v-40 480-440Z"/>
+            </svg>
+          </div>
+          <div class="item-text">
+            <strong>Support Email</strong>
+            <p><a href="mailto:support@kareswift.com">support&#64;kareswift.com</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="form-card">
+      <!-- Success State -->
+      <div class="success-state" *ngIf="isSubmitted">
+        <div class="success-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
+            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+          </svg>
+        </div>
+        <h3>Message Sent!</h3>
+        <p>Thank you for reaching out. A doorstep repair specialist will get back to you within 24 hours.</p>
+        <button (click)="resetForm()" class="btn-reset">Send Another Message</button>
+      </div>
+
+      <!-- Form State -->
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" *ngIf="!isSubmitted">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <div class="input-wrapper">
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              placeholder="John Doe"
+              [class.invalid]="contactForm.get('name')?.touched && contactForm.get('name')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="name@company.com"
+              [class.invalid]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject / Inquiry Type</label>
+          <div class="select-wrapper">
+            <select id="subject" formControlName="subject">
+              <option value="general">General Inquiry</option>
+              <option value="order">Existing Order Help</option>
+              <option value="tech">Technician Partnership</option>
+              <option value="custom">Custom Quote Request</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <div class="textarea-wrapper">
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="4"
+              placeholder="Write your message here..."
+              [class.invalid]="contactForm.get('message')?.touched && contactForm.get('message')?.invalid"
+            ></textarea>
+            <span class="focus-border"></span>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="contactForm.invalid || isLoading" class="btn-submit">
+          <span *ngIf="!isLoading">Send Message</span>
+          <div *ngIf="isLoading" class="spinner"></div>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

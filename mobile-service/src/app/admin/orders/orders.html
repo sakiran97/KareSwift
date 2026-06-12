@@ -1,0 +1,88 @@
+<div class="orders-page">
+  <div class="page-header">
+    <h2>Order Management</h2>
+    <button class="btn-refresh" (click)="loadOrders()" [disabled]="loading()">
+      ↻ Refresh
+    </button>
+  </div>
+
+  <div class="loading-state" *ngIf="loading()">
+    <div class="spinner"></div>
+    <p>Loading orders...</p>
+  </div>
+
+  <div class="error-state" *ngIf="error()">
+    <p class="alert alert-error">{{ error() }}</p>
+  </div>
+
+  <div class="table-container stagger-children" [class.animate-stagger]="!loading()" *ngIf="!loading() && orders().length > 0">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Technician</th>
+          <th>Device</th>
+          <th>Service</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders()">
+          <td>#{{ order.id }}</td>
+          <td>{{ order.user?.name || 'N/A' }}</td>
+          <td>{{ order.technician?.name || 'Unassigned' }}</td>
+          <td>{{ order.device?.brand }} {{ order.device?.model }}</td>
+          <td>{{ order.serviceCategory?.name }}</td>
+          <td>
+            <span class="badge" [ngClass]="statusClass(order.status)">{{ order.status }}</span>
+          </td>
+          <td>{{ order.createdAt | date:'medium' }}</td>
+          <td>
+            <button
+              class="btn-cancel"
+              *ngIf="order.status !== 'CANCELLED' && order.status !== 'COMPLETED'"
+              (click)="openCancelModal(order.id)"
+            >
+              Cancel
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading() && orders().length === 0">
+    <p>No orders found.</p>
+  </div>
+
+  <!-- Cancel Modal -->
+  <div class="modal-overlay" *ngIf="showCancelModal()" (click)="closeCancelModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Cancel Order #{{ cancelOrderId() }}</h3>
+      <p class="modal-desc">Are you sure you want to cancel this order? This action cannot be undone.</p>
+      <div class="form-group">
+        <label for="cancelReason">Cancellation Reason *</label>
+        <textarea
+          id="cancelReason"
+          [(ngModel)]="cancelReason"
+          placeholder="Enter reason for cancellation..."
+          rows="3"
+          class="form-control"
+        ></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeCancelModal()">Go Back</button>
+        <button
+          class="btn-danger"
+          (click)="confirmCancel()"
+          [disabled]="!cancelReason().trim()"
+        >
+          Confirm Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

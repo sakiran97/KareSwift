@@ -1,0 +1,40 @@
+<div class="search-overlay">
+  <div class="search-container text-center">
+    <!-- Pulse Radar Animation -->
+    <div class="radar-box mx-auto mb-5">
+      <div class="radar-pulse ring-1"></div>
+      <div class="radar-pulse ring-2"></div>
+      <div class="radar-pulse ring-3"></div>
+      <div class="radar-core">
+        <i class="bi bi-phone-vibrate-fill"></i>
+      </div>
+    </div>
+
+    <!-- Booking Details -->
+    <h3 class="fw-bold tracking-tight text-white mb-2">Matching Nearby Specialists{{ dots }}</h3>
+    <p class="text-secondary small max-width-350 mx-auto mb-4">
+      Your request has been broadcasted to online technicians within your service area.
+    </p>
+
+    <!-- Progress Indicator -->
+    <div class="search-timer mb-5">
+      <div class="progress bg-dark bg-opacity-50 mx-auto rounded-pill" style="height: 8px; max-width: 250px;">
+        <div class="progress-bar progress-bar-animated bg-warning progress-bar-striped" 
+          role="progressbar" 
+          [style.width.%]="(secondsRemaining / timeoutSeconds) * 100" 
+          [attr.aria-valuenow]="secondsRemaining" 
+          aria-valuemin="0" 
+          aria-valuemax="120">
+        </div>
+      </div>
+      <span class="text-warning small d-block mt-3 fw-semibold">
+        Searching for another {{ secondsRemaining }}s
+      </span>
+    </div>
+
+    <!-- Cancel Button -->
+    <button type="button" class="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold" (click)="cancelSearch()">
+      Cancel Request
+    </button>
+  </div>
+</div>

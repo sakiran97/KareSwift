@@ -1,0 +1,30 @@
+<div class="orders-container">
+  <header class="page-header">
+    <h1>All Assigned Orders</h1>
+    <a routerLink="/technician/dashboard" class="back-link">&larr; Back to Dashboard</a>
+  </header>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty-state">
+    <p>No orders assigned to you.</p>
+  </div>
+
+  <div class="order-list">
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-top">
+        <span class="order-id">#{{ order.id }}</span>
+        <span class="status-badge" [class]="order.status.toLowerCase()">{{ order.status }}</span>
+      </div>
+      <div class="order-info">
+        <p *ngIf="order.device"><strong>{{ order.device.brand }} {{ order.device.model }}</strong></p>
+        <p *ngIf="order.serviceCategory">{{ order.serviceCategory.name }}</p>
+        <p *ngIf="order.user" class="customer-name">{{ order.user.name }} · {{ order.user.phone }}</p>
+        <p *ngIf="order.address" class="address">{{ order.address }}</p>
+      </div>
+      <a [routerLink]="['/technician/orders', order.id]" class="btn-detail">View & Update Status</a>
+    </div>
+  </div>
+</div>

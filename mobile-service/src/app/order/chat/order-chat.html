@@ -1,0 +1,62 @@
+<div class="chat-container">
+  <header class="chat-header">
+    <button class="back-btn" [routerLink]="getBackUrl()">
+      <i class="icon-back">←</i> Back
+    </button>
+    <div class="chat-recipient-info">
+      <div class="avatar-small">
+        {{ getRecipientName().charAt(0) }}
+      </div>
+      <div class="name-status">
+        <h3>{{ getRecipientName() }}</h3>
+        <span class="role-badge">{{ getRecipientRole() }}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="chat-messages" #messageContainer>
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Retrieving secure chat thread...</p>
+    </div>
+
+    <div class="error-state" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+      <button (click)="loadMessages()" class="retry-btn">Retry</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !error && messages.length === 0">
+      <div class="speech-bubble-icon">💬</div>
+      <h3>Send a message</h3>
+      <p>Ask a question or discuss repair details directly with your {{ getRecipientRole().toLowerCase() }}.</p>
+    </div>
+
+    <div 
+      *ngFor="let msg of messages" 
+      class="message-wrapper" 
+      [class.self]="msg.senderId === currentUser?.id"
+    >
+      <div class="message-bubble">
+        <p class="content">{{ msg.content }}</p>
+        <span class="time">{{ msg.createdAt | date:'shortTime' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="chat-footer">
+    <form (ngSubmit)="sendMessage()" class="chat-form">
+      <input 
+        type="text" 
+        [(ngModel)]="newMessage" 
+        name="newMessage" 
+        placeholder="Type a secure message..." 
+        autocomplete="off"
+        [disabled]="sending"
+      />
+      <button type="submit" [disabled]="!newMessage.trim() || sending" class="send-btn">
+        <span *ngIf="!sending">Send</span>
+        <div class="spinner-small" *ngIf="sending"></div>
+      </button>
+    </form>
+  </footer>
+</div>

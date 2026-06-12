@@ -1,0 +1,376 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <div class="logo-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28" fill="currentColor">
+          <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q30 15 47 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/>
+        </svg>
+      </div>
+      <h2>Create Account</h2>
+      <p class="subtitle">Join us to manage your device repair requests</p>
+    </div>
+
+    <!-- Step Progress Indicator for Technicians -->
+    <div class="step-indicator mb-4" *ngIf="isTechnician">
+      <div class="step-progress-bar">
+        <div class="step-progress-fill" [style.width.%]="(currentStep - 1) * 33.3"></div>
+      </div>
+      <div class="step-labels text-center small text-secondary mt-2">
+        <span *ngIf="currentStep === 1">Step 1 of 4: Basic Profile</span>
+        <span *ngIf="currentStep === 2">Step 2 of 4: KYC Documents</span>
+        <span *ngIf="currentStep === 3">Step 3 of 4: Workshop Location</span>
+        <span *ngIf="currentStep === 4">Step 4 of 4: OTP Verification</span>
+      </div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div *ngIf="errorMessage" class="error-banner mb-3">{{ errorMessage }}</div>
+
+      <!-- STEP 1: Basic Profile Details -->
+      <div *ngIf="currentStep === 1" class="step-content">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <div class="input-wrapper">
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              placeholder="John Doe"
+              [class.invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="validation-error">
+            Name is required (min 2 characters).
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="you@gmail.com"
+              [class.invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="validation-error">
+            Please enter a valid email address.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              placeholder="9876543210"
+              [class.invalid]="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid" class="validation-error">
+            Phone must be a valid 10-digit number.
+          </div>
+        </div>
+
+        <div class="role-toggle">
+          <label class="toggle-label">
+            <input type="checkbox" [checked]="isTechnician" (change)="toggleRole()" class="toggle-input" />
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Register as Technician</span>
+          </label>
+        </div>
+
+        <ng-container *ngIf="isTechnician">
+          <div class="form-group">
+            <label for="technicianId">Technician ID</label>
+            <div class="input-wrapper">
+              <input
+                id="technicianId"
+                type="text"
+                formControlName="technicianId"
+                placeholder="e.g. TECH-001"
+                [class.invalid]="registerForm.get('technicianId')?.touched && registerForm.get('technicianId')?.invalid"
+              />
+              <span class="focus-border"></span>
+            </div>
+            <div *ngIf="registerForm.get('technicianId')?.touched && registerForm.get('technicianId')?.invalid" class="validation-error">
+              Technician ID is required.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                placeholder="Min 6 characters"
+                [class.invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+              />
+              <span class="focus-border"></span>
+            </div>
+            <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="validation-error">
+              Password must be at least 6 characters.
+            </div>
+          </div>
+        </ng-container>
+
+        <button type="button" class="btn-submit" (click)="nextStep()" [disabled]="isLoading">
+          Continue
+        </button>
+      </div>
+
+      <!-- STEP 2: KYC Documents (Technician Only) -->
+      <div *ngIf="currentStep === 2 && isTechnician" class="step-content">
+        <h4 class="fw-semibold mb-3">KYC Verification Details</h4>
+
+        <div class="form-group">
+          <label for="govtIdType">Government ID Type</label>
+          <div class="input-wrapper">
+            <select id="govtIdType" formControlName="govtIdType" class="form-control select-dark">
+              <option value="aadhaar">Aadhaar Card (12 Digits)</option>
+              <option value="pan">PAN Card (Format XXXXX0000X)</option>
+              <option value="voter_id">Voter ID Card</option>
+              <option value="driving_license">Driving License</option>
+              <option value="passport">Passport</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="govtIdNumber">ID Number</label>
+          <div class="input-wrapper">
+            <input
+              id="govtIdNumber"
+              type="text"
+              formControlName="govtIdNumber"
+              placeholder="Enter ID number"
+              [class.invalid]="registerForm.get('govtIdNumber')?.touched && registerForm.get('govtIdNumber')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('govtIdNumber')?.touched && registerForm.get('govtIdNumber')?.invalid" class="validation-error">
+            ID Number is required.
+          </div>
+        </div>
+
+        <!-- Aadhaar Verification Section -->
+        <div class="aadhaar-verification-section p-3 rounded-3 mb-3 border border-secondary bg-dark bg-opacity-20" *ngIf="registerForm.get('govtIdType')?.value === 'aadhaar'">
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+            <span class="small fw-semibold text-secondary">Aadhaar verification via registered OTP</span>
+            <span class="badge bg-success" *ngIf="isAadhaarOtpVerified">✓ Verified</span>
+            <span class="badge bg-warning text-dark" *ngIf="!isAadhaarOtpVerified">Verification Required</span>
+          </div>
+
+          <!-- Buttons/Inputs -->
+          <div class="d-flex gap-2" *ngIf="!isAadhaarOtpVerified">
+            <input 
+              type="text" 
+              class="w-100 py-2 px-3 bg-dark border border-secondary text-white rounded-3 small"
+              placeholder="12-digit Aadhaar Number"
+              [value]="registerForm.get('govtIdNumber')?.value"
+              readonly
+            />
+            <button 
+              type="button" 
+              class="btn-location py-2 px-3 small nowrap"
+              [disabled]="registerForm.get('govtIdNumber')?.invalid || aadhaarOtpLoading"
+              (click)="sendAadhaarOtp()">
+              {{ aadhaarOtpSent ? 'Resend OTP' : 'Send OTP' }}
+            </button>
+          </div>
+
+          <div class="mt-3" *ngIf="aadhaarOtpSent && !isAadhaarOtpVerified">
+            <label class="small text-secondary mb-1 d-block">Enter 6-Digit Aadhaar OTP</label>
+            <div class="d-flex gap-2">
+              <input 
+                type="text" 
+                class="w-100 py-2 px-3 bg-dark border border-secondary text-white rounded-3 font-mono"
+                placeholder="••••••"
+                maxLength="6"
+                #aadhaarOtpInput
+              />
+              <button 
+                type="button" 
+                class="btn-submit py-2 px-4 small w-auto"
+                [disabled]="aadhaarOtpLoading"
+                (click)="verifyAadhaarOtp(aadhaarOtpInput.value)">
+                Verify
+              </button>
+            </div>
+            <div class="text-success small mt-2" *ngIf="aadhaarDevOtp">
+              💡 Dev OTP Code: <strong>{{ aadhaarDevOtp }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="govtIdFrontFile">ID Front Photo</label>
+          <div class="input-wrapper">
+            <input
+              id="govtIdFrontFile"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              class="form-control select-dark py-2"
+              (change)="onFileSelected($event, 'govtIdFrontUrl')"
+            />
+          </div>
+          <!-- Show upload status / filename -->
+          <div *ngIf="govtIdFrontUploading" class="text-secondary small mt-1">
+            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
+          </div>
+          <div *ngIf="govtIdFrontName" class="text-success small mt-1">
+            ✓ Uploaded: {{ govtIdFrontName }}
+          </div>
+          <div *ngIf="registerForm.get('govtIdFrontUrl')?.touched && registerForm.get('govtIdFrontUrl')?.invalid" class="validation-error">
+            ID Front photo is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="govtIdBackFile">ID Back Photo <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <input
+              id="govtIdBackFile"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              class="form-control select-dark py-2"
+              (change)="onFileSelected($event, 'govtIdBackUrl')"
+            />
+          </div>
+          <!-- Show upload status / filename -->
+          <div *ngIf="govtIdBackUploading" class="text-secondary small mt-1">
+            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
+          </div>
+          <div *ngIf="govtIdBackName" class="text-success small mt-1">
+            ✓ Uploaded: {{ govtIdBackName }}
+          </div>
+        </div>
+
+        <div class="wizard-buttons d-flex gap-2">
+          <button type="button" class="btn-secondary w-50" (click)="prevStep()">Back</button>
+          <button type="button" class="btn-submit w-50" (click)="nextStep()" [disabled]="registerForm.get('govtIdType')?.value === 'aadhaar' && !isAadhaarOtpVerified">Continue</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Shop / Workshop Details (Technician Only) -->
+      <div *ngIf="currentStep === 3 && isTechnician" class="step-content">
+        <h4 class="fw-semibold mb-3">Workshop details</h4>
+
+        <div class="form-group">
+          <label for="shopName">Shop / Service Center Name</label>
+          <div class="input-wrapper">
+            <input
+              id="shopName"
+              type="text"
+              formControlName="shopName"
+              placeholder="e.g. Apex Repairs"
+              [class.invalid]="registerForm.get('shopName')?.touched && registerForm.get('shopName')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('shopName')?.touched && registerForm.get('shopName')?.invalid" class="validation-error">
+            Shop Name is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="shopAddress">Shop Address</label>
+          <div class="input-wrapper">
+            <textarea
+              id="shopAddress"
+              formControlName="shopAddress"
+              placeholder="Full shop address location"
+              rows="2"
+              [class.invalid]="registerForm.get('shopAddress')?.touched && registerForm.get('shopAddress')?.invalid"
+            ></textarea>
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('shopAddress')?.touched && registerForm.get('shopAddress')?.invalid" class="validation-error">
+            Shop Address is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="d-block mb-2">Location Coordinates</label>
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <button type="button" class="btn-location py-2 w-100 small" (click)="captureLocation()">
+              📍 Pin Live Shop GPS Location
+            </button>
+            <span *ngIf="registerForm.get('shopLatitude')?.value" class="text-success small nowrap">
+              Captured
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="shopPhotosFile">Shop Photo <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <input
+              id="shopPhotosFile"
+              type="file"
+              accept="image/*"
+              class="form-control select-dark py-2"
+              (change)="onFileSelected($event, 'shopPhotos')"
+            />
+          </div>
+          <!-- Show upload status / filename -->
+          <div *ngIf="shopPhotosUploading" class="text-secondary small mt-1">
+            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
+          </div>
+          <div *ngIf="shopPhotosName" class="text-success small mt-1">
+            ✓ Uploaded: {{ shopPhotosName }}
+          </div>
+        </div>
+
+        <div class="wizard-buttons d-flex gap-2">
+          <button type="button" class="btn-secondary w-50" (click)="prevStep()">Back</button>
+          <button type="button" class="btn-submit w-50" (click)="nextStep()">Request OTP</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: OTP Verification -->
+      <div *ngIf="currentStep === 4" class="step-content">
+        <div class="form-group">
+          <label for="otp">Enter 6-Digit OTP</label>
+          <div class="input-wrapper">
+            <input
+              id="otp"
+              type="text"
+              formControlName="otp"
+              placeholder="••••••"
+              maxLength="6"
+              [class.invalid]="registerForm.get('otp')?.touched && registerForm.get('otp')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="registerForm.get('otp')?.touched && registerForm.get('otp')?.invalid" class="validation-error">
+            OTP must be exactly 6 digits.
+          </div>
+        </div>
+
+        <div class="wizard-buttons d-flex gap-2">
+          <button type="button" class="btn-secondary w-50" (click)="prevStep()" [disabled]="isLoading">Back</button>
+          <button type="submit" class="btn-submit w-50" [disabled]="registerForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Verify & Register</span>
+            <div *ngIf="isLoading" class="spinner"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="register-footer" *ngIf="currentStep === 1">
+      <p>Already have an account? <a routerLink="/auth/login">Sign in here</a></p>
+      <p class="tech-link">Are you a technician? <a routerLink="/technician/login">Sign in with Tech ID</a></p>
+    </div>
+  </div>
+</div>
+

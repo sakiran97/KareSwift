@@ -1,0 +1,139 @@
+<div class="order-history-container">
+  <header class="history-header">
+    <button class="back-btn" routerLink="/profile">
+      <i class="icon-back">←</i> Profile
+    </button>
+    <h1>Your Repair History</h1>
+    <p class="subtitle">Track past services, active orders, and retrieve invoices.</p>
+  </header>
+
+  <div class="filters-panel">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (ngModelChange)="onSearchChange()" 
+        placeholder="Search by device, service, or order ID..."
+      />
+    </div>
+
+    <div class="filter-tabs">
+      <button 
+        [class.active]="statusFilter === 'ALL'" 
+        (click)="onFilterChange('ALL')"
+        class="filter-tab"
+      >
+        All Orders
+      </button>
+      <button 
+        [class.active]="statusFilter === 'ACTIVE'" 
+        (click)="onFilterChange('ACTIVE')"
+        class="filter-tab"
+      >
+        Active
+      </button>
+      <button 
+        [class.active]="statusFilter === 'COMPLETED'" 
+        (click)="onFilterChange('COMPLETED')"
+        class="filter-tab"
+      >
+        Completed
+      </button>
+      <button 
+        [class.active]="statusFilter === 'CANCELLED'" 
+        (click)="onFilterChange('CANCELLED')"
+        class="filter-tab"
+      >
+        Cancelled
+      </button>
+    </div>
+  </div>
+
+  <div class="orders-list">
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading your orders...</p>
+    </div>
+
+    <div class="error-state" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+      <button class="retry-btn" (click)="loadOrders()">Retry</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !error && filteredOrders.length === 0">
+      <div class="empty-icon">🔧</div>
+      <h3>No orders found</h3>
+      <p>Try searching for a different term or create a new order.</p>
+      <button class="action-btn" routerLink="/order/device-select">Book a Repair</button>
+    </div>
+
+    <div 
+      class="order-card" 
+      *ngFor="let order of filteredOrders"
+      [class.completed]="order.status === 'COMPLETED'"
+      [class.cancelled]="order.status === 'CANCELLED'"
+      [class.active-card]="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS'].includes(order.status)"
+    >
+      <div class="card-header">
+        <div class="order-id-group">
+          <span class="order-label">ORDER ID</span>
+          <span class="order-id">ORD-{{ order.id }}</span>
+        </div>
+        <span class="status-badge" [class]="order.status.toLowerCase()">
+          {{ order.status }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="device-details">
+          <h3>{{ order.device?.brand }} {{ order.device?.model }}</h3>
+          <p class="service-name">{{ order.serviceCategory?.name }}</p>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Date booked</span>
+            <span class="meta-value">{{ order.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="meta-item" *ngIf="order.scheduledDate">
+            <span class="meta-label">Scheduled For</span>
+            <span class="meta-value">{{ order.scheduledDate }} ({{ order.scheduledSlot }})</span>
+          </div>
+          <div class="meta-item" *ngIf="order.technician">
+            <span class="meta-label">Specialist</span>
+            <span class="meta-value">{{ order.technician.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="warranty-badge" *ngIf="order.status === 'COMPLETED'">
+          🛡️ 90-Day Warranty: 
+          <span class="warranty-status active">
+            {{ getDaysRemaining(order.completedAt || order.updatedAt) }} days left
+          </span>
+        </div>
+        <div class="action-buttons">
+          <button 
+            *ngIf="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS'].includes(order.status)"
+            [routerLink]="['/order/track', order.id]" 
+            class="track-btn"
+          >
+            Track Real-time
+          </button>
+          
+          <!-- Receipt / Invoice button was removed in accordance with Phase 5 -->
+
+          <button 
+            *ngIf="order.status === 'COMPLETED'" 
+            [routerLink]="['/order/feedback', order.id]" 
+            class="feedback-btn"
+          >
+            Review Repair
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

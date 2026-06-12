@@ -1,0 +1,324 @@
+# 🚀 Doorstep Device Repair — Enhancement Plan (2026 Edition)
+
+## Current State Audit
+
+After reviewing the entire codebase, here is what's **already built and working**:
+
+| Area | Status | Details |
+|---|---|---|
+| **Auth** | ✅ Complete | Email OTP + Technician password login, JWT, role-based guards |
+| **Customer Order Flow** | ✅ Complete | Device select → Brand grid → Create order → Live tracking → Feedback |
+| **Technician Portal** | ✅ Complete | Dashboard, new orders, accept flow, status pipeline, Google Maps directions |
+| **Real-time Events** | ✅ Complete | SSE-based order-available/accepted/update with toast notifications |
+| **Profile Management** | ✅ Complete | View/edit profile, order history listing |
+| **Admin** | ⚠️ Minimal | Only `create-technician` exists |
+| **Geolocation** | ✅ Complete | Nominatim reverse geocoding, address pre-fill |
+| **Feedback** | ⚠️ Frontend-only | Tags + rating UI built, but `onSubmit()` is a `setTimeout` stub — no backend API |
+
+---
+
+## Proposed Enhancements (Prioritized)
+
+### Phase 1 — Critical Missing Production Features
+
+These are features that any production-grade repair service app in 2026 **must have**. They plug the biggest gaps between your current MVP and a shippable product.
+
+---
+
+### Feature 1: Order History & Invoice Generation
+
+**Why**: Customers expect a full receipt/invoice for every completed repair. Currently the profile shows orders but there's no downloadable receipt, no price breakdown, and the `Quote` model in Prisma is unused.
+
+#### Backend Changes
+
+##### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts)
+- Add `generateInvoice(orderId: number)` method that fetches the order with relations (device, serviceCategory, user, technician, quote, feedback) and returns a structured invoice JSON with: order ID, customer name, technician name, device details, service performed, price breakdown (parts + labor + tax), scheduled date, completion date, and warranty period.
+
+##### [NEW] `backend/src/order/invoice.controller.ts`
+- `GET /orders/:id/invoice` — Returns the invoice JSON
+- `GET /orders/:id/invoice/pdf` — Returns a server-rendered PDF invoice using `pdfkit` (lightweight, zero-headless-browser dependency)
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `completedAt DateTime?` field to Order model
+- Add `partsUsed String?` and `laborNotes String?` fields to Order for technicians to fill during repair
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/order/order-history/order-history.ts`
+- Dedicated order history page with search/filter (by status, date range)
+- Each completed order shows an expandable card with full details + "Download Invoice" button
+- Route: `/order/history`
+
+##### [MODIFY] [profile.ts](file:///d:/Work/App/mobile-service/src/app/components/profile/profile.ts)
+- Replace inline order list with a "View All Orders" button linking to `/order/history`
+- Show only the most recent 3 orders in the profile summary
+
+---
+
+### Feature 2: In-App Chat / Messaging Between Customer & Technician
+
+**Why**: Every major on-demand service app (Uber, UrbanClap, Rapido) has in-app messaging. Currently the customer can only "Call" or see a static "Message" button that does nothing.
+
+#### Backend Changes
+
+##### [NEW] `backend/src/chat/chat.module.ts`, `chat.service.ts`, `chat.controller.ts`
+- REST endpoints: `POST /chat/:orderId/messages` (send), `GET /chat/:orderId/messages` (fetch history)
+- Messages stored in a new `ChatMessage` Prisma model with `orderId`, `senderId`, `senderRole`, `content`, `createdAt`
+- SSE integration: emit `chat-message` events through the existing `EventsService` for real-time delivery
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `ChatMessage` model linked to `Order`
+
+##### [MODIFY] [events.service.ts](file:///d:/Work/App/backend/src/events/events.service.ts)
+- Add `'chat-message'` to the SseEvent type union
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/order/chat/order-chat.ts`
+- Full chat UI with message bubbles, timestamp, auto-scroll, unread badge
+- Connected via SSE for real-time messages
+- Accessible from the tracking page via the existing "Message" button
+- Route: `/order/chat/:orderId`
+
+##### [MODIFY] [track-order.ts](file:///d:/Work/App/mobile-service/src/app/order/track-order/track-order.ts)
+- Wire the "Message" button to navigate to `/order/chat/:orderId`
+- Show unread message count badge on the button
+
+##### [NEW] `mobile-service/src/app/technician/chat/technician-chat.ts`
+- Same chat UI but from the technician's perspective
+- Accessible from the order detail page
+
+---
+
+### Feature 3: Notification Center (Bell Icon + History)
+
+**Why**: Currently, toast notifications are ephemeral — they disappear after a few seconds with no way to review past notifications. A notification center is standard in all 2026 apps.
+
+#### Backend Changes
+
+##### [NEW] `backend/src/notification/notification.module.ts`, `notification.service.ts`, `notification.controller.ts`
+- `POST /notifications` — create notification (internal use)
+- `GET /notifications` — fetch user's notifications (paginated, filtered by read/unread)
+- `PATCH /notifications/:id/read` — mark as read
+- `PATCH /notifications/read-all` — mark all as read
+- Persist notifications in a new `Notification` Prisma model
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `Notification` model: `id`, `userId`, `title`, `body`, `type` (order-update, chat, promo), `isRead`, `orderId?`, `createdAt`
+
+##### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts) and [technician.service.ts](file:///d:/Work/App/backend/src/technician/technician.service.ts)
+- Auto-create notifications when: order status changes, technician accepts order, order completed
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/components/notification-center/notification-center.ts`
+- Slide-out panel or full page showing notification history
+- Each notification is clickable, navigating to the relevant order/chat
+- Unread count badge on the bell icon in navbar
+
+##### [MODIFY] [navbar.ts](file:///d:/Work/App/mobile-service/src/app/components/navbar/navbar.ts)
+- Add a bell icon with unread notification count (for both customer and technician)
+- Toggle notification center panel on click
+
+---
+
+### Phase 2 — Competitive Differentiators
+
+These features move your app from "functional" to "best-in-class" — the kind of things users compare when choosing between repair services.
+
+---
+
+### Feature 4: Repair Warranty Tracker
+
+**Why**: Doorstep repair services that offer tracked warranties see 40% higher repeat customers. Your Prisma schema already has a `Quote` model but no warranty tracking.
+
+#### Backend Changes
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `Warranty` model: `id`, `orderId` (unique), `warrantyDays` (default 90), `expiresAt`, `claimCount`, `createdAt`
+- Auto-create warranty records when order status moves to `COMPLETED`
+
+##### [NEW] `backend/src/warranty/warranty.module.ts`, `warranty.service.ts`, `warranty.controller.ts`
+- `GET /warranty` — list user's active warranties
+- `GET /warranty/:orderId` — warranty details for a specific order
+- `POST /warranty/:orderId/claim` — initiate a warranty claim (creates a new linked order)
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/order/warranty/warranty-list.ts`
+- Card grid showing active warranties with countdown timer ("67 days remaining")
+- Glassmorphic progress ring showing warranty coverage percentage
+- "Claim Warranty" button that pre-fills a new order with the same device/service
+- Route: `/order/warranty`
+
+##### [MODIFY] [profile.ts](file:///d:/Work/App/mobile-service/src/app/components/profile/profile.ts)
+- Add "Active Warranties" section with count badge
+
+---
+
+### Feature 5: Loyalty & Rewards Program
+
+**Why**: Gamification and loyalty programs are the #1 retention mechanic in 2026 on-demand apps. Users earn points per order, unlock tiers, and redeem discounts.
+
+#### Backend Changes
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `LoyaltyAccount` model: `userId` (unique), `points`, `tier` (Bronze/Silver/Gold/Platinum), `totalOrders`, `totalSpent`
+- Add `PointTransaction` model: `userId`, `points`, `type` (earned/redeemed), `description`, `orderId?`, `createdAt`
+
+##### [NEW] `backend/src/loyalty/loyalty.module.ts`, `loyalty.service.ts`, `loyalty.controller.ts`
+- `GET /loyalty` — user's current points, tier, and history
+- `POST /loyalty/redeem` — redeem points for a discount code
+- Auto-award points when order completes (10 points per ₹100 spent)
+- Tier auto-upgrade logic: Bronze (0), Silver (500pts), Gold (2000pts), Platinum (5000pts)
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/components/rewards/rewards.ts`
+- Premium rewards dashboard with:
+  - Animated tier badge with shimmer effect
+  - Points balance with animated counter
+  - Progress bar to next tier
+  - Transaction history timeline
+  - "Redeem" button with available reward options
+- Route: `/rewards`
+
+##### [MODIFY] [navbar.ts](file:///d:/Work/App/mobile-service/src/app/components/navbar/navbar.ts)
+- Add "Rewards" link with points badge for customers
+
+---
+
+### Feature 6: AI Diagnostic Pre-Check
+
+**Why**: Trendy apps in 2026 use AI to triage issues before dispatch. This reduces wrong-diagnosis rates, helps technicians prepare the right parts, and makes the user experience feel cutting-edge.
+
+#### Frontend Changes (No Backend AI Required — Client-Side Decision Tree)
+
+##### [NEW] `mobile-service/src/app/order/diagnostic/diagnostic.ts`
+- Interactive step-by-step questionnaire:
+  1. "What's wrong?" → Select symptoms (cracked screen, won't charge, slow, overheating, water damage, camera blur, etc.)
+  2. "When did it start?" → Timeline selector
+  3. "Have you tried?" → Checklist of common fixes (restart, safe mode, etc.)
+  4. "Photos" → Upload up to 3 photos of the damage (stored as base64 or uploaded to backend)
+- AI-style summary: "Based on your symptoms, this appears to be a **charging port corrosion** issue. Estimated repair time: 40 mins. Estimated cost: ₹850–₹1,200."
+- "Book Repair" CTA that pre-fills the create-order form with the diagnosed service category
+- Route: `/order/diagnostic`
+
+##### [MODIFY] [device-select.ts](file:///d:/Work/App/mobile-service/src/app/order/device-select/device-select.ts)
+- Add a prominent "🔍 Diagnose My Device" card alongside the existing device category cards
+
+##### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts)
+- Accept pre-filled service category and notes from the diagnostic flow via query params or localStorage
+
+#### Backend Changes
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `diagnosticNotes String?` and `diagnosticPhotos String[]` to Order model
+
+##### [MODIFY] [order.service.ts](file:///d:/Work/App/backend/src/order/order.service.ts)
+- Accept and persist diagnostic data when creating an order
+
+---
+
+### Phase 3 — Premium Polish
+
+These are the finishing touches that make the app feel production-grade and delightful.
+
+---
+
+### Feature 7: Technician Ratings & Review System (Backend-Connected)
+
+**Why**: The `Feedback` model exists in Prisma and the frontend has a rating UI, but `onSubmit()` is a `setTimeout` stub. This wires it end-to-end and adds public technician ratings.
+
+#### Backend Changes
+
+##### [NEW] `backend/src/feedback/feedback.module.ts`, `feedback.service.ts`, `feedback.controller.ts`
+- `POST /orders/:id/feedback` — submit rating + comment + tags
+- `GET /technician/:id/reviews` — public reviews for a technician
+- Calculate and cache `averageRating` and `totalReviews` on the User model
+
+##### [MODIFY] [schema.prisma](file:///d:/Work/App/backend/prisma/schema.prisma)
+- Add `tags String[]` to Feedback model
+- Add `averageRating Float?` and `totalReviews Int?` to User model
+
+#### Frontend Changes
+
+##### [MODIFY] [feedback.ts](file:///d:/Work/App/mobile-service/src/app/order/feedback/feedback.ts)
+- Replace `setTimeout` stub with actual HTTP POST to `/api/orders/:id/feedback`
+- Show success animation with confetti effect
+
+##### [MODIFY] [track-order.ts](file:///d:/Work/App/mobile-service/src/app/order/track-order/track-order.ts)
+- Show the technician's real `averageRating` and `totalReviews` instead of hardcoded `4.95` and `420`
+
+---
+
+### Feature 8: Dark Mode Toggle
+
+**Why**: 80%+ of mobile users prefer dark mode. Your design system (DESIGN.md) explicitly notes "dark-mode token values are not defined" as a known gap. This fills that gap.
+
+#### Frontend Changes
+
+##### [NEW] `mobile-service/src/app/services/theme.service.ts`
+- Theme service with `toggle()`, `isDark()` methods
+- Persists preference in `localStorage`
+- Applies `data-theme="dark"` attribute to `<html>` element
+
+##### [MODIFY] `mobile-service/src/styles.scss` (or global CSS)
+- Define CSS custom properties for all colors under `:root` (light) and `[data-theme="dark"]`
+- Dark palette: deep navy backgrounds (#0a1117, #131a24), soft white text (#e4e6eb), muted borders (#2d3748)
+
+##### [MODIFY] [navbar.ts](file:///d:/Work/App/mobile-service/src/app/components/navbar/navbar.ts) + [navbar.html](file:///d:/Work/App/mobile-service/src/app/components/navbar/navbar.html)
+- Add a sun/moon toggle icon in the navbar
+- Wire to theme service
+
+##### [MODIFY] All component `.scss` files
+- Replace hardcoded colors with CSS custom property references (`var(--bg-surface)`, `var(--text-primary)`, etc.)
+
+---
+
+## Implementation Order & Estimates
+
+| # | Feature | Priority | Estimated Effort | Dependencies |
+|---|---|---|---|---|
+| 1 | Order History & Invoices | 🔴 High | ~3 hours | None |
+| 2 | In-App Chat | 🔴 High | ~4 hours | None |
+| 3 | Notification Center | 🔴 High | ~3 hours | None |
+| 4 | Repair Warranty Tracker | 🟡 Medium | ~2 hours | Feature 1 (completedAt field) |
+| 5 | Loyalty & Rewards | 🟡 Medium | ~3 hours | None |
+| 6 | AI Diagnostic Pre-Check | 🟡 Medium | ~3 hours | None |
+| 7 | Ratings & Reviews (Backend) | 🟢 Polish | ~2 hours | None |
+| 8 | Dark Mode | 🟢 Polish | ~3 hours | None |
+
+> **Total estimated**: ~23 hours of implementation
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Feature Selection**: Which features would you like me to implement? I can do all 8 in order, or you can pick specific ones. I recommend starting with **Phase 1 (Features 1–3)** since they plug the biggest gaps.
+
+> [!IMPORTANT]
+> **Invoice PDF**: Do you want actual downloadable PDF invoices, or is a printable HTML invoice page sufficient for now?
+
+> [!IMPORTANT]
+> **Chat Storage**: Should chat messages persist in the database (survives server restarts) or is in-memory sufficient for your current stage?
+
+> [!IMPORTANT]
+> **AI Diagnostic**: Should this be a client-side decision tree (faster to build, no API costs) or do you want integration with an actual AI API (like Gemini/GPT) for smarter diagnosis?
+
+> [!IMPORTANT]
+> **Dark Mode Scope**: Should I update ALL existing component stylesheets for dark mode compatibility, or start with the core pages (auth, order flow, tracking) first?
+
+---
+
+## Verification Plan
+
+### Automated
+- `npm run build` for both `mobile-service` and `backend` after each feature
+- Backend dev server restart to verify Prisma migrations apply cleanly
+
+### Manual
+- Test each feature end-to-end: create order → track → chat → complete → review → invoice → warranty
+- Verify SSE events propagate correctly for chat and notification features
+- Test dark mode toggle across all pages

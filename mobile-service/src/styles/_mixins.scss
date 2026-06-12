@@ -1,0 +1,24 @@
+@use "./variables" as *;
+// Design System Mixins
+
+// Glass‑morphism card mixin
+@mixin glass-card($blur: 12px, $alpha: null) {
+  background: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur($blur);
+  -webkit-backdrop-filter: saturate(180%) blur($blur);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  box-shadow: $elevation-1;
+}
+
+// Dark‑mode helper
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+// Transition utility
+@mixin transition($properties: all, $duration: 0.3s, $timing: ease-in-out) {
+  transition: $properties $duration $timing;
+}

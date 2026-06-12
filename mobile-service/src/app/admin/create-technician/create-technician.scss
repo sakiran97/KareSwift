@@ -1,0 +1,132 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.create-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $color-on-background;
+    margin: 0;
+  }
+
+  .subtitle {
+    color: rgba($color-on-background, 0.6);
+    margin: 0.25rem 0 2rem;
+  }
+}
+
+.message-banner {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  &.success {
+    background: rgba(52, 211, 153, 0.15);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: #34d399;
+  }
+}
+
+.success-card {
+  @include glass-card(12px, 0.06);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+
+  p {
+    margin: 0.3rem 0;
+    color: $color-on-background;
+    font-size: 0.95rem;
+  }
+  code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba($color-on-background, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: $color-on-background;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba($color-primary, 0.5);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+    }
+  }
+
+  .error {
+    font-size: 0.8rem;
+    color: #fca5a5;
+  }
+}
+
+.btn-submit {
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, $color-primary-dark, $color-primary);
+  color: $color-on-primary;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include transition((transform, box-shadow));
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($color-primary, 0.4);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba($color-on-primary, 0.3);
+  border-radius: 50%;
+  border-top-color: $color-on-primary;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,75 @@
+<div class="login-container">
+  <div class="login-card glass-panel">
+    <div class="brand">
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 -960 960 960" width="36" fill="currentColor">
+          <path d="M480-120 280-320l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-560q-33 0-56.5-23.5T160-640q0-33 23.5-56.5T240-720q33 0 56.5 23.5T320-640q0 33-23.5 56.5T240-560Zm480 0q-33 0-56.5-23.5T640-640q0-33 23.5-56.5T720-720q33 0 56.5 23.5T800-640q0 33-23.5 56.5T720-560Z"/>
+        </svg>
+      </div>
+      <h2>Doorstep Repair</h2>
+      <p class="subtitle">Administrative Portal</p>
+    </div>
+
+    <div class="alerts" *ngIf="errorMsg() || successMsg()">
+      <div class="alert error" *ngIf="errorMsg()">
+        <span class="alert-icon">⚠️</span>
+        <span class="alert-text">{{ errorMsg() }}</span>
+      </div>
+      <div class="alert success" *ngIf="successMsg()">
+        <span class="alert-icon">✨</span>
+        <span class="alert-text">{{ successMsg() }}</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Request OTP -->
+    <form *ngIf="!otpSent()" (ngSubmit)="sendOtp()">
+      <div class="form-group">
+        <label for="email">Admin Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          class="form-control" 
+          placeholder="admin@doorstep.com" 
+          [(ngModel)]="email" 
+          required 
+          autocomplete="email"
+          [disabled]="loading()">
+      </div>
+      
+      <button type="submit" class="btn-primary w-100" [disabled]="loading()">
+        <span class="spinner" *ngIf="loading()"></span>
+        {{ loading() ? 'Sending OTP...' : 'Request Verification Code' }}
+      </button>
+    </form>
+
+    <!-- Step 2: Verify OTP -->
+    <form *ngIf="otpSent()" (ngSubmit)="verifyOtp()">
+      <div class="form-group">
+        <label for="otp">Enter 6-Digit OTP</label>
+        <input 
+          type="text" 
+          id="otp" 
+          name="otp" 
+          class="form-control text-center letter-spacing-lg" 
+          placeholder="0 0 0 0 0 0" 
+          maxLength="6"
+          [(ngModel)]="otp" 
+          required 
+          autocomplete="one-time-code"
+          [disabled]="loading()">
+      </div>
+      
+      <div class="actions">
+        <button type="submit" class="btn-primary w-100" [disabled]="loading()">
+          <span class="spinner" *ngIf="loading()"></span>
+          {{ loading() ? 'Verifying...' : 'Verify & Sign In' }}
+        </button>
+        
+        <button type="button" class="btn-link" (click)="backToEmail()" [disabled]="loading()">
+          Change email address
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+hat is a fantastic product design question!
+
+Because your platform allows offline negotiation between the customer and the technician (e.g., the technician opens the device, finds a deeper issue, and they agree on a new price of ₹1500 instead of ₹500), the payment flow needs to be flexible.
+
+Here is a breakdown of how this works in the real world (like Urban Company), why an in-app wallet is still highly recommended, and my suggestions for your scenario:
+
+1. How it works in real-time
+In a real-world scenario with Razorpay or Stripe:
+
+The customer tops up their wallet using UPI, Credit Card, or Netbanking.
+When the repair is done, the technician enters the Final Negotiated Amount into their app.
+The customer's app instantly updates to show the final bill.
+The customer clicks "Pay", and the money securely moves from the Customer's Wallet to the Platform's Escrow account (and eventually to the Technician).
+2. Is an in-app payment system required?
+Strictly speaking, No. You can allow the customer to simply pay the technician directly via Cash or personal Google Pay/PhonePe when the job is done.
+
+However, relying solely on offline payments creates a massive problem for you as the platform owner: How do you collect your commission? If a technician makes ₹2000 in cash, they have no incentive to come back and pay your platform the 15% commission fee.
+
+3. My Recommended Scenario (The Hybrid Approach)
+I highly recommend keeping the Wallet system, but adjusting the workflow to a Hybrid Model:
+
+Pre-paid Diagnosis Fee: To prevent fake bookings and compensate the technician for travel, require the customer to pay a small, non-refundable booking fee (e.g., ₹99) from their Wallet before the technician is dispatched.
+Final Payment Options: When the repair is complete and the final price is negotiated, the technician enters the final amount in their app. The customer's app then gives them two choices:
+Pay via Wallet (Secure, tracked, generates automatic invoice)
+Pay via Cash / Direct UPI to Tech (Convenient for the customer)
+The Technician Wallet (For Commissions): This is the secret to making offline marketplaces work! If the customer pays in Cash, your platform automatically deducts your 15% commission from the Technician's Wallet. If the technician's wallet balance drops below ₹0, the app blocks them from accepting new orders until they top-up their wallet and pay you what they owe.

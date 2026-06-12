@@ -1,0 +1,70 @@
+<div class="config-container">
+  <div class="header-card glass-panel">
+    <div class="header-text">
+      <h2>App Configuration</h2>
+      <p>Configure routing radiuses, timeslot limitations, live tracking intervals, and match timeout configurations.</p>
+    </div>
+    <button class="btn-secondary" (click)="fetchConfig()">
+      🔄 Reload Defaults
+    </button>
+  </div>
+
+  <div class="alerts" *ngIf="errorMsg() || successMsg()">
+    <div class="alert error" *ngIf="errorMsg()">
+      <span>⚠️ {{ errorMsg() }}</span>
+    </div>
+    <div class="alert success" *ngIf="successMsg()">
+      <span>✨ {{ successMsg() }}</span>
+    </div>
+  </div>
+
+  <div class="loading-state glass-panel" *ngIf="loading() && configs().length === 0">
+    <span class="spinner"></span>
+    <p>Retrieving configuration values...</p>
+  </div>
+
+  <div class="settings-grid" *ngIf="!loading()">
+    <div *ngFor="let item of configs()" class="settings-card glass-panel" [class.modified]="item.pendingValue !== item.value">
+      <div class="settings-header">
+        <div class="key-wrap">
+          <span class="setting-key font-mono">{{ item.key }}</span>
+          <span class="modified-badge" *ngIf="item.pendingValue !== item.value">Unsaved</span>
+        </div>
+      </div>
+
+      <div class="settings-body">
+        <p class="description">{{ item.description || 'No description provided.' }}</p>
+
+        <div class="input-wrap">
+          <ng-container [ngSwitch]="item.key">
+            <div class="slider-container" *ngSwitchCase="'service_radius_km'">
+              <input
+                type="range"
+                min="1"
+                max="50"
+                class="range-slider"
+                [(ngModel)]="item.pendingValue">
+              <span class="slider-val">{{ item.pendingValue }} km</span>
+            </div>
+
+            <div class="number-container" *ngSwitchDefault>
+              <input
+                type="number"
+                class="form-control font-mono"
+                [(ngModel)]="item.pendingValue">
+              <span class="unit-label" *ngIf="item.key.endsWith('_sec')">seconds</span>
+              <span class="unit-label" *ngIf="item.key.endsWith('_slot')">orders</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="settings-footer" *ngIf="item.pendingValue !== item.value">
+        <button class="btn-secondary px-sm" (click)="resetItem(item)" [disabled]="savingKey() === item.key">Cancel</button>
+        <button class="btn-primary px-sm" (click)="saveItem(item)" [disabled]="savingKey() === item.key">
+          {{ savingKey() === item.key ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

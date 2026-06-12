@@ -1,0 +1,129 @@
+// Design System Variables (KareSwift Rebrand)
+$font-family-base: 'Inter', sans-serif;
+$font-family-headings: 'Outfit', sans-serif;
+
+:root {
+  // Trust Blue
+  --color-primary: hsl(221, 83%, 53%);
+  --color-primary-light: hsl(221, 83%, 65%);
+  --color-primary-dark: hsl(221, 83%, 40%);
+
+  // Tech Cyan
+  --color-secondary: hsl(189, 94%, 43%);
+  --color-secondary-light: hsl(189, 94%, 55%);
+  --color-secondary-dark: hsl(189, 94%, 30%);
+
+  // Status Colors
+  --color-success: hsl(160, 84%, 39%); // #10B981
+  --color-warning: hsl(38, 92%, 50%);  // #F59E0B
+  --color-error: hsl(0, 84%, 60%);     // #EF4444
+
+  --color-background: hsl(210, 20%, 98%);
+  --color-surface: hsl(0, 0%, 100%);
+  --color-surface-variant: hsl(210, 20%, 96%);
+  
+  --color-on-primary: hsl(0, 0%, 100%);
+  --color-on-secondary: hsl(0, 0%, 100%);
+  --color-on-background: hsl(215, 25%, 15%);
+  --color-on-surface: hsl(215, 25%, 20%);
+  --color-text-muted: hsl(215, 15%, 45%);
+  
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(37, 99, 235, 0.1); // subtle primary tint
+  --glass-shadow: rgba(37, 99, 235, 0.08);
+  --autofill-bg: #f8fafc;
+  --autofill-color: #0f172a;
+}
+
+[data-theme="dark"], .dark {
+  // Trust Blue (Slightly brighter for dark mode)
+  --color-primary: hsl(221, 83%, 60%);
+  --color-primary-light: hsl(221, 83%, 70%);
+  --color-primary-dark: hsl(221, 83%, 50%);
+
+  // Tech Cyan
+  --color-secondary: hsl(189, 94%, 50%);
+  --color-secondary-light: hsl(189, 94%, 60%);
+  --color-secondary-dark: hsl(189, 94%, 40%);
+
+  --color-background: hsl(222, 47%, 11%); // Deep modern dark
+  --color-surface: hsl(217, 33%, 17%);
+  --color-surface-variant: hsl(215, 28%, 22%);
+  
+  --color-on-primary: hsl(0, 0%, 100%);
+  --color-on-secondary: hsl(0, 0%, 100%);
+  --color-on-background: hsl(210, 40%, 98%);
+  --color-on-surface: hsl(210, 40%, 96%);
+  --color-text-muted: hsl(215, 20%, 65%);
+  
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+  --autofill-bg: #1e293b;
+  --autofill-color: #f8fafc;
+}
+
+$color-primary: var(--color-primary);
+$color-primary-light: var(--color-primary-light);
+$color-primary-dark: var(--color-primary-dark);
+
+$color-secondary: var(--color-secondary);
+$color-secondary-light: var(--color-secondary-light);
+$color-secondary-dark: var(--color-secondary-dark);
+
+$color-success: var(--color-success);
+$color-warning: var(--color-warning);
+$color-error: var(--color-error);
+
+$color-background: var(--color-background);
+$color-surface: var(--color-surface);
+$color-surface-variant: var(--color-surface-variant);
+$color-on-primary: var(--color-on-primary);
+$color-on-secondary: var(--color-on-secondary);
+$color-on-background: var(--color-on-background);
+$color-on-surface: var(--color-on-surface);
+$color-text-muted: var(--color-text-muted);
+
+// Shadow & elevation
+$elevation-1: 0 8px 32px 0 var(--glass-shadow);
+$elevation-2: 0 12px 40px 0 var(--glass-shadow);
+
+// ── Admin Dashboard Theme Variables ────────────────────────
+// Scoped to .admin-context so these dark-theme values don't leak into non-admin pages
+.admin-context {
+  --bg-main: #0c0f1d;
+  --bg-sidebar: rgba(18, 22, 41, 0.7);
+  --bg-card: rgba(26, 32, 58, 0.6);
+  --bg-card-hover: rgba(36, 44, 80, 0.7);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(99, 102, 241, 0.4);
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --accent: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.25);
+
+  --status-pending: #f59e0b;
+  --status-approved: #10b981;
+  --status-rejected: #ef4444;
+  --status-info: #3b82f6;
+  --status-online: #10b981;
+  --status-offline: #6b7280;
+}
+// Global fallback defaults for admin-style classes used outside admin context
+:root {
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --border-color: rgba(255, 255, 255, 0.06);
+  --text-primary: inherit;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --accent: #a855f7;
+}
+
+

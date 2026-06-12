@@ -1,0 +1,205 @@
+<div class="order-container animate-fade-up">
+  <div class="header-section">
+    <div class="back-link">
+      <a routerLink="/order/device-select">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+          <path d="M400-80 0-480l400-400 56 57-303 303h807v80H153l303 303-56 57Z"/>
+        </svg>
+        Back
+      </a>
+    </div>
+    
+    <div class="progress-indicator">
+      <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <div class="circle">1</div>
+        <span>Device</span>
+      </div>
+      <div class="line" [class.active]="currentStep >= 2"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+        <div class="circle">2</div>
+        <span>Problem</span>
+      </div>
+      <div class="line" [class.active]="currentStep >= 3"></div>
+      <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+        <div class="circle">3</div>
+        <span>Schedule</span>
+      </div>
+      <div class="line" [class.active]="currentStep >= 4"></div>
+      <div class="step" [class.active]="currentStep >= 4">
+        <div class="circle">4</div>
+        <span>Confirm</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <div class="form-card glass-card">
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="service-form">
+        
+        <!-- STEP 1: Choose Device -->
+        <div *ngIf="currentStep === 1" class="step-content animate-fade-right">
+          <h2>Choose Your Device</h2>
+          <p class="subtitle">Select the brand and model you need repaired.</p>
+          
+          <div class="form-group">
+            <label>Select Brand</label>
+            <div class="brand-grids">
+              <div 
+                *ngFor="let brand of brands" 
+                class="brand-card"
+                [class.selected]="orderForm.get('brand')?.value === brand"
+                (click)="selectBrand(brand)"
+              >
+                <div class="brand-logo">
+                  <img [src]="brandLogos[brand] || 'assets/generic-brand.png'" [alt]="brand" loading="lazy">
+                </div>
+                <span class="brand-name">{{ brand }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="model">Model Name / Number</label>
+            <div class="select-wrapper">
+              <select id="model" formControlName="model" [class.invalid]="orderForm.get('model')?.touched && orderForm.get('model')?.invalid">
+                <option *ngFor="let modelName of models" [value]="modelName">{{ modelName }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="isCustomModel">
+            <label for="customModel">Specify Model Name</label>
+            <div class="input-wrapper">
+              <input id="customModel" type="text" formControlName="customModel" placeholder="e.g. iPhone 16 Pro Max" [class.invalid]="orderForm.get('customModel')?.touched && orderForm.get('customModel')?.invalid" />
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-primary" (click)="nextStep()">Next: Choose Problem</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Choose Problem -->
+        <div *ngIf="currentStep === 2" class="step-content animate-fade-right">
+          <h2>What's the issue?</h2>
+          <p class="subtitle">Tell us what needs fixing on your device.</p>
+
+          <div class="form-group">
+            <label for="serviceId">Service Required</label>
+            <div class="select-wrapper">
+              <select id="serviceId" formControlName="serviceId" [class.invalid]="orderForm.get('serviceId')?.touched && orderForm.get('serviceId')?.invalid">
+                <option value="" disabled selected>Select service type...</option>
+                <option *ngFor="let service of services" [value]="service.id">{{ service.name }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Describe the Issue</label>
+            <div class="textarea-wrapper">
+              <textarea id="description" formControlName="description" rows="4" placeholder="Describe the issue in detail..." [class.invalid]="orderForm.get('description')?.touched && orderForm.get('description')?.invalid"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions space-between">
+            <button type="button" class="btn-secondary" (click)="prevStep()">Back</button>
+            <button type="button" class="btn-primary" (click)="nextStep()">Next: Schedule</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Choose Date & Time -->
+        <div *ngIf="currentStep === 3" class="step-content animate-fade-right">
+          <h2>When and where?</h2>
+          <p class="subtitle">We'll come to your doorstep.</p>
+
+          <div class="form-group">
+            <label for="address">Doorstep Service Address</label>
+            <div class="textarea-wrapper">
+              <textarea id="address" formControlName="address" rows="3" placeholder="Enter your complete home/office address..." [class.invalid]="orderForm.get('address')?.touched && orderForm.get('address')?.invalid"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>GPS Location Coordinates</label>
+            <div class="location-picker-row">
+              <div class="input-wrapper coordinate-input">
+                <input type="text" readonly [value]="orderForm.get('latitude')?.value ? ('Latitude: ' + orderForm.get('latitude')?.value + ', Longitude: ' + orderForm.get('longitude')?.value) : ''" placeholder="Click 'Pin GPS' to locate" [class.invalid]="orderForm.get('latitude')?.touched && orderForm.get('latitude')?.invalid" />
+              </div>
+              <button type="button" class="btn-locate" (click)="getCurrentLocation()" [disabled]="isLocating">
+                <span *ngIf="!isLocating">Pin GPS</span>
+                <div *ngIf="isLocating" class="spinner-small"></div>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="scheduledDate">Appointment Date</label>
+              <div class="input-wrapper">
+                <input id="scheduledDate" type="date" formControlName="scheduledDate" [class.invalid]="orderForm.get('scheduledDate')?.touched && orderForm.get('scheduledDate')?.invalid" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="scheduledSlot">Available Timeslots</label>
+              <div class="select-wrapper">
+                <select id="scheduledSlot" formControlName="scheduledSlot" [class.invalid]="orderForm.get('scheduledSlot')?.touched && orderForm.get('scheduledSlot')?.invalid">
+                  <option value="" disabled selected>Choose a timeslot...</option>
+                  <option *ngFor="let slotItem of availableSlots" [value]="slotItem.slot" [disabled]="!slotItem.available">
+                    {{ slotItem.slot }} {{ slotItem.available ? '' : '(Fully Booked)' }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions space-between">
+            <button type="button" class="btn-secondary" (click)="prevStep()">Back</button>
+            <button type="button" class="btn-primary" (click)="nextStep()">Next: Confirm Booking</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Confirm Booking -->
+        <div *ngIf="currentStep === 4" class="step-content animate-fade-right">
+          <h2>Confirm Booking</h2>
+          <p class="subtitle">Review your doorstep service request details</p>
+
+          <div class="quote-details">
+            <div class="quote-row">
+              <span>Device:</span>
+              <span class="val">{{ orderForm.get('brand')?.value }} {{ isCustomModel ? orderForm.get('customModel')?.value : orderForm.get('model')?.value }}</span>
+            </div>
+            <div class="quote-row">
+              <span>Schedule:</span>
+              <span class="val">{{ orderForm.get('scheduledDate')?.value }} at {{ orderForm.get('scheduledSlot')?.value }}</span>
+            </div>
+          </div>
+
+          <div class="quote-perks">
+            <div class="perk-item">
+              <div class="perk-icon" style="color: var(--color-success)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></svg>
+              </div>
+              <span>Verified KareSwift Technicians</span>
+            </div>
+            <div class="perk-item">
+              <div class="perk-icon" style="color: var(--color-primary)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M438-120 148-410q-12-12-18-27t-6-33q0-18 6.5-33t17.5-27l290-290q11-11 26-17t32-6h255q33 0 56.5 23.5T840-760v255q0 17-6 32t-18 27L526-156q-11 12-26.5 18t-31.5 6q-16 0-31.5-6T438-120Z"/></svg>
+              </div>
+              <span>90-Day Repair Warranty</span>
+            </div>
+          </div>
+
+          <div class="form-actions space-between">
+            <button type="button" class="btn-secondary" (click)="prevStep()">Back</button>
+            <button type="submit" [disabled]="orderForm.invalid || isLoading" class="btn-submit">
+              <span *ngIf="!isLoading">Confirm & Book Now</span>
+              <div *ngIf="isLoading" class="spinner"></div>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

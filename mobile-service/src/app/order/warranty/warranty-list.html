@@ -1,0 +1,115 @@
+<div class="warranty-container">
+  <!-- Header Card -->
+  <div class="header-card glass">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>Device Warranty Tracker</h1>
+        <p>Monitor coverage, check active periods, and request hassle-free warranty repairs.</p>
+      </div>
+      <div class="back-link">
+        <a routerLink="/profile" class="btn btn-outline">
+          <i class="icon-arrow-left"></i> Back to Profile
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="error" class="alert alert-danger glass animate-fade">
+    <span class="alert-icon">⚠️</span>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="claimSuccessMessage" class="alert alert-success glass animate-fade">
+    <span class="alert-icon">🎉</span>
+    <p>{{ claimSuccessMessage }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state glass">
+    <div class="spinner"></div>
+    <p>Retrieving active warranties...</p>
+  </div>
+
+  <!-- Warranties Grid -->
+  <div *ngIf="!loading" class="warranties-section">
+    <div *ngIf="warranties.length === 0" class="empty-state glass animate-fade">
+      <div class="empty-icon">🛡️</div>
+      <h2>No Warranties Found</h2>
+      <p>Once you have a completed repair order, its active warranty will show up here.</p>
+      <a routerLink="/order/create" class="btn btn-primary">Book a Repair</a>
+    </div>
+
+    <div *ngIf="warranties.length > 0" class="warranties-grid">
+      <div *ngFor="let warranty of warranties" class="warranty-card glass animate-fade" [class.expired]="isExpired(warranty.expiresAt)">
+        <div class="card-badge" [style.background-color]="getProgressColor(warranty.expiresAt, warranty.warrantyDays)">
+          {{ isExpired(warranty.expiresAt) ? 'Expired' : getDaysRemaining(warranty.expiresAt) + ' Days Left' }}
+        </div>
+
+        <div class="card-header">
+          <div class="device-icon">📱</div>
+          <div class="device-info">
+            <h3>{{ warranty.device }}</h3>
+            <p class="service-name">{{ warranty.service }}</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Progress bar -->
+          <div class="progress-container">
+            <div class="progress-labels">
+              <span>Coverage Progress</span>
+              <span class="pct">{{ getProgressPercentage(warranty.expiresAt, warranty.warrantyDays) }}%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill"
+                   [style.width.%]="getProgressPercentage(warranty.expiresAt, warranty.warrantyDays)"
+                   [style.background-color]="getProgressColor(warranty.expiresAt, warranty.warrantyDays)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Warranty details -->
+          <div class="details-list">
+            <div class="detail-item">
+              <span class="label">Original Order:</span>
+              <span class="val">#ORD-{{ warranty.orderId }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Completed On:</span>
+              <span class="val">{{ warranty.completedAt | date:'mediumDate' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Expires On:</span>
+              <span class="val">{{ warranty.expiresAt | date:'mediumDate' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Claims Made:</span>
+              <span class="val">{{ warranty.claimCount }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <a [routerLink]="['/order/track', warranty.orderId]" class="btn btn-outline-alt">Track Details</a>
+          
+          <button 
+            *ngIf="!isExpired(warranty.expiresAt)" 
+            (click)="claimWarranty(warranty.orderId)" 
+            [disabled]="claimLoadingOrderId !== null"
+            class="btn btn-primary">
+            <span *ngIf="claimLoadingOrderId === warranty.orderId" class="button-spinner"></span>
+            {{ claimLoadingOrderId === warranty.orderId ? 'Submitting...' : 'Claim Warranty' }}
+          </button>
+          
+          <button 
+            *ngIf="isExpired(warranty.expiresAt)" 
+            [disabled]="true"
+            class="btn btn-disabled">
+            Warranty Expired
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

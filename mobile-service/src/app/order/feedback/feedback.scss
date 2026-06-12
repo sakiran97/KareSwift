@@ -1,0 +1,291 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.feedback-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background: radial-gradient(circle at 10% 20%, rgba($color-primary, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba($color-secondary, 0.12) 0%, transparent 50%);
+}
+
+.feedback-card, .success-card {
+  @include glass-card(16px, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  max-width: 500px;
+  padding: 3rem 2.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: slideUp 0.5s ease;
+}
+
+.success-card {
+  align-items: center;
+  text-align: center;
+
+  .success-badge {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba($color-primary, 0.15);
+    border: 2px solid $color-primary;
+    color: $color-primary-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 20px rgba($color-primary, 0.4);
+    animation: successPulse 2s infinite ease-in-out;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba($color-on-background, 0.7);
+    margin: 0;
+  }
+
+  .btn-home {
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+    color: $color-on-primary;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba($color-primary, 0.25);
+    @include transition((transform, box-shadow));
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($color-primary, 0.4);
+    }
+  }
+}
+
+.feedback-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: rgba($color-on-background, 0.6);
+    margin: 0;
+  }
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// Star rating
+.rating-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba($color-on-background, 0.8);
+  }
+}
+
+.stars-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  padding: 0.25rem;
+  @include transition((color, transform));
+
+  &:hover {
+    transform: scale(1.15);
+  }
+
+  &.filled {
+    color: #ffb703;
+    filter: drop-shadow(0 0 5px rgba(#ffb703, 0.3));
+  }
+}
+
+// Tag pills
+.tags-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba($color-on-background, 0.8);
+  }
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tag-pill {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba($color-on-background, 0.7);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  @include transition((background, border-color, color));
+
+  &.selected {
+    background: rgba($color-secondary, 0.15);
+    border-color: $color-secondary;
+    color: $color-secondary-light;
+    box-shadow: 0 0 10px rgba($color-secondary, 0.2);
+  }
+
+  &:hover:not(.selected) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: $color-on-background;
+  }
+}
+
+// Form group
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba($color-on-background, 0.8);
+  }
+}
+
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+
+  textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: $color-on-background;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    @include transition((background, border-color, box-shadow));
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba($color-primary, 0.5);
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+    }
+  }
+}
+
+// Submit button
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, $color-primary-dark, $color-primary);
+  color: $color-on-primary;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba($color-primary-dark, 0.25);
+  @include transition((transform, box-shadow, background));
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($color-primary, 0.4);
+    background: linear-gradient(135deg, $color-primary, $color-primary-light);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba($color-primary-dark, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba($color-on-background, 0.4);
+    box-shadow: none;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba($color-on-primary, 0.3);
+  border-radius: 50%;
+  border-top-color: $color-on-primary;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes successPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba($color-primary, 0.3); }
+  50% { box-shadow: 0 0 25px rgba($color-primary, 0.6); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

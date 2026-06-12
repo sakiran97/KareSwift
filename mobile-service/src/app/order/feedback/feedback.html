@@ -1,0 +1,78 @@
+<div class="feedback-container">
+  <!-- Success State -->
+  <div class="success-card" *ngIf="isSubmitted">
+    <div class="success-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="currentColor">
+        <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
+      </svg>
+    </div>
+    <h2>Thank You!</h2>
+    <p>Your feedback helps us maintain our premium doorstep service standards. Your payment has been processed successfully.</p>
+    <button (click)="goHome()" class="btn-home">Return to Dashboard</button>
+  </div>
+
+  <!-- Form State -->
+  <div class="feedback-card" *ngIf="!isSubmitted">
+    <div class="feedback-header">
+      <h2>Share Your Experience</h2>
+      <p class="subtitle">Your repair order <strong>{{ orderId }}</strong> has been completed. How was your service?</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="feedback-form">
+      <!-- Stars Selection -->
+      <div class="rating-box">
+        <label>Your Rating</label>
+        <div class="stars-row" (mouseleave)="setHoverRating(0)">
+          <button 
+            type="button"
+            *ngFor="let star of [1, 2, 3, 4, 5]" 
+            class="star-btn"
+            (mouseenter)="setHoverRating(star)"
+            (click)="setRating(star)"
+            [class.filled]="star <= (hoverRating || rating)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor">
+              <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Tag Pills -->
+      <div class="tags-box">
+        <label>What did you like most?</label>
+        <div class="tags-row">
+          <button 
+            type="button"
+            *ngFor="let tag of tags; let i = index" 
+            class="tag-pill"
+            [class.selected]="tag.selected"
+            (click)="toggleTag(i)"
+          >
+            {{ tag.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Comment Box -->
+      <div class="form-group">
+        <label for="comment">Additional Comments</label>
+        <div class="textarea-wrapper">
+          <textarea
+            id="comment"
+            [(ngModel)]="comment"
+            name="comment"
+            rows="4"
+            placeholder="Tell us more about the doorstep experience, technician behavior, repair quality..."
+          ></textarea>
+          <span class="focus-border"></span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="rating === 0 || isLoading" class="btn-submit">
+        <span *ngIf="!isLoading">Submit Review & Finish</span>
+        <div *ngIf="isLoading" class="spinner"></div>
+      </button>
+    </form>
+  </div>
+</div>

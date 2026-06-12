@@ -1,0 +1,165 @@
+<div class="shop-container">
+  <div class="alerts-container" *ngIf="errorMsg() || successMsg()">
+    <div class="alert error" *ngIf="errorMsg()">
+      <span>⚠️ {{ errorMsg() }}</span>
+    </div>
+    <div class="alert success" *ngIf="successMsg()">
+      <span>✨ {{ successMsg() }}</span>
+    </div>
+  </div>
+
+  <div class="workspace-grid">
+    <div class="list-panel glass-panel">
+      <div class="panel-header">
+        <h3>Pending Shop Reviews</h3>
+        <span class="badge pending">{{ pendingList().length }}</span>
+      </div>
+
+      <div class="list-body">
+        <div class="loading-state" *ngIf="loading() && pendingList().length === 0">
+          <span class="spinner"></span>
+          <p>Loading records...</p>
+        </div>
+
+        <div class="empty-state" *ngIf="!loading() && pendingList().length === 0">
+          <div class="empty-icon">🏬</div>
+          <h4>No pending shop reviews</h4>
+          <p>All submitted shops have been reviewed and verified.</p>
+        </div>
+
+        <div
+          *ngFor="let item of pendingList()"
+          class="shop-item"
+          [class.selected]="selectedShop()?.userId === item.userId"
+          (click)="selectShop(item)">
+          <div class="shop-avatar">
+            🏬
+          </div>
+          <div class="shop-meta">
+            <div class="name">{{ item.shopName || 'Unnamed Workshop' }}</div>
+            <div class="sub">Owner: {{ item.user?.name }}</div>
+            <div class="date">{{ item.user?.phone || 'No Phone' }}</div>
+          </div>
+          <div class="arrow">➡️</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="workspace-panel glass-panel">
+      <div class="empty-workspace" *ngIf="!selectedShop() && !loading()">
+        <div class="workspace-icon">🏬</div>
+        <h3>Workshop Geolocation Desk</h3>
+        <p>Select a shop from the list on the left to verify its photos and compare GPS coordinates.</p>
+      </div>
+
+      <div class="review-details" *ngIf="selectedShop()">
+        <div class="detail-header">
+          <div class="title-wrap">
+            <button class="btn-back" (click)="deselect()">⬅️ Back</button>
+            <h2>Verify Workshop: {{ selectedShop().shopName }}</h2>
+          </div>
+          <span class="badge" [class.pending]="!selectedShop().shopVerified">
+            {{ selectedShop().shopVerified ? 'VERIFIED' : 'PENDING VERIFICATION' }}
+          </span>
+        </div>
+
+        <div class="details-body">
+
+          <div class="proximity-banner" [class.mismatch]="locationMismatch" [class.matched]="!locationMismatch">
+            <div class="banner-icon">
+              {{ locationMismatch ? '⚠️' : '✅' }}
+            </div>
+            <div class="banner-content">
+              <h4>
+                {{ locationMismatch ? 'Geotag Mismatch Warning' : 'Proximity Verification Passed' }}
+              </h4>
+              <p>
+                Shop photos were captured <b>{{ distanceMeters }} meters</b> away from the registered workshop coordinates.
+                <span *ngIf="locationMismatch"> This exceeds the maximum allowed deviation threshold of 500m. Please inspect visually.</span>
+                <span *ngIf="!locationMismatch"> This is within the acceptable 500m radius threshold.</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="label">Workshop Name</span>
+              <span class="val highlight">{{ selectedShop().shopName }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Technician Owner</span>
+              <span class="val">{{ selectedShop().user?.name }} (ID: {{ selectedShop().user?.technicianId || selectedShop().userId }})</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Registered Street Address</span>
+              <span class="val">{{ selectedShop().shopAddress }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Registered Coordinates</span>
+              <span class="val font-mono">{{ selectedShop().shopLatitude | number:'1.4-4' }}, {{ selectedShop().shopLongitude | number:'1.4-4' }}</span>
+            </div>
+          </div>
+
+          <div class="verification-visuals">
+            <div class="map-card-wrap">
+              <span class="section-title">Geolocation Mapping Overlay</span>
+              <div id="shop-map" class="leaflet-map-box"></div>
+              <div class="map-legend">
+                <span class="legend-item"><span class="dot shop"></span> Registered Shop Pin</span>
+                <span class="legend-item"><span class="dot photo"></span> Photo Geotag Pin</span>
+              </div>
+            </div>
+
+            <div class="photos-card-wrap">
+              <span class="section-title">Workshop Photos Gallery</span>
+              <div class="photos-grid">
+                <div *ngFor="let photo of selectedShop().shopPhotos; let i = index" class="photo-card">
+                  <img [src]="photo" alt="Workshop Photo {{ i + 1 }}">
+                  <div class="photo-info">
+                    <span>Photo #{{ i + 1 }}</span>
+                    <span class="badge info">Geotagged</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn-danger" (click)="openRejectModal()" [disabled]="actionLoading()">
+            Reject & Flag Location
+          </button>
+          <button class="btn-primary" (click)="approve()" [disabled]="actionLoading()">
+            {{ actionLoading() ? 'Verifying...' : 'Approve Workshop Location' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showRejectModal()">
+    <div class="modal-card glass-panel">
+      <h3>Flag Workshop details</h3>
+      <p class="modal-desc">Provide reasons for location mismatch or photo rejection. These review notes will be sent directly to the technician to edit/re-upload their data.</p>
+
+      <div class="form-group">
+        <label for="reject-reason">Workshop Rejection Reason</label>
+        <textarea
+          id="reject-reason"
+          class="form-control"
+          rows="4"
+          placeholder="e.g. Registered address is in Indiranagar, but photo GPS logs indicate capture in Whitefield (12km away). Please register with matching locations."
+          [(ngModel)]="rejectReason">
+        </textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeRejectModal()" [disabled]="actionLoading()">Cancel</button>
+        <button class="btn-danger" (click)="reject()" [disabled]="actionLoading() || !rejectReason.trim()">
+          {{ actionLoading() ? 'Flagging...' : 'Reject Workshop' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

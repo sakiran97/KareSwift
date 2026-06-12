@@ -1,0 +1,48 @@
+# Comprehensive A-Z Sorted & Chronological Device Catalog Select Plan
+
+This plan details the implementation of a structured device catalog selection interface for smartphones, tablets, laptops, and smartwatches. It addresses the user's request to sort brands alphabetically (A-Z) and models chronologically (oldest to newest), and explains the constraints surrounding hardware auto-detection in modern browsers.
+
+## User Review Required
+
+### 1. Browser Hardware Auto-Detection Explanation & Limitations
+> [!WARNING]
+> **Why we cannot fully auto-detect the exact device model:**
+> Modern web browsers (Chrome, Safari, Firefox, Edge) restrict access to specific hardware identification strings to protect user privacy (preventing "browser fingerprinting").
+> - The `Navigator.userAgent` header is frozen/genericized (e.g. all iPhones report `Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15` without specifying if it is an iPhone X, 13, 14, 15, or 16).
+> - There are no browser APIs to retrieve the precise manufacturer model name (like "Galaxy S24 Ultra" or "iPad Pro M4").
+>
+> **The Solution:**
+> We pre-populate an exhaustive structured device catalog dropdown in the UI. To keep it highly user-friendly and flexible:
+> 1. **Brands** are sorted alphabetically from **A to Z**.
+> 2. **Models** under each brand are sorted in **chronological order** (oldest to newest/latest).
+> 3. An **"Other / Custom Model"** option is provided at the bottom of the list. Clicking this dynamically displays a text input, allowing users to manually type their device name if it is not in the pre-populated list.
+
+## Proposed Changes
+
+### Frontend (Angular Client)
+
+#### [MODIFY] [create-order.ts](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.ts)
+- Replace the simplified catalog dataset with a comprehensive, alphabetically sorted list of brands, where each brand contains models ordered chronologically (old to latest).
+- Ensure that sorting is programmatic or pre-defined in the catalog.
+- Support `Other / Custom Model` logic and input field validators.
+
+#### [MODIFY] [create-order.html](file:///d:/Work/App/mobile-service/src/app/order/create-order/create-order.html)
+- Replace the model input textbox with a model `<select>` dropdown using the loaded `models` array.
+- Display a dynamic `customModel` text input only when `isCustomModel` is active (the user selects "Other / Custom Model").
+- Show validation warnings when the custom model is invalid.
+
+## Verification Plan
+
+### Automated Tests
+- Build the frontend project locally:
+  ```bash
+  npm run build
+  ```
+
+### Manual Verification
+- Launch the application, navigate to the Service Request screen, and select different device categories.
+- Verify that:
+  1. Brands are sorted alphabetically.
+  2. Models are listed chronologically from oldest to newest.
+  3. Selecting "Other / Custom Model" opens the text input box, requiring the user to type in a name.
+  4. The estimated price updates dynamically based on brand multipliers.

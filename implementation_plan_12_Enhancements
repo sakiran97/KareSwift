@@ -1,0 +1,150 @@
+# Doorstep Mobile Device Service: Enterprise Architecture & Audit Report
+
+This document contains the requested comprehensive production readiness audit, architecture plans, and enterprise-grade roadmap to scale the platform to 100,000+ users and 10,000+ technicians.
+
+## User Review Required
+
+> [!WARNING]
+> This plan outlines a massive architectural overhaul. Migrating from an in-memory `Subject` to Redis Pub/Sub, adding Elasticsearch, and migrating databases are breaking changes that require staging environments. Please review the infrastructural commitments (Kubernetes, Redis, Elastic) before proceeding.
+
+## 1. Production Readiness Report
+
+**Current State Analysis:**
+- **Backend**: NestJS with Prisma. Currently uses in-memory RxJS `Subject` for SSE which is **not horizontally scalable**.
+- **Database**: Prisma schema is configured for PostgreSQL, but needs proper migration management, indexing, and pooling for production.
+- **Frontend/Admin**: Angular & Ionic platforms are robust but need caching, offline support, and state optimization.
+- **Scalability**: Single-instance bound due to in-memory events.
+
+**Readiness Score**: 40/100 (Development Grade)
+
+**Critical Missing Capabilities:**
+- No distributed event bus (Redis Pub/Sub missing).
+- No connection pooling for database (PgBouncer/Prisma Accelerate missing).
+- No caching layer (Redis missing).
+- Single point of failure in backend.
+
+## 2. Security Audit Report
+
+> [!CAUTION]
+> Immediate security vulnerabilities exist in the current architecture that must be addressed before production deployment.
+
+- **Authentication**: Needs MFA, brute-force protection, and rate limiting.
+- **Data Protection**: PII and KYC data (Aadhaar, PAN) are stored in plaintext. Needs AES-256 encryption at rest.
+- **API Security**: Lacks API Gateway protections. Needs helmet, CORS strictness, and payload validation limits.
+- **Uploads**: Direct file uploads to local disk (`uploads/` folder). Must migrate to S3 with malware scanning and pre-signed URLs.
+- **Audit Logging**: Missing comprehensive audit trails for sensitive operations (technician approval, payment processing).
+
+## 3. Scalability Roadmap
+
+**Phase 1: Stateless Architecture (Weeks 1-2)**
+- Replace `EventsService` (RxJS) with Redis Pub/Sub.
+- Move local file uploads to AWS S3 / Cloud Storage.
+- Containerize NestJS application with Docker.
+
+**Phase 2: Database & Caching (Weeks 3-4)**
+- Implement Redis for caching high-frequency read APIs (e.g., config, categories).
+- Set up PgBouncer for database connection pooling.
+- Implement read replicas for PostgreSQL.
+
+**Phase 3: Search & Messaging (Weeks 5-6)**
+- Deploy Elasticsearch for global search (Users, Technicians, Orders).
+- Integrate Firebase Cloud Messaging (FCM) to replace/augment SSE for mobile clients.
+
+## 4. Infrastructure Architecture Diagram
+
+```mermaid
+graph TD
+    Client_Web[Angular Web App] --> LB[Load Balancer / NGINX]
+    Client_App[Ionic Mobile App] --> LB
+    Admin_Dash[Angular Admin] --> LB
+
+    LB --> API_1[NestJS Node 1]
+    LB --> API_2[NestJS Node 2]
+    LB --> API_N[NestJS Node N]
+
+    API_1 <--> Redis[(Redis Cache & Pub/Sub)]
+    API_2 <--> Redis
+    API_N <--> Redis
+
+    API_1 <--> DB_Pool[PgBouncer]
+    API_2 <--> DB_Pool
+    API_N <--> DB_Pool
+
+    DB_Pool <--> DB_Primary[(PostgreSQL Primary)]
+    DB_Primary -. Replication .-> DB_Replica[(PostgreSQL Replica)]
+
+    API_1 <--> ES[(Elasticsearch)]
+    API_2 <--> ES
+    API_N <--> ES
+
+    API_1 --> S3[AWS S3 / Storage]
+    API_1 --> FCM[Firebase Cloud Messaging]
+    API_1 --> PG[Payment Gateway - Razorpay]
+```
+
+## 5. Database Optimization Plan
+
+- **Indexing**: Add B-Tree indexes on `userId`, `technicianId`, `status`, and `createdAt` in the `Order` table. Add spatial indexes (PostGIS) for `latitude` and `longitude` for geospatial queries.
+- **Soft Deletes**: Implement soft deletes (`deletedAt` column) on critical entities instead of hard deletions.
+- **Partitioning**: Partition the `Order` and `PointTransaction` tables by date (monthly) to ensure query performance as data grows.
+- **Prisma Optimizations**: Implement `prisma-extension-read-replicas` to route read-heavy queries (dashboard analytics) to read replicas.
+
+## 6. DevOps Deployment Strategy
+
+- **CI/CD Pipeline**: GitHub Actions for automated linting, unit testing (Jest/Vitest), and Docker image building.
+- **Container Orchestration**: Kubernetes (EKS/GKE) for deployment.
+- **Deployment Strategy**: Blue-Green deployments to ensure zero-downtime updates.
+- **Infrastructure as Code (IaC)**: Terraform to provision VPC, RDS, ElastiCache, and EKS.
+- **Observability**: Prometheus + Grafana for metrics; ELK stack (Elasticsearch, Logstash, Kibana) for centralized logging; Sentry for error tracking.
+
+## 7. API Hardening Recommendations
+
+- **Rate Limiting**: Implement `@nestjs/throttler` backed by Redis to prevent DDoS and brute-force attacks.
+- **Input Validation**: Strict `class-validator` pipes stripping non-whitelisted properties.
+- **Rate-Limited Auth**: Implement exponential backoff for failed login attempts.
+- **Headers**: Implement `helmet` for secure HTTP headers.
+- **Refresh Token Rotation**: Invalidate refresh tokens upon use to prevent replay attacks.
+
+## 8. Mobile App Optimization Plan
+
+- **Offline-First**: Implement SQLite on device via Capacitor for offline data storage, synced via conflict-free replicated data types (CRDTs) or timestamp-based syncing when back online.
+- **Background Sync**: Use Capacitor Background Runner for syncing diagnostic data and location tracking.
+- **Biometric Login**: Integrate `@capacitor-community/biometric-auth`.
+- **Performance**: Lazy load all Angular modules, optimize bundle size, implement ahead-of-time (AOT) compilation natively.
+- **Socket Fallback**: Implement Socket.IO with standard polling fallback for environments where WebSockets are blocked.
+
+## 9. Enterprise Feature Roadmap
+
+### Milestone 1: Core Enterprise Readiness
+- PostgreSQL Migration & Prisma Pooling
+- Redis Pub/Sub & Caching
+- S3 File Uploads & Security Hardening
+
+### Milestone 2: Intelligent Routing & Payments
+- Payment Gateway (Razorpay/Stripe) & Wallet System
+- Google Maps API integration for ETA and auto-assignment
+- Commission & Dynamic Pricing Engine
+
+### Milestone 3: AI & Advanced Operations
+- AI Diagnostics Assistant (OpenAI integration)
+- Multi-city operations & Franchise Management
+- Elasticsearch integration
+- Gamification & SLA tracking
+
+## 10. Go-Live Checklist
+
+- [ ] **Infrastructure**: VPC configured, Database multi-AZ enabled, Redis clustered.
+- [ ] **Security**: Penetration testing completed, SSL/TLS enforced, Secrets in AWS Secrets Manager.
+- [ ] **Data**: Migration scripts tested, Backup & Restore tested (Disaster Recovery).
+- [ ] **Monitoring**: APM (e.g., Datadog/New Relic) installed, Alerting rules (Slack/PagerDuty) configured.
+- [ ] **Load Testing**: Apache JMeter / Artillery load test simulating 10,000 concurrent users passed.
+- [ ] **Compliance**: GDPR/DPDP Act compliance verified (data deletion, PII encryption).
+- [ ] **CI/CD**: Pipelines green, automated rollback tested.
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. Which Payment Gateway provider is preferred (Razorpay, Stripe, or PhonePe)?
+> 2. For the AI Diagnostics feature, do we have an existing OpenAI/Anthropic enterprise account, or should we provision one?
+> 3. Should we prioritize the multi-city/franchise features before or after the AI support assistant?
+> 4. Are we targeting AWS, GCP, or Azure for the cloud infrastructure deployment?

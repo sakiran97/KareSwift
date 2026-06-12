@@ -1,0 +1,120 @@
+<div class="dashboard-container">
+  <div class="welcome-banner glass-panel">
+    <div class="banner-text">
+      <h2>Welcome Back, Administrator</h2>
+      <p>Monitor your fleet, approve registration requests, and configure settings dynamically.</p>
+    </div>
+    <button class="btn-primary" (click)="fetchStats()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
+        <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 128.5 27T716-694v-106h80v240H556v-80h114q-37-38-87-59t-103-21q-100 0-170 70t-70 170q0 100 70 170t170 70q100 0 170-70t70-170h80q0 134-93 227t-227 93Z"/>
+      </svg>
+      Refresh Stats
+    </button>
+  </div>
+
+  <div class="stats-grid" *ngIf="!loading()">
+    <!-- Card 1: Total Technicians -->
+    <div class="stat-card glass-panel" routerLink="/admin/technicians">
+      <div class="card-icon tech">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M160-200v-80q0-58 41-99t99-41q23 0 44 6t41 18q-36 43-53.5 95.5T314-200H160Zm540 0q-18-59-35.5-111.5T611-407q20-12 41-18t44-6q58 0 99 41t41 99v80H700Zm-220 0H314v-46q0-46 32-78t78-32q23 0 45 8.5t39 25.5l56-56q-37-37-88.5-56T424-400q-73 0-124.5 51.5T248-224v24h232Zm-56-320q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="label">Total Fleet Size</span>
+        <h3 class="value">{{ stats()?.totalTechnicians }}</h3>
+        <span class="trend">Technicians Registered</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Online Technicians -->
+    <div class="stat-card glass-panel" routerLink="/admin/technicians" [queryParams]="{kycStatus: 'approved'}">
+      <div class="card-icon online">
+        <span class="pulse-ring"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Z"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="label">Active Online</span>
+        <h3 class="value">{{ stats()?.onlineTechnicians }}</h3>
+        <span class="trend success">Broadcasting Location</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Pending KYC -->
+    <div class="stat-card glass-panel" routerLink="/admin/kyc-review">
+      <div class="card-icon pending">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="m480-120-156-62q-83-33-123.5-103T160-440v-240l320-120 320 120v240q0 85-40.5 155T636-182L480-120Z"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="label">Pending Review</span>
+        <h3 class="value">{{ stats()?.pendingKycCount }}</h3>
+        <span class="trend warning">KYC Approvals Awaiting</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Active Orders -->
+    <div class="stat-card glass-panel">
+      <div class="card-icon orders">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+          <path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-760v200-200 640-640Z"/>
+        </svg>
+      </div>
+      <div class="card-content">
+        <span class="label">Active Repair Orders</span>
+        <h3 class="value">{{ stats()?.activeOrders }}</h3>
+        <span class="trend info">In Progress & Searching</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-container glass-panel" *ngIf="loading()">
+    <span class="spinner"></span>
+    <p>Retrieving platform telemetry...</p>
+  </div>
+
+  <div class="error-container glass-panel" *ngIf="errorMsg()">
+    <p>⚠️ {{ errorMsg() }}</p>
+    <button class="btn-secondary" (click)="fetchStats()">Retry Connection</button>
+  </div>
+
+  <!-- Quick Actions Grid -->
+  <div class="dashboard-sections" *ngIf="!loading() && !errorMsg()">
+    <div class="section-card glass-panel">
+      <h3>Administrative Quick Actions</h3>
+      <div class="actions-grid">
+        <button class="action-btn" routerLink="/admin/kyc-review">
+          <div class="icon-wrap kyc">🛡️</div>
+          <div class="action-info">
+            <h4>Verify KYC Credentials</h4>
+            <p>Review uploaded National IDs (Aadhaar/PAN) and confirm technician status.</p>
+          </div>
+        </button>
+        <button class="action-btn" routerLink="/admin/shop-review">
+          <div class="icon-wrap shop">🏬</div>
+          <div class="action-info">
+            <h4>Verify Workshop Photos</h4>
+            <p>Compare workshop photos coordinates vs shop registration coordinates.</p>
+          </div>
+        </button>
+        <button class="action-btn" routerLink="/admin/technicians">
+          <div class="icon-wrap tech">🔧</div>
+          <div class="action-info">
+            <h4>Manage Technicians</h4>
+            <p>View complete fleet status, ratings, and suspend or activate accounts.</p>
+          </div>
+        </button>
+        <button class="action-btn" routerLink="/admin/config">
+          <div class="icon-wrap config">⚙️</div>
+          <div class="action-info">
+            <h4>Configure Parameters</h4>
+            <p>Set search radius, timeslot reservation limits, and tracking frequencies.</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
