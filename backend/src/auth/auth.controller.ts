@@ -62,4 +62,10 @@ export class AuthController {
     const userId = req.user.id;
     return this.authService.updateProfile(userId, { name, phone });
   }
+
+  @Post('check-email')
+  async checkEmail(@Body('email') email: string) {
+    const exists = await this.authService.checkEmailExists(email);
+    return { exists };
+  }
 }

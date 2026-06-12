@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
@@ -25,10 +25,20 @@ export class AuthService {
   // ─── Unified Email OTP (Supabase) ─────────────────────────────────
 
   sendOtp(email: string, type?: 'login' | 'register'): Observable<{ message: string }> {
-    return from(this.supabase.auth.signInWithOtp({ email })).pipe(
-      map(({ data, error }) => {
-        if (error) throw error;
-        return { message: 'OTP sent to your email' };
+    return this.http.post<{exists: boolean}>(`${this.apiUrl}/check-email`, { email }).pipe(
+      switchMap(res => {
+        if (type === 'register' && res.exists) {
+          return throwError(() => new HttpErrorResponse({ error: { message: 'User already exists. Please login instead.' } }));
+        }
+        if (type === 'login' && !res.exists) {
+          return throwError(() => new HttpErrorResponse({ error: { message: 'User not found. Please register first.' } }));
+        }
+        return from(this.supabase.auth.signInWithOtp({ email })).pipe(
+          map(({ data, error }) => {
+            if (error) throw error;
+            return { message: 'OTP sent to your email' };
+          })
+        );
       })
     );
   }

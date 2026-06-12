@@ -198,7 +198,7 @@ export class Navbar implements OnInit, OnDestroy {
 
   isCustomer(): boolean {
     const role = this.getUserRole();
-    return role === 'customer' || role === null;
+    return role === 'customer' || role === 'authenticated' || role === null;
   }
 
   logout(): void {

@@ -104,4 +104,9 @@ export class AuthService {
       throw err;
     }
   }
+
+  async checkEmailExists(email: string): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    return !!user;
+  }
 }
