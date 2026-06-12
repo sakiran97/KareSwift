@@ -8,6 +8,9 @@ import { existsSync, mkdirSync } from 'fs';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Set global prefix for all routes so they match the /api/* proxy from the frontend
+  app.setGlobalPrefix('api');
+
   // Ensure uploads directory exists
   const uploadDir = join(__dirname, '..', 'uploads');
   if (!existsSync(uploadDir)) {
