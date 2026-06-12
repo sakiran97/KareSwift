@@ -11,8 +11,8 @@ services:
     env: node
     plan: free
     rootDir: backend
-    buildCommand: npm install && npx prisma generate && npx prisma db push --accept-data-loss && npm run build
-    startCommand: npm run start:prod
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma db push --accept-data-loss && npm run start:prod
     envVars:
       - key: DATABASE_URL
         sync: false # Set this in Render Dashboard from Supabase (Transaction pooler)
@@ -37,6 +37,9 @@ services:
     rootDir: mobile-service
     buildCommand: npm install && npm run build
     staticPublishPath: ./www
+    envVars:
+      - key: NODE_VERSION
+        value: "24.15.0"
     routes:
       # Proxy API requests to the backend (Replaces proxy.conf.json in production)
       - type: rewrite
@@ -58,6 +61,9 @@ services:
     rootDir: admin-dashboard
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist/admin-dashboard/browser
+    envVars:
+      - key: NODE_VERSION
+        value: "24.15.0"
     routes:
       # Proxy API requests to the backend
       - type: rewrite
