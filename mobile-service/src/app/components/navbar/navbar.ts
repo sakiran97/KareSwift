@@ -179,13 +179,8 @@ export class Navbar implements OnInit, OnDestroy {
   };
 
   getUserRole(): string | null {
-    const token = localStorage.getItem('jwt');
-    if (!token) return null;
-    try {
-      return JSON.parse(atob(token.split('.')[1])).role || null;
-    } catch {
-      return null;
-    }
+    const user = this.getCurrentUser();
+    return user?.role || null;
   }
 
   isTechnician(): boolean {
