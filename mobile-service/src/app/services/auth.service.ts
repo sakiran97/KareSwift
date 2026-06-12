@@ -86,8 +86,8 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register-technician`, { email, password, name });
   }
 
-  getProfile(): Observable<{ id: string; email?: string; phone?: string; name?: string; role: string; technicianId?: string; createdAt: string }> {
-    return this.http.get(`${this.apiUrl}/profile`);
+  getProfile(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/profile`);
   }
 
   updateProfile(data: { name?: string; phone?: string }): Observable<any> {
