@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Order, OrderStatus } from '../../generated/prisma';
+import { Order, OrderStatus } from '../generated/prisma';
 import { EventsService } from '../events/events.service';
 import { WarrantyService } from '../warranty/warranty.service';
 import { LoyaltyService } from '../loyalty/loyalty.service';

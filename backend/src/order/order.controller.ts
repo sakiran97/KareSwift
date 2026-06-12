@@ -3,7 +3,7 @@ import { OrderService } from './order.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
-import { Order } from '../../generated/prisma';
+import { Order } from '../generated/prisma';
 import { ConfigService } from '../config/config.service';
 
 @UseGuards(JwtAuthGuard)

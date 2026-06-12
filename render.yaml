@@ -36,7 +36,7 @@ services:
     env: static
     rootDir: mobile-service
     buildCommand: npm install && npm run build
-    staticPublishPath: ./www
+    staticPublishPath: ./dist/mobile-service/browser
     envVars:
       - key: NODE_VERSION
         value: "24.15.0"
