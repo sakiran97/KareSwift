@@ -26,33 +26,17 @@ export class Login {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      otp: ['']
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onRequestOtp(): void {
-    const emailControl = this.loginForm.get('email');
-    if (emailControl?.invalid) {
-      emailControl.markAsTouched();
-      return;
-    }
-
+  signInWithGoogle(): void {
     this.isLoading = true;
     this.errorMessage = null;
-    const email = emailControl?.value;
-
-    this.authService.sendOtp(email, 'login').subscribe({
-      next: () => {
+    this.authService.signInWithGoogle().subscribe({
+      error: (err: any) => {
         this.isLoading = false;
-        this.otpRequested = true;
-        const otpControl = this.loginForm.get('otp');
-        otpControl?.setValidators([Validators.required, Validators.pattern('^[0-9]{6}$')]);
-        otpControl?.updateValueAndValidity();
-        this.cdr.detectChanges();
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Failed to send OTP. Please try again.';
+        this.errorMessage = err.message || 'Google Sign-in failed. Please try again.';
         this.cdr.detectChanges();
       }
     });
@@ -66,9 +50,9 @@ export class Login {
 
     this.isLoading = true;
     this.errorMessage = null;
-    const { email, otp } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-    this.authService.verifyOtp(email, otp).subscribe({
+    this.authService.signInWithPassword(email, password).subscribe({
       next: (res: LoginResponse) => {
         this.isLoading = false;
         if (res.user.role === 'admin') {
@@ -81,7 +65,7 @@ export class Login {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Invalid or expired OTP. Please try again.';
+        this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
         this.cdr.detectChanges();
       }
     });

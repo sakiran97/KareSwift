@@ -19,44 +19,130 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-    // Supabase auto-persists sessions in localStorage.
+    this.listenToAuthChanges();
   }
 
-  // ─── Unified Email OTP (Supabase) ─────────────────────────────────
+  private listenToAuthChanges(): void {
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        const token = session.access_token;
+        const user = session.user;
+        const currentToken = localStorage.getItem('jwt');
+        if (currentToken !== token) {
+          localStorage.setItem('jwt', token);
+          this.http.get<any>(`${this.apiUrl}/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }).subscribe({
+            next: (profile: any) => {
+              const loginRes: LoginResponse = {
+                access_token: token,
+                user: {
+                  id: profile.id,
+                  email: profile.email,
+                  phone: profile.phone,
+                  name: profile.name,
+                  role: profile.role,
+                  technicianId: profile.technicianId
+                }
+              };
+              this.persistLogin(loginRes);
+            },
+            error: () => {
+              const fallbackRes: LoginResponse = {
+                access_token: token,
+                user: {
+                  id: user.id,
+                  email: user.email,
+                  role: 'customer'
+                }
+              };
+              this.persistLogin(fallbackRes);
+            }
+          });
+        }
+      }
+    });
+  }
 
-  sendOtp(email: string, type?: 'login' | 'register'): Observable<{ message: string }> {
-    return this.http.post<{exists: boolean}>(`${this.apiUrl}/check-email`, { email }).pipe(
-      switchMap(res => {
-        if (type === 'register' && res.exists) {
+  // ─── Password & Google Auth (Supabase) ─────────────────────────────
+
+  checkEmail(email: string): Observable<{ exists: boolean }> {
+    return this.http.post<{exists: boolean}>(`${this.apiUrl}/check-email`, { email });
+  }
+
+  signUpWithPassword(email: string, password: string, name: string, phone?: string): Observable<LoginResponse> {
+    return this.checkEmail(email).pipe(
+      switchMap((res: { exists: boolean }) => {
+        if (res.exists) {
           return throwError(() => new HttpErrorResponse({ error: { message: 'User already exists. Please login instead.' } }));
         }
-        if (type === 'login' && !res.exists) {
-          return throwError(() => new HttpErrorResponse({ error: { message: 'User not found. Please register first.' } }));
-        }
-        return from(this.supabase.auth.signInWithOtp({ email })).pipe(
-          map(({ data, error }) => {
+        return from(this.supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: name,
+              phone: phone || ''
+            }
+          }
+        })).pipe(
+          switchMap(({ data, error }) => {
             if (error) throw error;
-            return { message: 'OTP sent to your email' };
+            const session = data.session;
+            const user = data.user;
+            const token = session?.access_token;
+
+            if (token) {
+              return this.http.get<any>(`${this.apiUrl}/profile`, {
+                headers: { Authorization: `Bearer ${token}` }
+              }).pipe(
+                map((profile: any) => {
+                  const loginRes: LoginResponse = {
+                    access_token: token,
+                    user: {
+                      id: profile.id,
+                      email: profile.email,
+                      phone: profile.phone,
+                      name: profile.name,
+                      role: profile.role,
+                      technicianId: profile.technicianId
+                    }
+                  };
+                  this.persistLogin(loginRes);
+                  return loginRes;
+                }),
+                catchError(() => {
+                  const fallbackRes: LoginResponse = {
+                    access_token: token,
+                    user: {
+                      id: user?.id || '',
+                      email: user?.email || email,
+                      role: 'customer'
+                    }
+                  };
+                  this.persistLogin(fallbackRes);
+                  return from([fallbackRes]);
+                })
+              );
+            } else {
+              return throwError(() => new HttpErrorResponse({ error: { message: 'Signup successful! Please check your email for confirmation link.' } }));
+            }
           })
         );
       })
     );
   }
 
-  verifyOtp(email: string, otp: string, extras?: any): Observable<LoginResponse> {
-    return from(this.supabase.auth.verifyOtp({ email, token: otp, type: 'email' })).pipe(
+  signInWithPassword(email: string, password: string): Observable<LoginResponse> {
+    return from(this.supabase.auth.signInWithPassword({ email, password })).pipe(
       switchMap(({ data, error }) => {
         if (error) throw error;
         const session = data.session;
         if (!session) throw new Error('No session returned');
 
-        // Since Supabase manages the JWT, we use it directly.
         const token = session.access_token;
         const user = session.user;
 
-        // If this is a registration and we have extras, we should ideally update the profile
-        // but for now, we'll just fetch the synced profile from our backend.
-        
         return this.http.get<any>(`${this.apiUrl}/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         }).pipe(
@@ -75,12 +161,11 @@ export class AuthService {
             this.persistLogin(loginRes);
             return loginRes;
           }),
-          catchError((err: any) => {
-            // If the backend profile isn't synced yet (trigger delay), fallback to Supabase user
+          catchError(() => {
             const fallbackRes: LoginResponse = {
               access_token: token,
               user: {
-                id: user.id, // Supabase UUID
+                id: user.id,
                 email: user.email,
                 role: 'customer'
               }
@@ -91,6 +176,15 @@ export class AuthService {
         );
       })
     );
+  }
+
+  signInWithGoogle(): Observable<any> {
+    return from(this.supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/auth/login'
+      }
+    }));
   }
 
   // ─── Helpers ──────────────────────────────────────────────────────

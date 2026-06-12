@@ -12,6 +12,8 @@ const PUBLIC_AUTH_PATHS = [
   '/auth/register-technician',
   '/technician/kyc/send-aadhaar-otp',
   '/technician/kyc/verify-aadhaar-otp',
+  '/technician/kyc/upload-file',
+  '/auth/check-email',
 ];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

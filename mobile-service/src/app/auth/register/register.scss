@@ -502,3 +502,60 @@ textarea {
   }
 }
 
+.social-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem 0;
+  color: rgba($color-on-background, 0.4);
+  font-size: 0.85rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  span {
+    padding: 0 0.75rem;
+  }
+}
+
+.btn-google {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  color: $color-on-background;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  @include transition((background, border-color, transform));
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .google-icon {
+    flex-shrink: 0;
+  }
+}
+

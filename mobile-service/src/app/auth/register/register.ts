@@ -49,7 +49,7 @@ export class Register {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.pattern('^[0-9]{10}$')]],
       technicianId: [''],
-      password: [''],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       otp: [''],
       
       // KYC Docs Step
@@ -108,11 +108,9 @@ export class Register {
 
     if (this.isTechnician) {
       techIdControl?.setValidators([Validators.required]);
-      pwdControl?.setValidators([Validators.required, Validators.minLength(6)]);
       // KYC validators set on nextStep, leave them for now
     } else {
       techIdControl?.clearValidators();
-      pwdControl?.clearValidators();
       govtIdCtrl?.clearValidators();
       frontCtrl?.clearValidators();
       shopNameCtrl?.clearValidators();
@@ -269,13 +267,13 @@ export class Register {
       name?.markAsTouched();
       email?.markAsTouched();
       phone?.markAsTouched();
+      pwd?.markAsTouched();
       if (this.isTechnician) {
         techId?.markAsTouched();
-        pwd?.markAsTouched();
       }
 
-      if (name?.invalid || email?.invalid || phone?.invalid) return;
-      if (this.isTechnician && (techId?.invalid || pwd?.invalid)) return;
+      if (name?.invalid || email?.invalid || phone?.invalid || pwd?.invalid) return;
+      if (this.isTechnician && techId?.invalid) return;
 
       if (this.isTechnician) {
         // Enforce validators for Step 2
@@ -285,7 +283,7 @@ export class Register {
         this.registerForm.get('govtIdFrontUrl')?.updateValueAndValidity();
         this.currentStep = 2;
       } else {
-        this.onRequestOtp();
+        this.onSubmit();
       }
     } else if (this.currentStep === 2) {
       const type = this.registerForm.get('govtIdType')?.value;
@@ -322,16 +320,13 @@ export class Register {
 
       if (nameCtrl?.invalid || addrCtrl?.invalid) return;
 
-      this.onRequestOtp();
+      this.onSubmit();
     }
   }
 
   prevStep(): void {
     this.errorMessage = null;
-    if (this.currentStep === 4) {
-      this.currentStep = this.isTechnician ? 3 : 1;
-      this.otpRequested = false;
-    } else if (this.currentStep === 3) {
+    if (this.currentStep === 3) {
       this.currentStep = 2;
     } else if (this.currentStep === 2) {
       this.currentStep = 1;
@@ -356,24 +351,13 @@ export class Register {
     }
   }
 
-  onRequestOtp(): void {
+  signUpWithGoogle(): void {
     this.isLoading = true;
     this.errorMessage = null;
-    const email = this.registerForm.get('email')?.value;
-
-    this.authService.sendOtp(email, 'register').subscribe({
-      next: () => {
+    this.authService.signInWithGoogle().subscribe({
+      error: (err: any) => {
         this.isLoading = false;
-        this.otpRequested = true;
-        const otpControl = this.registerForm.get('otp');
-        otpControl?.setValidators([Validators.required, Validators.pattern('^[0-9]{6}$')]);
-        otpControl?.updateValueAndValidity();
-        this.currentStep = 4;
-        this.cdr.detectChanges();
-      },
-      error: (err: HttpErrorResponse) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Failed to send OTP. Please try again.';
+        this.errorMessage = err.message || 'Google Sign-in failed. Please try again.';
         this.cdr.detectChanges();
       }
     });
@@ -387,17 +371,9 @@ export class Register {
 
     this.isLoading = true;
     this.errorMessage = null;
-    const { name, email, phone, otp, technicianId, password } = this.registerForm.value;
+    const { name, email, phone, technicianId, password } = this.registerForm.value;
 
-    const extras: any = { name };
-    if (phone) extras.phone = phone;
-    if (this.isTechnician) {
-      extras.role = 'technician';
-      extras.technicianId = technicianId?.trim();
-      extras.password = password;
-    }
-
-    this.authService.verifyOtp(email, otp, extras).subscribe({
+    this.authService.signUpWithPassword(email, password, name, phone).subscribe({
       next: (res: LoginResponse) => {
         if (res.user.role === 'technician') {
           // Upload documents
@@ -443,7 +419,7 @@ export class Register {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Verification failed. Please try again.';
+        this.errorMessage = err.error?.message || err.message || 'Registration failed. Please try again.';
         this.cdr.detectChanges();
       }
     });
