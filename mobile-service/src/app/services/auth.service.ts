@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, from, throwError } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
 
 export interface LoginResponse {
   access_token: string;
@@ -13,10 +15,75 @@ export interface LoginResponse {
 })
 export class AuthService {
   private readonly apiUrl = '/api/auth';
+  private supabase: SupabaseClient;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    // Supabase auto-persists sessions in localStorage.
+  }
 
-  // ─── Persist helpers ──────────────────────────────────────────────
+  // ─── Unified Email OTP (Supabase) ─────────────────────────────────
+
+  sendOtp(email: string, type?: 'login' | 'register'): Observable<{ message: string }> {
+    return from(this.supabase.auth.signInWithOtp({ email })).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return { message: 'OTP sent to your email' };
+      })
+    );
+  }
+
+  verifyOtp(email: string, otp: string, extras?: any): Observable<LoginResponse> {
+    return from(this.supabase.auth.verifyOtp({ email, token: otp, type: 'email' })).pipe(
+      switchMap(({ data, error }) => {
+        if (error) throw error;
+        const session = data.session;
+        if (!session) throw new Error('No session returned');
+
+        // Since Supabase manages the JWT, we use it directly.
+        const token = session.access_token;
+        const user = session.user;
+
+        // If this is a registration and we have extras, we should ideally update the profile
+        // but for now, we'll just fetch the synced profile from our backend.
+        
+        return this.http.get<any>(`${this.apiUrl}/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).pipe(
+          map(profile => {
+            const loginRes: LoginResponse = {
+              access_token: token,
+              user: {
+                id: profile.id,
+                email: profile.email,
+                phone: profile.phone,
+                name: profile.name,
+                role: profile.role,
+                technicianId: profile.technicianId
+              }
+            };
+            this.persistLogin(loginRes);
+            return loginRes;
+          }),
+          catchError(err => {
+            // If the backend profile isn't synced yet (trigger delay), fallback to Supabase user
+            const fallbackRes: LoginResponse = {
+              access_token: token,
+              user: {
+                id: user.id, // Supabase UUID
+                email: user.email,
+                role: 'customer'
+              }
+            };
+            this.persistLogin(fallbackRes);
+            return from([fallbackRes]);
+          })
+        );
+      })
+    );
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────
 
   private persistLogin(res: LoginResponse): LoginResponse {
     localStorage.setItem('jwt', res.access_token);
@@ -29,14 +96,6 @@ export class AuthService {
     if (raw) {
       try { return JSON.parse(raw); } catch {}
     }
-    // Fallback: decode JWT
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return { id: payload.sub, email: payload.email, name: payload.name, phone: payload.phone, role: payload.role || 'customer', technicianId: payload.technicianId };
-      } catch {}
-    }
     return null;
   }
 
@@ -44,46 +103,14 @@ export class AuthService {
     return localStorage.getItem('jwt') !== null;
   }
 
-  // ─── Unified Email OTP ────────────────────────────────────────────
-
-  sendOtp(email: string, type?: 'login' | 'register'): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/send-otp`, { email, type });
+  getToken(): string | null {
+    return localStorage.getItem('jwt');
   }
 
-  verifyOtp(email: string, otp: string, extras?: { name?: string; phone?: string; role?: string; technicianId?: string; password?: string }): Observable<LoginResponse> {
-    const body: any = { email, otp };
-    if (extras?.name) body.name = extras.name;
-    if (extras?.phone) body.phone = extras.phone;
-    if (extras?.role) body.role = extras.role;
-    if (extras?.technicianId) body.technicianId = extras.technicianId;
-    if (extras?.password) body.password = extras.password;
-    return this.http.post<LoginResponse>(`${this.apiUrl}/verify-otp`, body).pipe(
-      map((res: LoginResponse) => this.persistLogin(res))
-    );
-  }
-
-  // ─── Technician Password Login ────────────────────────────────────
-
-  login(technicianId: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { technicianId, password }).pipe(
-      map((res: LoginResponse) => this.persistLogin(res))
-    );
-  }
-
-  // ─── Legacy: Phone OTP ────────────────────────────────────────────
-
-  requestOtp(phone: string): Observable<{ otpCode: string; message: string }> {
-    return this.http.post<{ otpCode: string; message: string }>(`${this.apiUrl}/request-otp`, { phone });
-  }
-
-  verifyPhoneOtp(phone: string, otp: string, name?: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/verify-phone-otp`, { phone, otp, name }).pipe(
-      map((res: LoginResponse) => this.persistLogin(res))
-    );
-  }
-
-  registerTechnician(email: string, password: string, name: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register-technician`, { email, password, name });
+  logout(): void {
+    this.supabase.auth.signOut();
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
   }
 
   getProfile(): Observable<any> {
@@ -93,22 +120,4 @@ export class AuthService {
   updateProfile(data: { name?: string; phone?: string }): Observable<any> {
     return this.http.patch(`${this.apiUrl}/profile`, data);
   }
-
-  logout(): void {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('user');
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('jwt');
-  }
-
-  forgotPassword(payload: { email?: string; technicianId?: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/forgot-password`, payload);
-  }
-
-  resetPassword(payload: { email?: string; technicianId?: string; otp: string; newPassword?: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/reset-password`, payload);
-  }
 }
-

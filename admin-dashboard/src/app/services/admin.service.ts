@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, from } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export interface AdminUser {
   id: string;
@@ -15,14 +16,19 @@ export interface LoginResponse {
   user: AdminUser;
 }
 
+const SUPABASE_URL = 'https://apqtqdnjgrusomauvuqc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwcXRxZG5qZ3J1c29tYXV2dXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDgxODcsImV4cCI6MjA5NjgyNDE4N30.oQV2Af4esBBR--SO1eEWYbZD5-vIlbblHRhbiqa5aKw';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
   private userSubject = new BehaviorSubject<AdminUser | null>(null);
   public currentUser$ = this.userSubject.asObservable();
+  private supabase: SupabaseClient;
 
   constructor(private http: HttpClient) {
+    this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     this.loadPersistedUser();
   }
 
@@ -37,26 +43,54 @@ export class AdminService {
     }
   }
 
-  // Auth Operations
+  // Auth Operations (Supabase)
   sendOtp(email: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>('/api/auth/send-otp', { email });
+    return from(this.supabase.auth.signInWithOtp({ email })).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return { message: 'OTP sent successfully' };
+      })
+    );
   }
 
   verifyOtp(email: string, otp: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/auth/verify-otp', { email, otp }).pipe(
-      map(res => {
-        if (res.user.role !== 'admin') {
-          throw new Error('Access denied: User is not an admin');
-        }
-        localStorage.setItem('jwt', res.access_token);
-        localStorage.setItem('admin_user', JSON.stringify(res.user));
-        this.userSubject.next(res.user);
-        return res;
+    return from(this.supabase.auth.verifyOtp({ email, token: otp, type: 'email' })).pipe(
+      switchMap(({ data, error }) => {
+        if (error) throw error;
+        const session = data.session;
+        if (!session) throw new Error('No session returned');
+
+        const token = session.access_token;
+
+        // Fetch user from our backend to verify admin role
+        return this.http.get<any>('/api/auth/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        }).pipe(
+          map(profile => {
+            if (profile.role !== 'admin') {
+              throw new Error('Access denied: User is not an admin');
+            }
+            const res: LoginResponse = {
+              access_token: token,
+              user: {
+                id: profile.id,
+                email: profile.email,
+                name: profile.name || 'Admin',
+                role: profile.role
+              }
+            };
+            localStorage.setItem('jwt', res.access_token);
+            localStorage.setItem('admin_user', JSON.stringify(res.user));
+            this.userSubject.next(res.user);
+            return res;
+          })
+        );
       })
     );
   }
 
   logout() {
+    this.supabase.auth.signOut();
     localStorage.removeItem('jwt');
     localStorage.removeItem('admin_user');
     this.userSubject.next(null);

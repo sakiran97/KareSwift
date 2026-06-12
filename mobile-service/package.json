@@ -30,6 +30,7 @@
     "@ngrx/router-store": "^21.1.0",
     "@ngrx/store": "^21.1.0",
     "@ngrx/store-devtools": "^21.1.0",
+    "@supabase/supabase-js": "^2.108.1",
     "jeep-sqlite": "^2.8.0",
     "ngx-toastr": "^20.0.5",
     "rxjs": "~7.8.0",

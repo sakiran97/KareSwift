@@ -9,24 +9,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'defaultSecret',
+      secretOrKey: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-token-with-at-least-32-characters-long',
     });
   }
 
   async validate(payload: any) {
-    // payload contains sub (user id), phone, and role
+    // Supabase JWT payload contains email
     try {
-      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
+      const user = await this.prisma.user.findUnique({ where: { email: payload.email } });
       if (user) {
         const { passwordHash, ...result } = user;
         return result; // attaches to request.user
       }
     } catch (err: any) {
-      // Database offline — fall back to decoded token payload
       console.warn('JWT validation: DB offline, using token payload as user context.');
     }
     // Return payload data if DB lookup fails or user not found in DB
-    return { id: payload.sub, phone: payload.phone, role: payload.role || 'customer' };
+    return { id: payload.sub, email: payload.email, role: payload.role || 'customer' };
   }
 }
 
