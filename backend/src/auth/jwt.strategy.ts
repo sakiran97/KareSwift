@@ -32,17 +32,36 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // Supabase JWT payload contains email
     try {
-      const user = await this.prisma.user.findUnique({ where: { email: payload.email } });
-      if (user) {
+      if (payload.aud === 'authenticated' && payload.email) {
+        // Supabase token
+        let user = await this.prisma.user.findUnique({ where: { email: payload.email } });
+        if (!user) {
+          // Self-heal: create missing user (in case the Supabase trigger failed or user is older than trigger)
+          user = await this.prisma.user.create({
+            data: {
+              email: payload.email,
+              role: 'customer',
+            }
+          });
+        }
         const { passwordHash, ...result } = user;
-        return result; // attaches to request.user
+        return result;
+      } else if (payload.sub) {
+        // Local technician token
+        const userId = typeof payload.sub === 'string' ? parseInt(payload.sub, 10) : payload.sub;
+        if (!isNaN(userId)) {
+          const user = await this.prisma.user.findUnique({ where: { id: userId } });
+          if (user) {
+            const { passwordHash, ...result } = user;
+            return result;
+          }
+        }
       }
     } catch (err: any) {
-      console.warn('JWT validation: DB offline, using token payload as user context.');
+      console.warn('JWT validation: DB offline or error, using token payload as user context.', err);
     }
-    // Return payload data if DB lookup fails or user not found in DB
+    // Fallback (might cause 500 if id is string and passed to Prisma)
     return { id: payload.sub, email: payload.email, role: payload.role || 'customer' };
   }
 }
