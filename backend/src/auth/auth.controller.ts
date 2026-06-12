@@ -19,6 +19,32 @@ export class AuthController {
     return this.authService.adminCreateTechnician(email, password, name);
   }
 
+  @Post('login')
+  async login(
+    @Body('technicianId') technicianId: string,
+    @Body('password') password: string,
+  ) {
+    return this.authService.technicianPasswordLogin(technicianId, password);
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(
+    @Body('email') email?: string,
+    @Body('technicianId') technicianId?: string,
+  ) {
+    return this.authService.forgotPassword({ email, technicianId });
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Body('otp') otp: string,
+    @Body('newPassword') newPassword: string,
+    @Body('email') email?: string,
+    @Body('technicianId') technicianId?: string,
+  ) {
+    return this.authService.resetPassword({ email, technicianId, otp, newPassword });
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Req() req: any) {
