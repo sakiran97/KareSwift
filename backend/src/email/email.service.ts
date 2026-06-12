@@ -13,6 +13,9 @@ export class EmailService {
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: { user, pass },
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 5000,
       });
     } else {
       console.warn('[EmailService] GMAIL_USER / GMAIL_PASS not set. Emails will be logged to console only.');
