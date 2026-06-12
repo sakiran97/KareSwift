@@ -2,6 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../prisma.service';
+import { passportJwtSecret } from 'jwks-rsa';
+import * as jwt from 'jsonwebtoken';
+
+const jwksProvider = passportJwtSecret({
+  cache: true,
+  rateLimit: true,
+  jwksRequestsPerMinute: 5,
+  jwksUri: 'https://apqtqdnjgrusomauvuqc.supabase.co/auth/v1/.well-known/jwks.json',
+});
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -9,7 +18,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-token-with-at-least-32-characters-long',
+      secretOrKeyProvider: (request, rawJwtToken, done) => {
+        const decoded = jwt.decode(rawJwtToken, { complete: true });
+        if (decoded && typeof decoded === 'object' && decoded.header && decoded.header.kid) {
+          // Token has a kid (Key ID), meaning it's an asymmetric RS256 token from Supabase
+          jwksProvider(request, rawJwtToken, done);
+        } else {
+          // Token is a local symmetric token (technician login via JWT_SECRET)
+          done(null, process.env.JWT_SECRET || 'super-secret-jwt-token-with-at-least-32-characters-long');
+        }
+      },
     });
   }
 
