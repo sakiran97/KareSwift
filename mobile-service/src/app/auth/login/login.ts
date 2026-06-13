@@ -17,6 +17,7 @@ export class Login {
   errorMessage: string | null = null;
   isLoading = false;
   otpRequested = false;
+  isRedirecting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +29,14 @@ export class Login {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    if (typeof window !== 'undefined' && (window.location.hash.includes('access_token') || window.location.search.includes('code='))) {
+      this.isRedirecting = true;
+      setTimeout(() => {
+        this.isRedirecting = false;
+        this.cdr.detectChanges();
+      }, 5000);
+    }
 
     effect(() => {
       if (this.authService.isLoggedIn()) {

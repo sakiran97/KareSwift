@@ -1,79 +1,86 @@
 <div class="login-container">
   <div class="login-card">
-    <div class="login-header">
-      <div class="logo-badge">
-        <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28" fill="currentColor">
-          <path d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v720q0 33-23.5 56.5T680-40H280Zm0-120v40h400v-40H280Zm0-80h400v-480H280v480Zm0-560h400v-40H280v40Zm200 680q17 0 28.5-11.5T520-120q0-17-11.5-28.5T480-160q-17 0-28.5 11.5T440-120q0 17 11.5 28.5T480-80ZM280-160v40-40Z"/>
-        </svg>
-      </div>
-      <h2>Welcome Back</h2>
-      <p class="subtitle">Sign in to manage your repair orders</p>
-    </div>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div *ngIf="errorMessage" class="error-banner">{{ errorMessage }}</div>
-
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <div class="input-wrapper">
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            placeholder="you@gmail.com"
-            [class.invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
-          />
-          <span class="focus-border"></span>
+    <ng-container *ngIf="!isRedirecting">
+      <div class="login-header">
+        <div class="logo-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" height="28" viewBox="0 -960 960 960" width="28" fill="currentColor">
+            <path d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v720q0 33-23.5 56.5T680-40H280Zm0-120v40h400v-40H280Zm0-80h400v-480H280v480Zm0-560h400v-40H280v40Zm200 680q17 0 28.5-11.5T520-120q0-17-11.5-28.5T480-160q-17 0-28.5 11.5T440-120q0 17 11.5 28.5T480-80ZM280-160v40-40Z"/>
+          </svg>
         </div>
-        <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="validation-error">
-          Please enter a valid email address.
-        </div>
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Sign in to manage your repair orders</p>
       </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-wrapper">
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            placeholder="••••••••"
-            [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
-          />
-          <span class="focus-border"></span>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div *ngIf="errorMessage" class="error-banner">{{ errorMessage }}</div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="you@gmail.com"
+              [class.invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="validation-error">
+            Please enter a valid email address.
+          </div>
         </div>
-        <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="validation-error">
-          Password must be at least 6 characters.
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="••••••••"
+              [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="validation-error">
+            Password must be at least 6 characters.
+          </div>
         </div>
+
+        <button 
+          type="submit" 
+          [disabled]="loginForm.invalid || isLoading" 
+          class="btn-submit"
+        >
+          <span *ngIf="!isLoading">Sign In</span>
+          <div *ngIf="isLoading" class="spinner"></div>
+        </button>
+
+        <div class="social-separator">
+          <span>or sign in with</span>
+        </div>
+
+        <button type="button" class="btn-google" (click)="signInWithGoogle()" [disabled]="isLoading">
+          <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          Sign in with Google
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Don't have an account? <a routerLink="/auth/register">Sign up here</a></p>
+        <p class="technician-link"><a routerLink="/technician/login">Technician? Sign in with Tech ID</a></p>
       </div>
+    </ng-container>
 
-      <button 
-        type="submit" 
-        [disabled]="loginForm.invalid || isLoading" 
-        class="btn-submit"
-      >
-        <span *ngIf="!isLoading">Sign In</span>
-        <div *ngIf="isLoading" class="spinner"></div>
-      </button>
-
-      <div class="social-separator">
-        <span>or sign in with</span>
-      </div>
-
-      <button type="button" class="btn-google" (click)="signInWithGoogle()" [disabled]="isLoading">
-        <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
-        </svg>
-        Sign in with Google
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <p>Don't have an account? <a routerLink="/auth/register">Sign up here</a></p>
-      <p class="technician-link"><a routerLink="/technician/login">Technician? Sign in with Tech ID</a></p>
+    <div *ngIf="isRedirecting" class="loading-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; text-align: center;">
+      <div class="spinner" style="width: 32px; height: 32px; border-width: 3px; border-top-color: var(--color-primary);"></div>
+      <p style="margin-top: 1.5rem; color: var(--color-text-muted); font-size: 0.95rem; font-weight: 500;">Completing sign in...</p>
     </div>
   </div>
 </div>
