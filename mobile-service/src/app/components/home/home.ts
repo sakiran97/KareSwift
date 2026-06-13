@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 interface PublicReview {
   id: number;
@@ -21,8 +22,9 @@ interface PublicReview {
   styleUrl: './home.scss'
 })
 export class HomeComponent implements OnInit {
+  private authService = inject(AuthService);
   reviews = signal<PublicReview[]>([]);
-  isLoggedIn = signal(false);
+  isLoggedIn = this.authService.isLoggedIn;
 
   servicesList = [
     { name: 'Screen Replacement', icon: '📱', desc: 'Cracked, bleeding, or unresponsive touch screens fixed in under 45 minutes.' },
@@ -42,12 +44,7 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
-    this.checkLoginStatus();
     this.fetchPublicReviews();
-  }
-
-  checkLoginStatus() {
-    this.isLoggedIn.set(localStorage.getItem('jwt') !== null);
   }
 
   fetchPublicReviews() {

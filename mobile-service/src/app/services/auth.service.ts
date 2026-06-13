@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, switchMap, catchError } from 'rxjs/operators';
@@ -16,6 +16,8 @@ export interface LoginResponse {
 export class AuthService {
   private readonly apiUrl = '/api/auth';
   private supabase: SupabaseClient;
+  
+  isLoggedIn = signal<boolean>(localStorage.getItem('jwt') !== null);
 
   constructor(private http: HttpClient) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
@@ -192,6 +194,7 @@ export class AuthService {
   private persistLogin(res: LoginResponse): LoginResponse {
     localStorage.setItem('jwt', res.access_token);
     localStorage.setItem('user', JSON.stringify(res.user));
+    this.isLoggedIn.set(true);
     return res;
   }
 
@@ -203,10 +206,6 @@ export class AuthService {
     return null;
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('jwt') !== null;
-  }
-
   getToken(): string | null {
     return localStorage.getItem('jwt');
   }
@@ -215,6 +214,7 @@ export class AuthService {
     this.supabase.auth.signOut();
     localStorage.removeItem('jwt');
     localStorage.removeItem('user');
+    this.isLoggedIn.set(false);
   }
 
   getProfile(): Observable<any> {

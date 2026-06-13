@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { SseService, SseEvent } from '../../services/sse.service';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,6 +25,9 @@ export class Navbar implements OnInit, OnDestroy {
 
   private sseSub?: Subscription;
 
+  private authService = inject(AuthService);
+  isLoggedIn = this.authService.isLoggedIn;
+
   constructor(
     private sse: SseService,
     private http: HttpClient,
@@ -33,24 +37,24 @@ export class Navbar implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    window.addEventListener('scroll', this.onScroll, { passive: true });
     if (this.isLoggedIn()) {
       this.loadNotifications();
-    }
-    window.addEventListener('scroll', this.onScroll, { passive: true });
-    this.sseSub = this.sse.connect().subscribe({
-      next: (event: SseEvent) => {
-        if (event.type === 'notification') {
-          const currentUser = this.getCurrentUser();
-          if (currentUser && event.data.userId === currentUser.id) {
-            if (!this.notifications.some(n => n.id === event.data.id)) {
-              this.notifications.unshift(event.data);
-              this.unreadNotificationsCount++;
-              this.cdr.detectChanges();
+      this.sseSub = this.sse.connect().subscribe({
+        next: (event: SseEvent) => {
+          if (event.type === 'notification') {
+            const currentUser = this.getCurrentUser();
+            if (currentUser && event.data.userId === currentUser.id) {
+              if (!this.notifications.some(n => n.id === event.data.id)) {
+                this.notifications.unshift(event.data);
+                this.unreadNotificationsCount++;
+                this.cdr.detectChanges();
+              }
             }
           }
-        }
-      },
-    });
+        },
+      });
+    }
   }
 
   getCurrentUser(): any {
@@ -129,10 +133,6 @@ export class Navbar implements OnInit, OnDestroy {
     this.isMenuOpen = false;
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('jwt') !== null;
-  }
-
   private onScroll = () => {
     this.isScrolled = window.scrollY > 20;
     this.cdr.detectChanges();
@@ -153,8 +153,7 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('user');
+    this.authService.logout();
     localStorage.removeItem('activeOrderId');
     localStorage.removeItem('selectedDeviceCategory');
     this.closeMenu();

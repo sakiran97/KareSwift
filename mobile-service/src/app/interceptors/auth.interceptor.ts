@@ -2,6 +2,7 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
 const PUBLIC_AUTH_PATHS = [
   '/auth/send-otp',
@@ -18,6 +19,8 @@ const PUBLIC_AUTH_PATHS = [
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('jwt');
+  const router = inject(Router);
+  const authService = inject(AuthService);
 
   // Don't attach token to public auth endpoints (login, register, OTP)
   const isPublicAuth = PUBLIC_AUTH_PATHS.some(p => req.url.includes(p));
@@ -35,9 +38,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       tap({
         error: (err: HttpErrorResponse) => {
           if (err.status === 401) {
-            localStorage.removeItem('jwt');
-            localStorage.removeItem('user');
-            inject(Router).navigate(['/auth/login']);
+            authService.logout();
+            router.navigate(['/auth/login']);
           }
         }
       })

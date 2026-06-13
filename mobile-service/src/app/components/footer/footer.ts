@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ScrollAnimateDirective } from '../../directives/scroll-animate.directive';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-footer',
@@ -11,7 +12,6 @@ import { ScrollAnimateDirective } from '../../directives/scroll-animate.directiv
   styleUrl: './footer.scss'
 })
 export class Footer {
-  isLoggedIn(): boolean {
-    return localStorage.getItem('jwt') !== null;
-  }
+  private authService = inject(AuthService);
+  isLoggedIn = this.authService.isLoggedIn;
 }

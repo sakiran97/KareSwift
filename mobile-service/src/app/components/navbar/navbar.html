@@ -9,23 +9,29 @@
     </a>
 
     <!-- Desktop Navigation -->
-    <nav class="desktop-nav" *ngIf="isLoggedIn()">
-      <!-- Customer Links -->
-      <ng-container *ngIf="isCustomer()">
+    <nav class="desktop-nav">
+      <!-- Customer Links (Logged In) -->
+      <ng-container *ngIf="isLoggedIn() && isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Dashboard</a>
         <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
         <a routerLink="/order/warranty" routerLinkActive="active" class="nav-link">Warranties</a>
+      </ng-container>
+
+      <!-- Common Links (Logged In or Logged Out) -->
+      <ng-container *ngIf="!isLoggedIn() || isCustomer()">
         <a routerLink="/about" routerLinkActive="active" class="nav-link">About Us</a>
         <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact Us</a>
         <a routerLink="/help" routerLinkActive="active" class="nav-link">Help & Queries</a>
       </ng-container>
+
       <!-- Admin Links -->
-      <ng-container *ngIf="isAdmin()">
+      <ng-container *ngIf="isLoggedIn() && isAdmin()">
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
         <a routerLink="/admin/orders" routerLinkActive="active" class="nav-link">Orders</a>
         <a routerLink="/admin/config" routerLinkActive="active" class="nav-link">Configuration</a>
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Customer View</a>
       </ng-container>
+
       <div class="nav-actions">
         <!-- Theme Toggle Button -->
         <button class="bell-btn theme-toggle-btn" (click)="themeService.toggle()" title="Toggle Theme">
@@ -39,19 +45,20 @@
           </svg>
         </button>
 
-        <!-- Notification Center Bell (All Users) -->
-        <button class="bell-btn notification-center-bell" (click)="toggleNotifications()" title="Notifications">
+        <!-- Notification Center Bell (Logged In Only) -->
+        <button class="bell-btn notification-center-bell" *ngIf="isLoggedIn()" (click)="toggleNotifications()" title="Notifications">
           <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22" fill="currentColor">
             <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
           </svg>
           <span class="bell-badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
         </button>
       </div>
-      <button (click)="logout()" routerLink="/auth/login" class="btn-logout">Logout</button>
+      <button *ngIf="isLoggedIn()" (click)="logout()" routerLink="/auth/login" class="btn-logout">Logout</button>
+      <a *ngIf="!isLoggedIn()" routerLink="/auth/login" class="btn-login">Login</a>
     </nav>
  
     <!-- Hamburger Toggle -->
-    <button class="hamburger-btn" *ngIf="isLoggedIn()" (click)="toggleMenu()" [class.open]="isMenuOpen" aria-label="Toggle Menu">
+    <button class="hamburger-btn" (click)="toggleMenu()" [class.open]="isMenuOpen" aria-label="Toggle Menu">
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
@@ -59,32 +66,41 @@
   </div>
  
   <!-- Mobile Drawer -->
-  <div class="mobile-drawer" [class.open]="isMenuOpen" *ngIf="isLoggedIn()">
+  <div class="mobile-drawer" [class.open]="isMenuOpen">
     <nav class="mobile-nav">
-      <!-- Customer Links -->
-      <ng-container *ngIf="isCustomer()">
+      <!-- Customer Links (Logged In) -->
+      <ng-container *ngIf="isLoggedIn() && isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
         <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Profile</a>
         <a routerLink="/order/history" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Order History</a>
         <a routerLink="/order/warranty" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Warranties</a>
+      </ng-container>
+
+      <!-- Common Links (Logged In or Logged Out) -->
+      <ng-container *ngIf="!isLoggedIn() || isCustomer()">
         <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">About Us</a>
         <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Contact Us</a>
         <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Help & Queries</a>
       </ng-container>
+
       <!-- Admin Links -->
-      <ng-container *ngIf="isAdmin()">
+      <ng-container *ngIf="isLoggedIn() && isAdmin()">
         <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
         <a routerLink="/admin/orders" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Orders</a>
         <a routerLink="/admin/config" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Configuration</a>
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Customer View</a>
       </ng-container>
+
       <!-- Mobile Notifications trigger -->
+      <ng-container *ngIf="isLoggedIn()">
+        <div class="drawer-divider"></div>
+        <button (click)="toggleNotifications(); closeMenu()" class="mobile-link">
+          🔔 Notifications Center ({{ unreadNotificationsCount }})
+        </button>
+      </ng-container>
       <div class="drawer-divider"></div>
-      <button (click)="toggleNotifications(); closeMenu()" class="mobile-link">
-        🔔 Notifications Center ({{ unreadNotificationsCount }})
-      </button>
-      <div class="drawer-divider"></div>
-      <button (click)="logout()" routerLink="/auth/login" class="mobile-link btn-mobile-logout">Logout</button>
+      <button *ngIf="isLoggedIn()" (click)="logout()" routerLink="/auth/login" class="mobile-link btn-mobile-logout">Logout</button>
+      <a *ngIf="!isLoggedIn()" routerLink="/auth/login" (click)="closeMenu()" class="mobile-link" style="color: var(--color-primary) !important;">Login</a>
     </nav>
   </div>
    
