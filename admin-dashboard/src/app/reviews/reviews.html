@@ -1,0 +1,72 @@
+<div class="reviews-container">
+  <div class="reviews-header glass-panel">
+    <div>
+      <h2>Customer Reviews Moderation</h2>
+      <p>Approve or hide customer reviews before displaying them on the public homepage.</p>
+    </div>
+    <button class="btn-refresh" (click)="loadReviews()">
+      🔄 Refresh List
+    </button>
+  </div>
+
+  <div class="reviews-grid" *ngIf="!loading()">
+    <div class="no-records glass-panel" *ngIf="reviews().length === 0">
+      <p>No customer reviews submitted yet.</p>
+    </div>
+
+    <!-- Review Card -->
+    <div class="review-card glass-panel" *ngFor="let r of reviews()" [class.unverified]="!r.isVerified">
+      <div class="card-header">
+        <div class="user-meta">
+          <strong>ORD-{{ r.orderId }}</strong>
+          <span class="user-name" *ngIf="r.order?.user?.name">by {{ r.order.user.name }}</span>
+        </div>
+        <button type="button" class="btn-status-toggle" [class.verified-status]="r.isVerified" (click)="toggleVerify(r)">
+          {{ r.isVerified ? 'Verified & Public' : 'Hidden / Unverified' }}
+        </button>
+      </div>
+
+      <div class="card-body">
+        <!-- Multi-Ratings breakdown -->
+        <div class="ratings-row">
+          <div class="rating-badge">
+            <span class="label">Overall:</span>
+            <span class="stars">⭐ {{ r.overallRating }}/5</span>
+          </div>
+          <div class="rating-badge">
+            <span class="label">Quality:</span>
+            <span class="stars">⭐ {{ r.serviceQuality }}/5</span>
+          </div>
+          <div class="rating-badge">
+            <span class="label">Timeliness:</span>
+            <span class="stars">⭐ {{ r.timeliness }}/5</span>
+          </div>
+          <div class="rating-badge">
+            <span class="label">Professionalism:</span>
+            <span class="stars">⭐ {{ r.professionalism }}/5</span>
+          </div>
+        </div>
+
+        <div class="review-comments" *ngIf="r.comments">
+          <p>"{{ r.comments }}"</p>
+        </div>
+
+        <!-- Photos if uploaded -->
+        <div class="photos-preview" *ngIf="r.photos?.length > 0">
+          <a *ngFor="let p of r.photos" [href]="p" target="_blank">
+            <img [src]="p" alt="Review Photo" class="review-thumbnail" />
+          </a>
+        </div>
+      </div>
+      
+      <div class="card-footer">
+        <span class="date-submitted">Submitted: {{ r.createdAt | date:'mediumDate' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-panel glass-panel" *ngIf="loading()">
+    <span class="spinner"></span>
+    <p>Loading customer reviews...</p>
+  </div>
+</div>

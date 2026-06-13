@@ -31,7 +31,6 @@
       <!-- Navigation Links -->
       <div class="profile-nav-links" *ngIf="user.role === 'customer'">
         <a routerLink="/order/warranty" class="btn-profile-link">🛡️ Warranty Tracker</a>
-        <a routerLink="/rewards" class="btn-profile-link">✨ Rewards & Loyalty</a>
       </div>
 
       <button class="btn-edit" (click)="toggleEdit()">
@@ -67,6 +66,99 @@
           <div *ngIf="isSaving" class="spinner"></div>
         </button>
       </form>
+    </div>
+
+    <!-- Addresses Card -->
+    <div class="addresses-card glass-panel" *ngIf="user.role === 'customer'">
+      <div class="address-header">
+        <h3>Saved Addresses</h3>
+        <button class="btn-add-address" (click)="showAddressForm()" *ngIf="!isEditingAddress">
+          + Add New
+        </button>
+      </div>
+
+      <!-- Add/Edit Address Form -->
+      <div class="address-form-container" *ngIf="isEditingAddress">
+        <h4>{{ editingAddressId ? 'Edit Address' : 'Add New Address' }}</h4>
+        <div *ngIf="addressError" class="error-banner">{{ addressError }}</div>
+        <div *ngIf="addressSuccess" class="success-banner">{{ addressSuccess }}</div>
+
+        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" formControlName="fullName" placeholder="John Doe" />
+            </div>
+            <div class="form-group">
+              <label>Mobile Number</label>
+              <input type="text" formControlName="mobileNumber" placeholder="9876543210" />
+            </div>
+            <div class="form-group">
+              <label>House/Flat Number</label>
+              <input type="text" formControlName="houseNumber" placeholder="Flat 401, Block A" />
+            </div>
+            <div class="form-group">
+              <label>Street/Road</label>
+              <input type="text" formControlName="street" placeholder="Main Road" />
+            </div>
+            <div class="form-group">
+              <label>Area/Locality</label>
+              <input type="text" formControlName="area" placeholder="Hitech City" />
+            </div>
+            <div class="form-group">
+              <label>Landmark (Optional)</label>
+              <input type="text" formControlName="landmark" placeholder="Opp. Metro Station" />
+            </div>
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" formControlName="city" placeholder="Hyderabad" />
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" formControlName="state" placeholder="Telangana" />
+            </div>
+            <div class="form-group">
+              <label>Pincode</label>
+              <input type="text" formControlName="pincode" placeholder="500081" />
+            </div>
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="isDefault" />
+                Set as Default Address
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="cancelAddressEdit()">Cancel</button>
+            <button type="submit" class="btn-save" [disabled]="addressForm.invalid">Save Address</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Address List -->
+      <div class="address-list" *ngIf="!isEditingAddress">
+        <div class="no-addresses" *ngIf="addresses.length === 0">
+          <p>No saved addresses yet. Add one to speed up doorstep booking!</p>
+        </div>
+
+        <div class="address-card-item" *ngFor="let addr of addresses" [class.default-addr]="addr.isDefault">
+          <div class="addr-badge" *ngIf="addr.isDefault">Default</div>
+          <div class="addr-details">
+            <p class="addr-name">{{ addr.fullName }} <span class="addr-phone">({{ addr.mobileNumber }})</span></p>
+            <p class="addr-text">
+              {{ addr.houseNumber }}, {{ addr.street }}, {{ addr.area }}
+              <span *ngIf="addr.landmark">, Near {{ addr.landmark }}</span>
+            </p>
+            <p class="addr-city-state">{{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
+          </div>
+          <div class="addr-actions">
+            <button class="btn-action-text" (click)="setDefaultAddress(addr.id)" *ngIf="!addr.isDefault">Set Default</button>
+            <button class="btn-action-icon edit" (click)="showAddressForm(addr)" title="Edit">✏️</button>
+            <button class="btn-action-icon delete" (click)="deleteAddress(addr.id)" title="Delete">🗑️</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Orders Section -->

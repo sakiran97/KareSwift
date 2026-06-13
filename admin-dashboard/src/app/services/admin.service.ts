@@ -109,48 +109,88 @@ export class AdminService {
     return this.http.get<any>('/api/admin/dashboard/stats');
   }
 
-  // KYC Operations
-  getPendingKyc(): Observable<any[]> {
-    return this.http.get<any[]>('/api/admin/kyc/pending');
+  // Orders Operations
+  getAllOrders(): Observable<any[]> {
+    return this.http.get<any[]>('/api/admin/orders');
   }
 
-  getKycDetails(userId: number): Observable<any> {
-    return this.http.get<any>(`/api/admin/kyc/${userId}`);
+  updateOrderStatus(
+    id: number,
+    status: string,
+    payload: {
+      partsUsed?: string;
+      laborNotes?: string;
+      finalAmount?: number;
+      paymentMethod?: string;
+      repairNotes?: string;
+      otp?: string;
+    } = {}
+  ): Observable<any> {
+    return this.http.patch<any>(`/api/orders/${id}/status`, { status, ...payload });
   }
 
-  approveKyc(userId: number): Observable<any> {
-    return this.http.post<any>(`/api/admin/kyc/${userId}/approve`, {});
+  cancelOrder(id: number, reason: string): Observable<any> {
+    return this.http.patch<any>(`/api/admin/orders/${id}/cancel`, { reason });
   }
 
-  rejectKyc(userId: number, reason: string): Observable<any> {
-    return this.http.post<any>(`/api/admin/kyc/${userId}/reject`, { reason });
+  // Service Areas Operations
+  getServiceAreas(): Observable<any[]> {
+    return this.http.get<any[]>('/api/service-areas/admin');
   }
 
-  // Shop Operations
-  getPendingShops(): Observable<any[]> {
-    return this.http.get<any[]>('/api/admin/shops/pending');
+  createServiceArea(data: { name: string; city: string; travelCharge: number; isActive?: boolean }): Observable<any> {
+    return this.http.post<any>('/api/service-areas', data);
   }
 
-  approveShop(userId: number): Observable<any> {
-    return this.http.post<any>(`/api/admin/shops/${userId}/approve`, {});
+  updateServiceArea(id: number, data: { name?: string; city?: string; travelCharge?: number; isActive?: boolean }): Observable<any> {
+    return this.http.put<any>(`/api/service-areas/${id}`, data);
   }
 
-  rejectShop(userId: number, reason: string): Observable<any> {
-    return this.http.post<any>(`/api/admin/shops/${userId}/reject`, { reason });
+  deleteServiceArea(id: number): Observable<any> {
+    return this.http.delete<any>(`/api/service-areas/${id}`);
   }
 
-  // Technician Management
-  getTechnicians(kycStatus?: string): Observable<any[]> {
-    const url = kycStatus ? `/api/admin/technicians?kycStatus=${kycStatus}` : '/api/admin/technicians';
-    return this.http.get<any[]>(url);
+  // Slots Operations
+  getSlots(): Observable<any[]> {
+    return this.http.get<any[]>('/api/slots/admin');
   }
 
-  suspendTechnician(userId: number): Observable<any> {
-    return this.http.patch<any>(`/api/admin/technicians/${userId}/suspend`, {});
+  createSlot(data: { name: string; startTime: string; endTime: string; maxBookings?: number; isActive?: boolean }): Observable<any> {
+    return this.http.post<any>('/api/slots', data);
   }
 
-  activateTechnician(userId: number): Observable<any> {
-    return this.http.patch<any>(`/api/admin/technicians/${userId}/activate`, {});
+  updateSlot(id: number, data: { name?: string; startTime?: string; endTime?: string; maxBookings?: number; isActive?: boolean }): Observable<any> {
+    return this.http.put<any>(`/api/slots/${id}`, data);
+  }
+
+  deleteSlot(id: number): Observable<any> {
+    return this.http.delete<any>(`/api/slots/${id}`);
+  }
+
+  // Service Categories Operations
+  getServiceCategories(): Observable<any[]> {
+    return this.http.get<any[]>('/api/service-categories/admin');
+  }
+
+  createServiceCategory(data: { name: string; description?: string; isActive?: boolean }): Observable<any> {
+    return this.http.post<any>('/api/service-categories', data);
+  }
+
+  updateServiceCategory(id: number, data: { name?: string; description?: string; isActive?: boolean }): Observable<any> {
+    return this.http.put<any>(`/api/service-categories/${id}`, data);
+  }
+
+  deleteServiceCategory(id: number): Observable<any> {
+    return this.http.delete<any>(`/api/service-categories/${id}`);
+  }
+
+  // Reviews Operations
+  getReviews(): Observable<any[]> {
+    return this.http.get<any[]>('/api/reviews');
+  }
+
+  verifyReview(id: number, isVerified: boolean): Observable<any> {
+    return this.http.patch<any>(`/api/reviews/${id}/verify`, { isVerified });
   }
 
   // Configuration Panel

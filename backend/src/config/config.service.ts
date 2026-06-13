@@ -6,12 +6,14 @@ export class ConfigService {
   private useMock = false;
   // In-memory defaults used when DB is offline
   private mockConfig: Record<string, { value: string; description?: string }> = {
-    service_radius_km: { value: '10', description: 'Max distance in km to match nearby technicians' },
-    max_orders_per_slot: { value: '3', description: 'Max orders allowed per time slot' },
-    max_active_orders_per_technician: { value: '1', description: 'Max active orders a technician can hold' },
-    technician_location_ping_sec: { value: '30', description: 'Location update frequency in seconds' },
-    search_timeout_sec: { value: '120', description: 'How long to search for nearby technicians' },
-    platform_commission_rate: { value: '15', description: 'Platform commission percentage for cash orders' },
+    booking_enabled: { value: 'true', description: 'Enable or disable customer bookings' },
+    same_day_booking: { value: 'true', description: 'Allow customer to book same-day repairs' },
+    max_bookings_per_day: { value: '10', description: 'Maximum customer bookings allowed per day' },
+    upi_enabled: { value: 'true', description: 'Enable or disable UPI payment option' },
+    cash_enabled: { value: 'true', description: 'Enable or disable cash payment option' },
+    qr_enabled: { value: 'true', description: 'Enable or disable QR payment option' },
+    qr_image_url: { value: 'assets/qr-code-placeholder.png', description: 'URL or path to static QR Code image' },
+    review_mandatory: { value: 'false', description: 'Require reviews after successful repair completion' },
   };
 
   constructor(private prisma: PrismaService) {}
@@ -59,12 +61,15 @@ export class ConfigService {
           orderBy: { key: 'asc' },
         });
         
-        // Merge with mockConfig defaults
-        const result = Object.entries(this.mockConfig).map(([key, def]) => {
-          const dbConf = dbConfigs.find(c => c.key === key);
-          return dbConf || { key, value: def.value, description: def.description || null };
-        });
-        return result;
+        // Merge DB configurations and mock defaults
+        const dbKeys = new Set(dbConfigs.map(c => c.key));
+        const merged = [...dbConfigs];
+        for (const [key, def] of Object.entries(this.mockConfig)) {
+          if (!dbKeys.has(key)) {
+            merged.push({ key, value: def.value, description: def.description || null });
+          }
+        }
+        return merged.sort((a, b) => a.key.localeCompare(b.key));
       } catch (err: any) {
         if (this.isDbOffline(err)) {
           this.useMock = true;
@@ -78,7 +83,7 @@ export class ConfigService {
       key,
       value,
       description: description || null,
-    }));
+    })).sort((a, b) => a.key.localeCompare(b.key));
   }
 
   /**

@@ -11,35 +11,26 @@ datasource db {
 }
 
 model User {
-  id                Int                @id @default(autoincrement())
-  email             String?            @unique
-  passwordHash      String?
-  name              String?
-  phone             String?            @unique
-  role              String             @default("customer")
-  technicianId      String?            @unique
-  otpCode           String?
-  otpExpiresAt      DateTime?
-  averageRating     Float?
-  totalReviews      Int?               @default(0)
-  createdAt         DateTime           @default(now())
-  orders            Order[]            @relation("CustomerOrders")
-  assignedOrders    Order[]            @relation("TechnicianOrders")
-  sentMessages      ChatMessage[]      @relation("SenderMessages")
-  notifications     Notification[]
-  loyaltyAccount    LoyaltyAccount?
-  pointTransactions PointTransaction[]
-  technicianProfile TechnicianProfile?
-  subscriptions     UserSubscription[]
-  wallet            Wallet?
-  franchise         Franchise?
+  id            Int            @id @default(autoincrement())
+  email         String?        @unique
+  passwordHash  String?
+  name          String?
+  phone         String?        @unique
+  role          String         @default("customer") // "customer", "admin"
+  otpCode       String?
+  otpExpiresAt  DateTime?
+  averageRating Float?
+  totalReviews  Int?           @default(0)
+  createdAt     DateTime       @default(now())
+  orders        Order[]        @relation("CustomerOrders")
+  notifications Notification[]
+  addresses     Address[]
 }
 
 model Device {
   id     Int     @id @default(autoincrement())
   brand  String
   model  String
-  // Additional specs can be added
   orders Order[]
 }
 
@@ -47,7 +38,7 @@ model ServiceCategory {
   id          Int     @id @default(autoincrement())
   name        String  @unique
   description String?
-  // e.g., "Screen Replacement", "Battery Swap"
+  isActive    Boolean @default(true)
   orders      Order[]
 }
 
@@ -56,14 +47,12 @@ model Order {
   userId            Int
   deviceId          Int
   serviceCategoryId Int
-  status            OrderStatus @default(PENDING)
+  status            OrderStatus @default(BOOKED)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
   completedAt       DateTime?
   estimatedTime     Int? // minutes
   address           String?
-  latitude          Float?
-  longitude         Float?
   scheduledDate     String?
   scheduledSlot     String?
   diagnosticNotes   String?
@@ -71,53 +60,49 @@ model Order {
   partsUsed         String?
   laborNotes        String?
   finalAmount       Decimal?    @db.Decimal(10, 2)
-  paymentMethod     String? // "wallet" or "cash"
+  paymentMethod     String? // "cash", "upi", "qr"
   completionOtp     String?
 
-  technicianId Int?
-  technician   User? @relation("TechnicianOrders", fields: [technicianId], references: [id])
+  // New Fields for Operator Business Model
+  amountConfirmedAt    DateTime?
+  completionVerifiedAt DateTime?
+  repairNotes          String?
+  travelCharge         Decimal?     @db.Decimal(10, 2)
+  serviceAreaId        Int?
+  serviceArea          ServiceArea? @relation(fields: [serviceAreaId], references: [id])
 
-  franchiseId Int?
-  franchise   Franchise? @relation(fields: [franchiseId], references: [id])
-
-  user              User               @relation("CustomerOrders", fields: [userId], references: [id])
-  device            Device             @relation(fields: [deviceId], references: [id])
-  serviceCategory   ServiceCategory    @relation(fields: [serviceCategoryId], references: [id])
-  feedback          Feedback?          @relation(name: "FeedbackOrder")
-  chatMessages      ChatMessage[]
-  notifications     Notification[]
-  warranty          Warranty?          @relation(name: "WarrantyOrder")
-  pointTransactions PointTransaction[]
+  user            User            @relation("CustomerOrders", fields: [userId], references: [id])
+  device          Device          @relation(fields: [deviceId], references: [id])
+  serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
+  review          Review?         @relation(name: "ReviewOrder")
+  notifications   Notification[]
+  warranty        Warranty?       @relation(name: "WarrantyOrder")
 }
 
 enum OrderStatus {
-  PENDING
+  BOOKED
   CONFIRMED
-  EN_ROUTE
+  CUSTOMER_CONTACTED
+  DIAGNOSIS_COMPLETED
+  VISIT_SCHEDULED
   IN_PROGRESS
+  PRICE_FINALIZED
   COMPLETED
   CANCELLED
 }
 
-model Feedback {
-  id        Int      @id @default(autoincrement())
-  orderId   Int      @unique
-  rating    Int      @default(5) // 1-5 stars
-  comment   String?
-  tags      String[]
-  createdAt DateTime @default(now())
-  order     Order    @relation(name: "FeedbackOrder", fields: [orderId], references: [id])
-}
-
-model ChatMessage {
-  id         Int      @id @default(autoincrement())
-  orderId    Int
-  senderId   Int
-  senderRole String // "customer" or "technician"
-  content    String
-  createdAt  DateTime @default(now())
-  order      Order    @relation(fields: [orderId], references: [id])
-  sender     User     @relation("SenderMessages", fields: [senderId], references: [id])
+model Review {
+  id              Int      @id @default(autoincrement())
+  orderId         Int      @unique
+  overallRating   Int      @default(5) // 1-5 stars
+  serviceQuality  Int      @default(5)
+  timeliness      Int      @default(5)
+  professionalism Int      @default(5)
+  comments        String?
+  photos          String[]
+  isVerified      Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  order           Order    @relation(name: "ReviewOrder", fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Notification {
@@ -129,8 +114,8 @@ model Notification {
   isRead    Boolean  @default(false)
   orderId   Int?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  order     Order?   @relation(fields: [orderId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Warranty {
@@ -140,206 +125,53 @@ model Warranty {
   expiresAt    DateTime
   claimCount   Int      @default(0)
   createdAt    DateTime @default(now())
-  order        Order    @relation(name: "WarrantyOrder", fields: [orderId], references: [id])
+  order        Order    @relation(name: "WarrantyOrder", fields: [orderId], references: [id], onDelete: Cascade)
 }
 
-model LoyaltyAccount {
-  id          Int      @id @default(autoincrement())
-  userId      Int      @unique
-  points      Int      @default(0)
-  tier        String   @default("Bronze") // Bronze, Silver, Gold, Platinum
-  totalOrders Int      @default(0)
-  totalSpent  Decimal  @default(0.00) @db.Decimal(10, 2)
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
+model Address {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  fullName     String
+  mobileNumber String
+  houseNumber  String
+  street       String
+  area         String
+  landmark     String?
+  city         String
+  state        String
+  pincode      String
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model PointTransaction {
+model ServiceArea {
+  id           Int      @id @default(autoincrement())
+  name         String
+  city         String
+  travelCharge Decimal  @default(0.00) @db.Decimal(10, 2)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       Order[]
+}
+
+model Slot {
   id          Int      @id @default(autoincrement())
-  userId      Int
-  points      Int
-  type        String // "earned", "redeemed"
-  description String
-  orderId     Int?
+  name        String   @unique
+  startTime   String
+  endTime     String
+  maxBookings Int      @default(5)
+  isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
-  order       Order?   @relation(fields: [orderId], references: [id])
+  updatedAt   DateTime @updatedAt
 }
 
-// ── Technician KYC Profile ──────────────────────────────────
-model TechnicianProfile {
-  id     Int @id @default(autoincrement())
-  userId Int @unique
-
-  // KYC Documents
-  aadhaarNumber   String?
-  panNumber       String?
-  govtIdType      String? // "aadhaar", "pan", "voter_id", "driving_license", "passport"
-  govtIdNumber    String?
-  govtIdFrontUrl  String? // uploaded image URL/path
-  govtIdBackUrl   String? // uploaded image URL/path
-  aadhaarVerified Boolean @default(false)
-
-  // Workshop/Shop Details
-  shopName      String?
-  shopAddress   String?
-  shopLatitude  Float?
-  shopLongitude Float?
-  shopPhotos    String[] // array of image URLs
-
-  // Verification Status
-  kycStatus      String    @default("pending") // "pending", "under_review", "approved", "rejected"
-  kycReviewNotes String? // admin review notes
-  kycReviewedAt  DateTime?
-  kycReviewedBy  Int? // admin user ID who reviewed
-
-  shopVerified    Boolean   @default(false)
-  shopReviewNotes String?
-  shopReviewedAt  DateTime?
-
-  // Live Location (for nearby matching)
-  currentLatitude  Float?
-  currentLongitude Float?
-  isOnline         Boolean   @default(false)
-  lastLocationAt   DateTime?
-
-  franchiseId Int?
-  franchise   Franchise? @relation(fields: [franchiseId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-}
-
-// ── Admin Configuration ─────────────────────────────────────
-// Stores key-value pairs for app-wide settings managed by admins.
-// Seeded with defaults: service_radius_km, max_orders_per_slot, etc.
 model AppConfig {
   id          Int      @id @default(autoincrement())
   key         String   @unique
   value       String
   description String?
   updatedAt   DateTime @updatedAt
-}
-
-// ── Subscription Plans (Future Use) ─────────────────────────
-// Currently all users are on the "free" plan. Schema is ready
-// for future Razorpay/Stripe/PhonePe integration.
-model SubscriptionPlan {
-  id                Int                @id @default(autoincrement())
-  name              String             @unique // "free", "basic", "premium", "enterprise"
-  displayName       String // "Free Plan", "Basic Plan", etc.
-  targetRole        String // "customer", "technician", "both"
-  priceMonthly      Decimal            @default(0.00) @db.Decimal(10, 2)
-  priceYearly       Decimal            @default(0.00) @db.Decimal(10, 2)
-  currency          String             @default("INR")
-  features          String[] // ["unlimited_orders", "priority_matching", "analytics"]
-  maxOrdersPerMonth Int? // null = unlimited
-  isActive          Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  subscriptions     UserSubscription[]
-}
-
-model UserSubscription {
-  id            Int              @id @default(autoincrement())
-  userId        Int
-  planId        Int
-  status        String           @default("active") // "active", "expired", "cancelled", "trial"
-  startDate     DateTime         @default(now())
-  endDate       DateTime?
-  autoRenew     Boolean          @default(true)
-  paymentMethod String? // placeholder for future payment gateway
-  transactionId String? // placeholder for payment gateway reference
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  user          User             @relation(fields: [userId], references: [id])
-  plan          SubscriptionPlan @relation(fields: [planId], references: [id])
-}
-
-// ── Wallet System ───────────────────────────────────────────
-model Wallet {
-  id           Int                 @id @default(autoincrement())
-  userId       Int                 @unique
-  balance      Decimal             @default(0.00) @db.Decimal(10, 2)
-  currency     String              @default("INR")
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-  user         User                @relation(fields: [userId], references: [id])
-  transactions WalletTransaction[]
-}
-
-model WalletTransaction {
-  id          Int      @id @default(autoincrement())
-  walletId    Int
-  amount      Decimal  @db.Decimal(10, 2)
-  type        String // "credit" or "debit"
-  description String
-  referenceId String? // Order ID, Payment Gateway Ref, etc.
-  createdAt   DateTime @default(now())
-  wallet      Wallet   @relation(fields: [walletId], references: [id])
-}
-
-// ── Pricing & Commissions ───────────────────────────────────
-model CommissionRule {
-  id         Int      @id @default(autoincrement())
-  name       String
-  type       String // "percentage" or "fixed"
-  value      Decimal  @db.Decimal(10, 2)
-  targetRole String // "technician", "franchise"
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model PricingModifier {
-  id            Int      @id @default(autoincrement())
-  name          String // e.g., "Peak Hour Surge", "Rain Surge"
-  multiplier    Float // e.g., 1.5
-  conditionType String // "time", "weather", "demand"
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
-
-// ── Multi-City & Franchise Operations ───────────────────────
-model City {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  state        String
-  country      String        @default("India")
-  isActive     Boolean       @default(true)
-  franchises   Franchise[]
-  serviceZones ServiceZone[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
-model Franchise {
-  id           Int                 @id @default(autoincrement())
-  name         String
-  ownerId      Int                 @unique
-  cityId       Int
-  city         City                @relation(fields: [cityId], references: [id])
-  owner        User                @relation(fields: [ownerId], references: [id])
-  serviceZones ServiceZone[]
-  technicians  TechnicianProfile[]
-  orders       Order[]
-  isActive     Boolean             @default(true)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-}
-
-model ServiceZone {
-  id            Int        @id @default(autoincrement())
-  name          String
-  cityId        Int
-  city          City       @relation(fields: [cityId], references: [id])
-  franchiseId   Int?
-  franchise     Franchise? @relation(fields: [franchiseId], references: [id])
-  polygonCoords String // JSON string of boundary coordinates
-  isActive      Boolean    @default(true)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
 }

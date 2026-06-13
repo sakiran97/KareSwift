@@ -39,26 +39,49 @@
         
         <div class="input-wrap">
           <!-- Dynamic Input rendering -->
-          <ng-container [ngSwitch]="item.key">
-            <!-- Radius Slider representation -->
-            <div class="slider-container" *ngSwitchCase="'service_radius_km'">
-              <input 
-                type="range" 
-                min="1" 
-                max="50" 
-                class="range-slider" 
-                [(ngModel)]="item.pendingValue">
-              <span class="slider-val">{{ item.pendingValue }} km</span>
+          <ng-container [ngSwitch]="true">
+            <!-- Boolean toggles -->
+            <div class="switch-container" *ngSwitchCase="isBooleanKey(item.key)">
+              <label class="switch">
+                <input 
+                  type="checkbox" 
+                  [ngModel]="getBooleanValue(item)" 
+                  (ngModelChange)="setBooleanValue(item, $event)">
+                <span class="slider"></span>
+              </label>
+              <span class="status-label" [class.active]="getBooleanValue(item)" [class.inactive]="!getBooleanValue(item)">
+                {{ getBooleanValue(item) ? 'Enabled' : 'Disabled' }}
+              </span>
             </div>
 
-            <!-- Default numeric inputs -->
-            <div class="number-container" *ngSwitchDefault>
+            <!-- Numeric configs -->
+            <div class="number-container" *ngSwitchCase="isNumericKey(item.key)">
               <input 
                 type="number" 
                 class="form-control font-mono" 
                 [(ngModel)]="item.pendingValue">
               <span class="unit-label" *ngIf="item.key.endsWith('_sec')">seconds</span>
               <span class="unit-label" *ngIf="item.key.endsWith('_slot')">orders</span>
+              <span class="unit-label" *ngIf="item.key.endsWith('_day')">bookings</span>
+            </div>
+
+            <!-- QR Code Text Input + Preview -->
+            <div class="text-container" *ngSwitchCase="item.key === 'qr_image_url'">
+              <input 
+                type="text" 
+                class="form-control-text font-mono" 
+                [(ngModel)]="item.pendingValue">
+              <div class="qr-preview" *ngIf="item.pendingValue">
+                <img [src]="item.pendingValue" alt="QR Preview" (error)="qrImg.src='assets/qr-code-placeholder.png'" #qrImg>
+              </div>
+            </div>
+
+            <!-- Default inputs -->
+            <div class="number-container" *ngSwitchDefault>
+              <input 
+                type="text" 
+                class="form-control-text font-mono" 
+                [(ngModel)]="item.pendingValue">
             </div>
           </ng-container>
         </div>

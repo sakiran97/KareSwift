@@ -127,7 +127,6 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   role: 'role',
-  technicianId: 'technicianId',
   otpCode: 'otpCode',
   otpExpiresAt: 'otpExpiresAt',
   averageRating: 'averageRating',
@@ -144,7 +143,8 @@ exports.Prisma.DeviceScalarFieldEnum = {
 exports.Prisma.ServiceCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description'
+  description: 'description',
+  isActive: 'isActive'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -158,8 +158,6 @@ exports.Prisma.OrderScalarFieldEnum = {
   completedAt: 'completedAt',
   estimatedTime: 'estimatedTime',
   address: 'address',
-  latitude: 'latitude',
-  longitude: 'longitude',
   scheduledDate: 'scheduledDate',
   scheduledSlot: 'scheduledSlot',
   diagnosticNotes: 'diagnosticNotes',
@@ -169,25 +167,23 @@ exports.Prisma.OrderScalarFieldEnum = {
   finalAmount: 'finalAmount',
   paymentMethod: 'paymentMethod',
   completionOtp: 'completionOtp',
-  technicianId: 'technicianId',
-  franchiseId: 'franchiseId'
+  amountConfirmedAt: 'amountConfirmedAt',
+  completionVerifiedAt: 'completionVerifiedAt',
+  repairNotes: 'repairNotes',
+  travelCharge: 'travelCharge',
+  serviceAreaId: 'serviceAreaId'
 };
 
-exports.Prisma.FeedbackScalarFieldEnum = {
+exports.Prisma.ReviewScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
-  rating: 'rating',
-  comment: 'comment',
-  tags: 'tags',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ChatMessageScalarFieldEnum = {
-  id: 'id',
-  orderId: 'orderId',
-  senderId: 'senderId',
-  senderRole: 'senderRole',
-  content: 'content',
+  overallRating: 'overallRating',
+  serviceQuality: 'serviceQuality',
+  timeliness: 'timeliness',
+  professionalism: 'professionalism',
+  comments: 'comments',
+  photos: 'photos',
+  isVerified: 'isVerified',
   createdAt: 'createdAt'
 };
 
@@ -211,53 +207,40 @@ exports.Prisma.WarrantyScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.LoyaltyAccountScalarFieldEnum = {
+exports.Prisma.AddressScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  points: 'points',
-  tier: 'tier',
-  totalOrders: 'totalOrders',
-  totalSpent: 'totalSpent',
+  fullName: 'fullName',
+  mobileNumber: 'mobileNumber',
+  houseNumber: 'houseNumber',
+  street: 'street',
+  area: 'area',
+  landmark: 'landmark',
+  city: 'city',
+  state: 'state',
+  pincode: 'pincode',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PointTransactionScalarFieldEnum = {
+exports.Prisma.ServiceAreaScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  points: 'points',
-  type: 'type',
-  description: 'description',
-  orderId: 'orderId',
-  createdAt: 'createdAt'
+  name: 'name',
+  city: 'city',
+  travelCharge: 'travelCharge',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
-exports.Prisma.TechnicianProfileScalarFieldEnum = {
+exports.Prisma.SlotScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  aadhaarNumber: 'aadhaarNumber',
-  panNumber: 'panNumber',
-  govtIdType: 'govtIdType',
-  govtIdNumber: 'govtIdNumber',
-  govtIdFrontUrl: 'govtIdFrontUrl',
-  govtIdBackUrl: 'govtIdBackUrl',
-  aadhaarVerified: 'aadhaarVerified',
-  shopName: 'shopName',
-  shopAddress: 'shopAddress',
-  shopLatitude: 'shopLatitude',
-  shopLongitude: 'shopLongitude',
-  shopPhotos: 'shopPhotos',
-  kycStatus: 'kycStatus',
-  kycReviewNotes: 'kycReviewNotes',
-  kycReviewedAt: 'kycReviewedAt',
-  kycReviewedBy: 'kycReviewedBy',
-  shopVerified: 'shopVerified',
-  shopReviewNotes: 'shopReviewNotes',
-  shopReviewedAt: 'shopReviewedAt',
-  currentLatitude: 'currentLatitude',
-  currentLongitude: 'currentLongitude',
-  isOnline: 'isOnline',
-  lastLocationAt: 'lastLocationAt',
-  franchiseId: 'franchiseId',
+  name: 'name',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  maxBookings: 'maxBookings',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -267,106 +250,6 @@ exports.Prisma.AppConfigScalarFieldEnum = {
   key: 'key',
   value: 'value',
   description: 'description',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SubscriptionPlanScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  displayName: 'displayName',
-  targetRole: 'targetRole',
-  priceMonthly: 'priceMonthly',
-  priceYearly: 'priceYearly',
-  currency: 'currency',
-  features: 'features',
-  maxOrdersPerMonth: 'maxOrdersPerMonth',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.UserSubscriptionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  planId: 'planId',
-  status: 'status',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  autoRenew: 'autoRenew',
-  paymentMethod: 'paymentMethod',
-  transactionId: 'transactionId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.WalletScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  balance: 'balance',
-  currency: 'currency',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.WalletTransactionScalarFieldEnum = {
-  id: 'id',
-  walletId: 'walletId',
-  amount: 'amount',
-  type: 'type',
-  description: 'description',
-  referenceId: 'referenceId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.CommissionRuleScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  type: 'type',
-  value: 'value',
-  targetRole: 'targetRole',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PricingModifierScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  multiplier: 'multiplier',
-  conditionType: 'conditionType',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CityScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  state: 'state',
-  country: 'country',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.FranchiseScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  ownerId: 'ownerId',
-  cityId: 'cityId',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ServiceZoneScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  cityId: 'cityId',
-  franchiseId: 'franchiseId',
-  polygonCoords: 'polygonCoords',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
@@ -385,10 +268,13 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 exports.OrderStatus = exports.$Enums.OrderStatus = {
-  PENDING: 'PENDING',
+  BOOKED: 'BOOKED',
   CONFIRMED: 'CONFIRMED',
-  EN_ROUTE: 'EN_ROUTE',
+  CUSTOMER_CONTACTED: 'CUSTOMER_CONTACTED',
+  DIAGNOSIS_COMPLETED: 'DIAGNOSIS_COMPLETED',
+  VISIT_SCHEDULED: 'VISIT_SCHEDULED',
   IN_PROGRESS: 'IN_PROGRESS',
+  PRICE_FINALIZED: 'PRICE_FINALIZED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'
 };
@@ -398,23 +284,13 @@ exports.Prisma.ModelName = {
   Device: 'Device',
   ServiceCategory: 'ServiceCategory',
   Order: 'Order',
-  Feedback: 'Feedback',
-  ChatMessage: 'ChatMessage',
+  Review: 'Review',
   Notification: 'Notification',
   Warranty: 'Warranty',
-  LoyaltyAccount: 'LoyaltyAccount',
-  PointTransaction: 'PointTransaction',
-  TechnicianProfile: 'TechnicianProfile',
-  AppConfig: 'AppConfig',
-  SubscriptionPlan: 'SubscriptionPlan',
-  UserSubscription: 'UserSubscription',
-  Wallet: 'Wallet',
-  WalletTransaction: 'WalletTransaction',
-  CommissionRule: 'CommissionRule',
-  PricingModifier: 'PricingModifier',
-  City: 'City',
-  Franchise: 'Franchise',
-  ServiceZone: 'ServiceZone'
+  Address: 'Address',
+  ServiceArea: 'ServiceArea',
+  Slot: 'Slot',
+  AppConfig: 'AppConfig'
 };
 
 /**

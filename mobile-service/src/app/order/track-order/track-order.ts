@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap, RouterLink } from '@angular/router';
 import { OrderService, OrderResponse } from '../../services/order.service';
 import { SseService, SseEvent } from '../../services/sse.service';
-import { WalletService } from '../../services/wallet.service';
 import { CommonModule } from '@angular/common';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-track-order',
@@ -15,32 +15,28 @@ import { Subscription, firstValueFrom } from 'rxjs';
 })
 export class TrackOrder implements OnInit, OnDestroy {
   orderId = '';
-  statusSteps = [
-    { key: 'RECEIVED', label: 'Order Received', desc: 'We have received your service request.' },
-    { key: 'ASSIGNED', label: 'Technician Assigned', desc: 'A certified expert has been assigned to your order.' },
-    { key: 'EN_ROUTE', label: 'Technician En-route', desc: 'Our technician is traveling to your doorstep.' },
-    { key: 'REPAIRING', label: 'Repair in Progress', desc: 'The technician is diagnosing and repairing your device.' },
-    { key: 'COMPLETED', label: 'Repair Completed', desc: 'Your device is fixed! Please verify and complete payment.' }
-  ];
-  
-  currentStepIndex = 0;
   isCancelled = false;
-  technician = {
-    name: 'Alex Mercer',
-    rating: 4.95,
-    completedRepairs: 420,
-    vehicle: 'Electric Van - Tech-12',
-    avatar: 'AM'
-  };
+  currentStepIndex = 0;
+  
+  // Status Steps for KareSwift Operator Model
+  statusSteps = [
+    { key: 'BOOKED', label: 'Booked', desc: 'Repair request successfully received.' },
+    { key: 'CONFIRMED', label: 'Confirmed', desc: 'Booking confirmed by service coordinator.' },
+    { key: 'CUSTOMER_CONTACTED', label: 'Contacted', desc: 'We contacted you to verify repair details.' },
+    { key: 'DIAGNOSIS_COMPLETED', label: 'Diagnosed', desc: 'Device diagnosed and repair path identified.' },
+    { key: 'VISIT_SCHEDULED', label: 'Visit Scheduled', desc: 'Expert technician doorstep visit scheduled.' },
+    { key: 'IN_PROGRESS', label: 'Repair In Progress', desc: 'We are repairing your device at your doorstep.' },
+    { key: 'PRICE_FINALIZED', label: 'Price Finalized', desc: 'Final repair pricing has been determined.' },
+    { key: 'COMPLETED', label: 'Completed', desc: 'Repair verified and completed successfully.' }
+  ];
 
-  isPaying = false;
-  paymentError = '';
-  hasPaid = false;
-  paymentMethod = '';
-  orderAmount = 50;
+  // Pricing & OTP flow state
+  finalAmount: number | null = null;
+  paymentMethod: string | null = null;
   completionOtp: string | null = null;
-
-  demoTimer: any;
+  repairNotes: string | null = null;
+  travelCharge = 0;
+  
   pollInterval: any;
   private sseSub?: Subscription;
 
@@ -49,7 +45,7 @@ export class TrackOrder implements OnInit, OnDestroy {
     private router: Router,
     private orderService: OrderService,
     private sse: SseService,
-    private walletService: WalletService,
+    private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -64,9 +60,6 @@ export class TrackOrder implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sseSub?.unsubscribe();
-    if (this.demoTimer) {
-      clearInterval(this.demoTimer);
-    }
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
     }
@@ -74,70 +67,34 @@ export class TrackOrder implements OnInit, OnDestroy {
 
   mapStatusToStepIndex(status: string): number {
     const s = status ? status.toUpperCase() : '';
-    if (s === 'PENDING' || s === 'RECEIVED') return 0;
-    if (s === 'CONFIRMED' || s === 'ASSIGNED') return 1;
-    if (s === 'EN_ROUTE') return 2;
-    if (s === 'IN_PROGRESS' || s === 'REPAIRING') return 3;
-    if (s === 'COMPLETED') return 4;
+    if (s === 'BOOKED') return 0;
+    if (s === 'CONFIRMED') return 1;
+    if (s === 'CUSTOMER_CONTACTED') return 2;
+    if (s === 'DIAGNOSIS_COMPLETED') return 3;
+    if (s === 'VISIT_SCHEDULED') return 4;
+    if (s === 'IN_PROGRESS') return 5;
+    if (s === 'PRICE_FINALIZED') return 6;
+    if (s === 'COMPLETED') return 7;
     return -1;
   }
 
   updateOrderData(order: any): void {
     if (order.finalAmount) {
-      this.orderAmount = Number(order.finalAmount);
+      this.finalAmount = Number(order.finalAmount);
     }
     if (order.paymentMethod) {
-      this.hasPaid = true;
       this.paymentMethod = order.paymentMethod;
     }
     if (order.completionOtp) {
       this.completionOtp = order.completionOtp;
     }
-    this.updateTechnicianDetails(order);
-  }
-
-  updateTechnicianDetails(order: any): void {
-    if (order && order.technician) {
-      const tech = order.technician;
-      const name = tech.name || 'Technician';
-      
-      // Calculate initials (avatar)
-      const parts = name.trim().split(/\s+/);
-      let initials = '';
-      if (parts.length > 0) {
-        initials += parts[0][0];
-        if (parts.length > 1) {
-          initials += parts[parts.length - 1][0];
-        }
-      }
-      initials = initials.toUpperCase() || 'Tech';
-
-      this.technician = {
-        name: name,
-        rating: tech.averageRating !== undefined && tech.averageRating !== null ? tech.averageRating : 4.95,
-        completedRepairs: tech.totalReviews !== undefined && tech.totalReviews !== null ? tech.totalReviews : 420,
-        vehicle: 'Electric Van - Tech-' + (tech.technicianId || tech.id || '12'),
-        avatar: initials
-      };
-    } else if (order && order.acceptedBy) {
-      const name = order.acceptedBy;
-      const parts = name.trim().split(/\s+/);
-      let initials = '';
-      if (parts.length > 0) {
-        initials += parts[0][0];
-        if (parts.length > 1) {
-          initials += parts[parts.length - 1][0];
-        }
-      }
-      initials = initials.toUpperCase() || 'Tech';
-      this.technician = {
-        name: name,
-        rating: order.technician?.averageRating !== undefined && order.technician?.averageRating !== null ? order.technician.averageRating : 4.95,
-        completedRepairs: order.technician?.totalReviews !== undefined && order.technician?.totalReviews !== null ? order.technician.totalReviews : 420,
-        vehicle: 'Electric Van - Tech-12',
-        avatar: initials
-      };
+    if (order.repairNotes) {
+      this.repairNotes = order.repairNotes;
     }
+    if (order.travelCharge) {
+      this.travelCharge = Number(order.travelCharge);
+    }
+    this.cdr.detectChanges();
   }
 
   fetchOrderDetails(): void {
@@ -151,8 +108,8 @@ export class TrackOrder implements OnInit, OnDestroy {
         this.updateOrderData(res);
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.startDemoTracking();
+      error: (err: any) => {
+        console.error('Failed to fetch order details', err);
       }
     });
   }
@@ -160,7 +117,7 @@ export class TrackOrder implements OnInit, OnDestroy {
   setupRealtimeTracking(): void {
     this.sseSub = this.sse.connect().subscribe({
       next: (event: SseEvent) => {
-        if (event.type === 'order-update' || event.type === 'order-accepted') {
+        if (event.type === 'order-update') {
           const orderId = String(event.data.id || event.data.orderId || '');
           const cleanId = this.orderId.replace('ORD-', '');
           if (orderId === this.orderId || orderId === cleanId) {
@@ -169,22 +126,8 @@ export class TrackOrder implements OnInit, OnDestroy {
             const stepIndex = this.mapStatusToStepIndex(status);
             if (stepIndex !== -1) {
               this.currentStepIndex = stepIndex;
-              if (this.demoTimer) {
-                clearInterval(this.demoTimer);
-                this.demoTimer = null;
-              }
             }
             this.updateOrderData(event.data);
-            this.cdr.detectChanges();
-          }
-        } else if (event.type === 'completion-requested') {
-          const orderId = String(event.data.id || event.data.orderId || '');
-          const cleanId = this.orderId.replace('ORD-', '');
-          if (orderId === this.orderId || orderId === cleanId) {
-            this.completionOtp = event.data.otp;
-            if (event.data.finalAmount) {
-              this.orderAmount = Number(event.data.finalAmount);
-            }
             this.cdr.detectChanges();
           }
         }
@@ -199,12 +142,8 @@ export class TrackOrder implements OnInit, OnDestroy {
           const status = res.status || '';
           this.isCancelled = (status === 'CANCELLED');
           const step = this.mapStatusToStepIndex(status);
-          if (step !== -1 && step !== this.currentStepIndex) {
+          if (step !== -1) {
             this.currentStepIndex = step;
-            if (this.demoTimer) {
-              clearInterval(this.demoTimer);
-              this.demoTimer = null;
-            }
           }
           this.updateOrderData(res);
           this.cdr.detectChanges();
@@ -214,46 +153,7 @@ export class TrackOrder implements OnInit, OnDestroy {
     }, 4000);
   }
 
-  startDemoTracking(): void {
-    this.currentStepIndex = 0;
-    this.cdr.detectChanges();
-    
-    this.demoTimer = setInterval(() => {
-      if (this.currentStepIndex < this.statusSteps.length - 1) {
-        this.currentStepIndex++;
-        this.cdr.detectChanges();
-      } else {
-        clearInterval(this.demoTimer);
-      }
-    }, 12000);
-  }
-
   navigateToFeedback(): void {
     this.router.navigate([`/order/feedback/${this.orderId}`]);
-  }
-
-  async payOrder(method: 'wallet' | 'cash'): Promise<void> {
-    this.isPaying = true;
-    this.paymentError = '';
-    this.cdr.detectChanges();
-
-    try {
-      // Small simulated delay for UX
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const res = await firstValueFrom(this.walletService.payOrder(Number(this.orderId), method)) as any;
-      if (res && res.success) {
-        this.hasPaid = true;
-        this.paymentMethod = method;
-      }
-    } catch (err: any) {
-      if (err.error && err.error.message) {
-        this.paymentError = err.error.message;
-      } else {
-        this.paymentError = 'Payment failed. Please try again.';
-      }
-    } finally {
-      this.isPaying = false;
-      this.cdr.detectChanges();
-    }
   }
 }

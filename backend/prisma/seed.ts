@@ -10,35 +10,18 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('🌱 Seeding database...');
+  console.log('🌱 Seeding V2 database...');
 
-  // ── App Configuration Defaults ──────────────────────────
+  // 1. App Configuration Defaults
   const configs = [
-    {
-      key: 'service_radius_km',
-      value: '10',
-      description: 'Maximum distance in km to match nearby technicians to customer orders',
-    },
-    {
-      key: 'max_orders_per_slot',
-      value: '3',
-      description: 'Maximum number of orders allowed per time slot before disabling it',
-    },
-    {
-      key: 'max_active_orders_per_technician',
-      value: '1',
-      description: 'Maximum active orders a technician can hold simultaneously',
-    },
-    {
-      key: 'technician_location_ping_sec',
-      value: '30',
-      description: 'How often (in seconds) online technicians send GPS location updates',
-    },
-    {
-      key: 'search_timeout_sec',
-      value: '120',
-      description: 'How long (in seconds) to search for nearby technicians before timing out',
-    },
+    { key: 'booking_enabled', value: 'true', description: 'Enable or disable customer bookings' },
+    { key: 'same_day_booking', value: 'true', description: 'Allow customer to book same-day repairs' },
+    { key: 'max_bookings_per_day', value: '10', description: 'Maximum customer bookings allowed per day' },
+    { key: 'upi_enabled', value: 'true', description: 'Enable or disable UPI payment option' },
+    { key: 'cash_enabled', value: 'true', description: 'Enable or disable cash payment option' },
+    { key: 'qr_enabled', value: 'true', description: 'Enable or disable QR payment option' },
+    { key: 'qr_image_url', value: 'assets/qr-code-placeholder.png', description: 'URL or path to static QR Code image' },
+    { key: 'review_mandatory', value: 'false', description: 'Require reviews after successful repair completion' },
   ];
 
   for (const config of configs) {
@@ -50,30 +33,35 @@ async function main() {
     console.log(`  ✅ Config: ${config.key} = ${config.value}`);
   }
 
-  // ── Default Service Categories ──────────────────────────
+  // 2. Default Service Categories (Services)
   const categories = [
-    { name: 'Screen Replacement', description: 'Cracked or broken screen repair' },
-    { name: 'Battery Swap', description: 'Battery replacement service' },
-    { name: 'Software Fix', description: 'OS issues, malware, data recovery' },
-    { name: 'Water Damage Repair', description: 'Liquid damage diagnostics and repair' },
-    { name: 'Charging Port Fix', description: 'Charging port replacement or repair' },
-    { name: 'Camera Repair', description: 'Front or rear camera repair' },
+    { name: 'Screen Replacement', description: 'Cracked, broken, or unresponsive touch screen repairs' },
+    { name: 'Battery Replacement', description: 'Low health, swollen, or fast-draining battery replacement' },
+    { name: 'Charging Issue', description: 'Charging port cleaning, repair, or charging port swap' },
+    { name: 'Speaker Repair', description: 'Muffled, crackly, or non-functional speaker repairs' },
+    { name: 'Microphone Repair', description: 'Low volume, crackly, or completely silent mic fixes' },
+    { name: 'Camera Repair', description: 'Front or rear camera lens, sensor, or glass replacement' },
+    { name: 'Water Damage', description: 'Diagnostics, ultrasonic cleaning, and circuit repair for liquid ingress' },
+    { name: 'Software Issue', description: 'Bootloops, OS upgrades, factory resets, or data backup assistance' },
+    { name: 'Data Recovery', description: 'Retrieval of files, photos, and contacts from dead or broken devices' },
+    { name: 'Other', description: 'General diagnosis and custom repair solutions' },
   ];
 
   for (const cat of categories) {
     await prisma.serviceCategory.upsert({
       where: { name: cat.name },
-      update: { description: cat.description },
-      create: cat,
+      update: { description: cat.description, isActive: true },
+      create: { ...cat, isActive: true },
     });
-    console.log(`  ✅ Service: ${cat.name}`);
+    console.log(`  ✅ Service Category: ${cat.name}`);
   }
 
-  // ── Default Devices ─────────────────────────────────────
+  // 3. Default Devices
   const devices = [
     { brand: 'Apple', model: 'iPhone 15 Pro' },
     { brand: 'Samsung', model: 'Galaxy S24 Ultra' },
     { brand: 'Google', model: 'Pixel 8 Pro' },
+    { brand: 'OnePlus', model: 'OnePlus 12' },
   ];
 
   for (const device of devices) {
@@ -88,41 +76,77 @@ async function main() {
     }
   }
 
-  // ── Free Subscription Plan (Placeholder) ────────────────
-  await prisma.subscriptionPlan.upsert({
-    where: { name: 'free' },
-    update: {},
-    create: {
-      name: 'free',
-      displayName: 'Free Plan',
-      targetRole: 'both',
-      priceMonthly: 0,
-      priceYearly: 0,
-      currency: 'INR',
-      features: ['basic_orders', 'chat', 'notifications'],
-      maxOrdersPerMonth: null, // unlimited
-      isActive: true,
-    },
-  });
-  console.log('  ✅ Subscription: Free Plan');
+  // 4. Default Service Areas (Hyderabad)
+  const areas = [
+    { name: 'ECIL', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Nagaram', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'AS Rao Nagar', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Sainikpuri', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Tarnaka', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Uppal', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Habsiguda', city: 'Hyderabad', travelCharge: 0 },
+    { name: 'Hitech City', city: 'Hyderabad', travelCharge: 199 },
+    { name: 'Gachibowli', city: 'Hyderabad', travelCharge: 199 },
+    { name: 'Kondapur', city: 'Hyderabad', travelCharge: 199 },
+  ];
 
-  // ── Admin User ──────────────────────────────────────────
-  const adminEmail = 'admin@doorstep.com';
-  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
-  if (!existingAdmin) {
-    await prisma.user.create({
-      data: {
+  for (const area of areas) {
+    const existing = await prisma.serviceArea.findFirst({
+      where: { name: area.name, city: area.city },
+    });
+    if (!existing) {
+      await prisma.serviceArea.create({
+        data: {
+          name: area.name,
+          city: area.city,
+          travelCharge: area.travelCharge,
+          isActive: true,
+        },
+      });
+      console.log(`  ✅ Service Area: ${area.name} (₹${area.travelCharge})`);
+    } else {
+      await prisma.serviceArea.update({
+        where: { id: existing.id },
+        data: { travelCharge: area.travelCharge, isActive: true },
+      });
+      console.log(`  ⏭️  Service Area updated: ${area.name}`);
+    }
+  }
+
+  // 5. Default Available Slots
+  const slots = [
+    { name: '09:00 AM', startTime: '09:00', endTime: '11:00', maxBookings: 5 },
+    { name: '11:00 AM', startTime: '11:00', endTime: '13:00', maxBookings: 5 },
+    { name: '01:00 PM', startTime: '13:00', endTime: '15:00', maxBookings: 5 },
+    { name: '03:00 PM', startTime: '15:00', endTime: '17:00', maxBookings: 5 },
+    { name: '05:00 PM', startTime: '17:00', endTime: '19:00', maxBookings: 5 },
+  ];
+
+  for (const slot of slots) {
+    await prisma.slot.upsert({
+      where: { name: slot.name },
+      update: { startTime: slot.startTime, endTime: slot.endTime, maxBookings: slot.maxBookings, isActive: true },
+      create: { ...slot, isActive: true },
+    });
+    console.log(`  ✅ Slot: ${slot.name}`);
+  }
+
+  // 6. Admin Users
+  const admins = ['admin@doorstep.com', 'admin@demo.com'];
+  for (const adminEmail of admins) {
+    await prisma.user.upsert({
+      where: { email: adminEmail },
+      update: { role: 'admin' },
+      create: {
         email: adminEmail,
-        name: 'Admin User',
+        name: adminEmail === 'admin@demo.com' ? 'Demo Admin' : 'Admin User',
         role: 'admin',
       },
     });
-    console.log('  ✅ Admin user: admin@doorstep.com');
-  } else {
-    console.log('  ⏭️  Admin exists: admin@doorstep.com');
+    console.log(`  ✅ Admin user upserted: ${adminEmail}`);
   }
 
-  console.log('\n🎉 Seed complete!');
+  console.log('\n🎉 Seeding completed successfully!');
 }
 
 main()
@@ -131,5 +155,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await pool.end();
   });

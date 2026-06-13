@@ -51,14 +51,42 @@ export class ConfigComponent implements OnInit {
     });
   }
 
+  isBooleanKey(key: string): boolean {
+    return ['booking_enabled', 'same_day_booking', 'upi_enabled', 'cash_enabled', 'qr_enabled', 'review_mandatory'].includes(key);
+  }
+
+  isNumericKey(key: string): boolean {
+    return ['max_bookings_per_day'].includes(key);
+  }
+
+  getBooleanValue(item: ConfigItem): boolean {
+    return item.pendingValue === 'true';
+  }
+
+  setBooleanValue(item: ConfigItem, val: boolean) {
+    item.pendingValue = val ? 'true' : 'false';
+  }
+
   saveItem(item: ConfigItem) {
     if (item.pendingValue === undefined || item.pendingValue === item.value) return;
 
     // Validate inputs
-    const numVal = Number(item.pendingValue);
-    if (isNaN(numVal) || numVal < 0) {
-      this.errorMsg.set(`Invalid value for ${item.key}. Must be a positive number.`);
-      return;
+    if (this.isNumericKey(item.key)) {
+      const numVal = Number(item.pendingValue);
+      if (isNaN(numVal) || numVal <= 0 || !Number.isInteger(numVal)) {
+        this.errorMsg.set(`Invalid value for ${item.key}. Must be a positive integer.`);
+        return;
+      }
+    } else if (item.key === 'qr_image_url') {
+      if (!item.pendingValue.trim()) {
+        this.errorMsg.set(`Invalid value for ${item.key}. Cannot be empty.`);
+        return;
+      }
+    } else if (this.isBooleanKey(item.key)) {
+      if (item.pendingValue !== 'true' && item.pendingValue !== 'false') {
+        this.errorMsg.set(`Invalid value for ${item.key}. Must be a boolean (true/false).`);
+        return;
+      }
     }
 
     this.savingKey.set(item.key);

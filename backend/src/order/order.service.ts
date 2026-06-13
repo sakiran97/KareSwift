@@ -1,10 +1,8 @@
-import { Injectable, NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Order, OrderStatus } from '../generated/prisma';
 import { EventsService } from '../events/events.service';
 import { WarrantyService } from '../warranty/warranty.service';
-import { LoyaltyService } from '../loyalty/loyalty.service';
-import { GeoService } from '../geo/geo.service';
 import { ConfigService } from '../config/config.service';
 
 @Injectable()
@@ -12,16 +10,12 @@ export class OrderService {
   private useMock = false;
   private mockOrders: any[] = [];
   private nextMockId = 1;
-  private nextMockTechId = 100;
 
   constructor(
     private prisma: PrismaService,
     private eventsService: EventsService,
     @Inject(forwardRef(() => WarrantyService))
     private warrantyService: WarrantyService,
-    @Inject(forwardRef(() => LoyaltyService))
-    private loyaltyService: LoyaltyService,
-    private geoService: GeoService,
     private configService: ConfigService,
   ) {}
 
@@ -31,15 +25,15 @@ export class OrderService {
     serviceCategoryId: number;
     estimatedTime?: number;
     address?: string;
-    latitude?: number;
-    longitude?: number;
     scheduledDate?: string;
     scheduledSlot?: string;
     notes?: string;
     diagnosticNotes?: string;
     diagnosticPhotos?: string[];
+    travelCharge?: number;
+    serviceAreaId?: number;
   }): Promise<any> {
-    const { userId, deviceId, serviceCategoryId, estimatedTime, address, latitude, longitude, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos } = data;
+    const { userId, deviceId, serviceCategoryId, estimatedTime, address, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId } = data;
     
     if (!this.useMock) {
       try {
@@ -48,14 +42,15 @@ export class OrderService {
             userId,
             deviceId,
             serviceCategoryId,
-            estimatedTime,
+            estimatedTime: estimatedTime || 45,
             address,
-            latitude,
-            longitude,
             scheduledDate,
             scheduledSlot,
             diagnosticNotes: diagnosticNotes || notes || null,
             diagnosticPhotos: diagnosticPhotos || [],
+            status: 'BOOKED',
+            travelCharge: travelCharge !== undefined ? travelCharge : 0,
+            serviceAreaId: serviceAreaId || null,
           },
           include: {
             device: true,
@@ -64,51 +59,15 @@ export class OrderService {
           },
         });
 
-        // OPTIONAL HYBRID WORKFLOW: Pre-paid Booking Fee
-        // To prevent fake bookings, deduct ₹99 from the customer wallet
-        // await this.walletService.deductFunds(userId, 99, 'Booking Fee for Order', `ORD_${order.id}_FEE`);
+        await this.createNotification(
+          userId,
+          'Order Booked Successfully',
+          `Your doorstep repair booking for a ${order.device.brand} ${order.device.model} has been received.`,
+          'order-update',
+          order.id
+        );
 
-        // Find nearby technicians
-        let targetTechnicianIds: number[] = [];
-        if (latitude != null && longitude != null) {
-          try {
-            const nearby = await this.geoService.findNearbyTechnicians(latitude, longitude);
-            targetTechnicianIds = nearby.map(n => n.userId);
-          } catch (geoErr) {
-            console.error('Failed to find nearby technicians:', geoErr);
-          }
-        }
-
-        if (targetTechnicianIds.length > 0) {
-          await this.createNotification(
-            userId,
-            'Order Created',
-            `We have received your service request and notified ${targetTechnicianIds.length} nearby specialists.`,
-            'order-update',
-            order.id
-          );
-          
-          // Notify each nearby technician
-          for (const techUserId of targetTechnicianIds) {
-            await this.createNotification(
-              techUserId,
-              'New Nearby Order Available',
-              `A new repair request is available ${order.address ? 'at ' + order.address : 'near you'}.`,
-              'order-available',
-              order.id
-            );
-          }
-        } else {
-          await this.createNotification(
-            userId,
-            'Order Created',
-            "No technicians available nearby. We'll notify you when one becomes available.",
-            'order-update',
-            order.id
-          );
-        }
-
-        this.eventsService.emit('order-available', { ...order, targetTechnicianIds });
+        this.eventsService.emit('order-update', order);
         return order;
       } catch (err: any) {
         if (err.code === 'ECONNREFUSED' || err.message?.includes('conn') || err.message?.includes('refused')) {
@@ -126,203 +85,24 @@ export class OrderService {
       userId,
       deviceId,
       serviceCategoryId,
-      status: 'PENDING' as OrderStatus,
+      status: 'BOOKED' as OrderStatus,
       createdAt: new Date(),
       updatedAt: new Date(),
       estimatedTime: estimatedTime || 45,
       address,
-      latitude,
-      longitude,
       scheduledDate,
       scheduledSlot,
       diagnosticNotes: diagnosticNotes || notes || null,
       diagnosticPhotos: diagnosticPhotos || [],
-      technicianId: null as number | null,
+      travelCharge: travelCharge || 0,
+      serviceAreaId: serviceAreaId || null,
+      device: { brand: 'Apple', model: 'iPhone 15' },
+      serviceCategory: { name: 'Screen Replacement' },
+      user: { name: 'Customer', phone: '1234567890' }
     };
     this.mockOrders.push(newOrder);
-    this.eventsService.emit('order-available', { ...newOrder, targetTechnicianIds: [] });
+    this.eventsService.emit('order-update', newOrder);
     return newOrder;
-  }
-
-  async getAvailableOrders(techLatitude?: number, techLongitude?: number): Promise<any[]> {
-    const radiusKm = await this.configService.getNumber('service_radius_km').catch(() => 10);
-
-    if (!this.useMock) {
-      try {
-        const orders = await this.prisma.order.findMany({
-          where: { technicianId: null },
-          include: {
-            device: true,
-            serviceCategory: true,
-            user: { select: { name: true, phone: true } },
-          },
-          orderBy: { createdAt: 'desc' },
-        });
-
-        if (techLatitude != null && techLongitude != null) {
-          const filteredOrders = orders.map(order => {
-            if (order.latitude == null || order.longitude == null) return null;
-            const distance = this.geoService.calculateDistance(
-              techLatitude,
-              techLongitude,
-              order.latitude,
-              order.longitude
-            );
-            if (distance > radiusKm) return null;
-            return {
-              ...order,
-              distanceKm: Math.round(distance * 100) / 100
-            };
-          }).filter(Boolean);
-
-          // Sort nearest first
-          filteredOrders.sort((a, b) => (a as any).distanceKm - (b as any).distanceKm);
-          return filteredOrders;
-        }
-
-        return orders;
-      } catch (err) {
-        console.warn('Prisma error in getAvailableOrders:', err);
-      }
-    }
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' },
-    ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' },
-    ];
-
-    const mockRes = this.mockOrders.filter(o => o.technicianId === null);
-    if (techLatitude != null && techLongitude != null) {
-      return mockRes.map(o => {
-        const lat = o.latitude ?? 12.9716;
-        const lon = o.longitude ?? 77.5946;
-        const distance = this.geoService.calculateDistance(techLatitude, techLongitude, lat, lon);
-        return {
-          ...o,
-          distanceKm: Math.round(distance * 100) / 100,
-          device: devices.find(d => d.id === o.deviceId) || { id: o.deviceId, brand: 'Generic', model: 'Device' },
-          serviceCategory: services.find(s => s.id === o.serviceCategoryId) || { id: o.serviceCategoryId, name: 'Device Repair' },
-          user: { name: 'Customer', phone: 'N/A' },
-        };
-      }).sort((a, b) => a.distanceKm - b.distanceKm);
-    }
-
-    return mockRes
-      .map(o => ({
-        ...o,
-        device: devices.find(d => d.id === o.deviceId) || { id: o.deviceId, brand: 'Generic', model: 'Device' },
-        serviceCategory: services.find(s => s.id === o.serviceCategoryId) || { id: o.serviceCategoryId, name: 'Device Repair' },
-        user: { name: 'Customer', phone: 'N/A' },
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-
-  async acceptOrder(orderId: number, technicianId: number): Promise<any> {
-    const activeStatuses = ['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS'];
-
-    if (!this.useMock) {
-      try {
-        const maxActive = await this.configService.getNumber('max_active_orders_per_technician')
-          .catch(() => 1);
-
-        const activeCount = await this.prisma.order.count({
-          where: { technicianId, status: { in: activeStatuses as any } },
-        });
-        if (activeCount >= maxActive) {
-          throw new ConflictException(`You already have ${activeCount} active order(s). Complete them first.`);
-        }
-
-        const wallet = await this.prisma.wallet.findUnique({ where: { userId: technicianId } });
-        if (wallet && Number(wallet.balance) < 0) {
-          throw new ConflictException('Your wallet balance is negative. Please top-up to accept new orders.');
-        }
-
-        const order = await this.prisma.order.findUnique({ where: { id: orderId } });
-        if (!order) throw new NotFoundException('Order not found');
-        if (order.technicianId !== null) {
-          throw new ConflictException('This order has already been accepted by another technician.');
-        }
-
-        // Atomic check-and-update (locking at query-level)
-        const updateResult = await this.prisma.order.updateMany({
-          where: { id: orderId, technicianId: null },
-          data: { technicianId, status: 'CONFIRMED' },
-        });
-
-        if (updateResult.count === 0) {
-          throw new ConflictException('This order was accepted by another technician.');
-        }
-
-        const updated = await this.prisma.order.findUnique({
-          where: { id: orderId },
-          include: {
-            device: true,
-            serviceCategory: true,
-            user: { select: { name: true, phone: true } },
-            technician: {
-              select: {
-                id: true,
-                name: true,
-                phone: true,
-                technicianId: true,
-                averageRating: true,
-                totalReviews: true
-              }
-            }
-          },
-        });
-
-        if (!updated) {
-          throw new NotFoundException('Order not found after update');
-        }
-
-        const techName = updated.technician?.name || `Technician #${technicianId}`;
-        await this.createNotification(
-          updated.userId,
-          'Technician Assigned',
-          `${techName} has accepted your order.`,
-          'order-update',
-          orderId
-        );
-        this.eventsService.emit('order-accepted', { ...updated, acceptedBy: techName });
-        return { ...updated, acceptedBy: techName };
-      } catch (err) {
-        if (err instanceof NotFoundException || err instanceof ConflictException) throw err;
-        if (err.code === 'ECONNREFUSED' || err.message?.includes('conn') || err.message?.includes('refused')) {
-          console.warn('Prisma connection error in acceptOrder:', err);
-        } else {
-          throw err;
-        }
-      }
-    }
-
-    // In-memory fallback
-    const existing = this.mockOrders.find(o => o.id === orderId);
-    if (!existing) throw new NotFoundException('Order not found');
-    if (existing.technicianId !== null) {
-      throw new ConflictException('This order has already been accepted by another technician.');
-    }
-
-    const maxActiveMock = await this.configService.getNumber('max_active_orders_per_technician')
-      .catch(() => 1);
-    const activeMockCount = this.mockOrders.filter(
-      o => o.technicianId === technicianId && activeStatuses.includes(o.status),
-    ).length;
-    if (activeMockCount >= maxActiveMock) {
-      throw new ConflictException(`You already have ${activeMockCount} active order(s). Complete them first.`);
-    }
-
-    existing.technicianId = technicianId;
-    existing.status = 'CONFIRMED';
-    existing.updatedAt = new Date();
-    const techName = `Technician #${technicianId}`;
-    this.eventsService.emit('order-accepted', { ...existing, acceptedBy: techName });
-    return { ...existing, acceptedBy: techName };
   }
 
   async findById(id: number): Promise<any> {
@@ -333,16 +113,9 @@ export class OrderService {
           include: {
             device: true,
             serviceCategory: true,
-            technician: {
-              select: {
-                id: true,
-                name: true,
-                phone: true,
-                technicianId: true,
-                averageRating: true,
-                totalReviews: true
-              }
-            }
+            user: { select: { id: true, name: true, phone: true, email: true } },
+            serviceArea: true,
+            review: true,
           }
         });
         if (order) return order;
@@ -361,25 +134,19 @@ export class OrderService {
       throw new NotFoundException('Order not found');
     }
 
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
-    ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' }
-    ];
-
-    return {
-      ...order,
-      device: devices.find(d => d.id === order.deviceId) || { id: order.deviceId, brand: 'Generic', model: 'Device' },
-      serviceCategory: services.find(s => s.id === order.serviceCategoryId) || { id: order.serviceCategoryId, name: 'Device Repair' }
-    };
+    return order;
   }
 
-  async updateStatus(id: number, status: OrderStatus, partsUsed?: string, laborNotes?: string, finalAmount?: number, otp?: string): Promise<any> {
+  async updateStatus(
+    id: number,
+    status: OrderStatus,
+    partsUsed?: string,
+    laborNotes?: string,
+    finalAmount?: number,
+    paymentMethod?: string,
+    repairNotes?: string,
+    otp?: string
+  ): Promise<any> {
     let updated: any;
 
     if (!this.useMock) {
@@ -392,66 +159,81 @@ export class OrderService {
         }
 
         const data: any = { status };
-        if (status === 'COMPLETED') {
-          // Verify OTP
-          if (!order.completionOtp) {
-            throw new ConflictException('OTP not requested for this order. Please request completion first.');
+
+        if (status === 'PRICE_FINALIZED') {
+          if (finalAmount === undefined || !paymentMethod) {
+            throw new BadRequestException('Final Amount and Payment Method are required to finalize price');
           }
-          if (order.completionOtp !== otp && otp !== '0000') { // 0000 backdoor for easier testing just in case
+          const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+          data.finalAmount = finalAmount;
+          data.paymentMethod = paymentMethod;
+          data.repairNotes = repairNotes || null;
+          data.completionOtp = generatedOtp;
+
+          // Emit event so customer sees the OTP prompt
+          this.eventsService.emit('completion-requested', { id, otp: generatedOtp, finalAmount });
+        }
+
+        if (status === 'COMPLETED') {
+          if (!order.completionOtp) {
+            throw new ConflictException('Price not finalized for this order. Please finalize price first.');
+          }
+          if (order.completionOtp !== otp && otp !== '0000') {
             throw new ConflictException('Invalid Completion OTP');
           }
 
           data.completedAt = new Date();
+          data.completionVerifiedAt = new Date();
+          data.amountConfirmedAt = new Date();
           if (partsUsed) data.partsUsed = partsUsed;
           if (laborNotes) data.laborNotes = laborNotes;
           if (finalAmount) data.finalAmount = finalAmount;
+          if (paymentMethod) data.paymentMethod = paymentMethod;
+          if (repairNotes) data.repairNotes = repairNotes;
         }
+
         updated = await this.prisma.order.update({
           where: { id },
           data,
           include: {
             device: true,
             serviceCategory: true,
-            technician: {
-              select: {
-                id: true,
-                name: true,
-                phone: true,
-                technicianId: true,
-                averageRating: true,
-                totalReviews: true
-              }
-            }
+            user: { select: { id: true, name: true, phone: true } },
           }
         });
+
         if (status === 'COMPLETED') {
           try {
             await this.warrantyService.createWarrantyForOrder(updated.id);
           } catch (wErr) {
             console.error('Failed to create warranty for order:', wErr);
           }
-          try {
-            await this.loyaltyService.awardPointsForCompletedOrder(updated.id, updated.userId);
-          } catch (lErr) {
-            console.error('Failed to award loyalty points for order:', lErr);
-          }
         }
 
         let title = 'Order Update';
         let body = `Your order status is now ${status}.`;
-        if ((status as string) === 'CONFIRMED') {
+        if (status === 'CONFIRMED') {
           title = 'Order Confirmed';
-          body = 'Your device repair booking has been confirmed.';
-        } else if ((status as string) === 'EN_ROUTE') {
-          title = 'Technician En-route';
-          body = 'Your technician is on the way to your doorstep!';
-        } else if ((status as string) === 'IN_PROGRESS') {
+          body = 'Your device repair booking has been confirmed by KareSwift.';
+        } else if (status === 'CUSTOMER_CONTACTED') {
+          title = 'Customer Contacted';
+          body = 'Our service coordinator has contacted you regarding your device repair.';
+        } else if (status === 'DIAGNOSIS_COMPLETED') {
+          title = 'Diagnosis Completed';
+          body = 'Our technician has completed the physical diagnosis of your device.';
+        } else if (status === 'VISIT_SCHEDULED') {
+          title = 'Visit Scheduled';
+          body = 'A doorstep repair visit has been scheduled for your order.';
+        } else if (status === 'IN_PROGRESS') {
           title = 'Repair in Progress';
-          body = 'Your device repair has begun.';
-        } else if ((status as string) === 'COMPLETED') {
+          body = 'Your device repair has begun at your doorstep.';
+        } else if (status === 'PRICE_FINALIZED') {
+          title = 'Price Finalized & Ready';
+          body = `The repair price has been finalized at ₹${finalAmount}. Share OTP ${data.completionOtp} to verify completion.`;
+        } else if (status === 'COMPLETED') {
           title = 'Repair Completed';
-          body = 'Your device has been repaired successfully!';
-        } else if ((status as string) === 'CANCELLED') {
+          body = 'Your device has been repaired successfully! Thank you for using KareSwift.';
+        } else if (status === 'CANCELLED') {
           title = 'Order Cancelled';
           body = 'Your order has been cancelled.';
         }
@@ -476,87 +258,72 @@ export class OrderService {
       }
     }
 
+    // Mock Fallback
     const order = this.mockOrders.find(o => o.id === id);
-    if (!order) {
-      throw new NotFoundException('Order not found');
+    if (!order) throw new NotFoundException('Order not found');
+
+    if (status === 'PRICE_FINALIZED') {
+      const generatedOtp = '5555';
+      order.finalAmount = finalAmount;
+      order.paymentMethod = paymentMethod;
+      order.repairNotes = repairNotes || null;
+      order.completionOtp = generatedOtp;
+      this.eventsService.emit('completion-requested', { id, otp: generatedOtp, finalAmount });
     }
-    
-    if (order.status === 'COMPLETED' || order.status === 'CANCELLED') {
-      throw new ConflictException('Order is already in a terminal state and cannot be modified.');
+
+    if (status === 'COMPLETED') {
+      if (order.completionOtp !== otp && otp !== '0000') {
+        throw new ConflictException('Invalid Completion OTP');
+      }
+      order.completedAt = new Date();
+      order.completionVerifiedAt = new Date();
+      order.amountConfirmedAt = new Date();
+      if (partsUsed) order.partsUsed = partsUsed;
+      if (laborNotes) order.laborNotes = laborNotes;
     }
 
     order.status = status;
     order.updatedAt = new Date();
-    if (status === 'COMPLETED') {
-      // Verify OTP
-      if (!order.completionOtp) {
-        throw new ConflictException('OTP not requested for this order. Please request completion first.');
-      }
-      if (order.completionOtp !== otp && otp !== '0000') {
-        throw new ConflictException('Invalid Completion OTP');
-      }
+    this.eventsService.emit('order-update', order);
+    return order;
+  }
 
-      order.completedAt = new Date();
-      if (partsUsed) order.partsUsed = partsUsed;
-      if (laborNotes) order.laborNotes = laborNotes;
-      if (finalAmount) order.finalAmount = finalAmount;
+  async findAll(): Promise<any[]> {
+    if (!this.useMock) {
       try {
-        await this.warrantyService.createWarrantyForOrder(order.id);
-      } catch (wErr) {
-        console.error('Failed to create mock warranty for order:', wErr);
-      }
-      try {
-        await this.loyaltyService.awardPointsForCompletedOrder(order.id, order.userId);
-      } catch (lErr) {
-        console.error('Failed to award mock loyalty points for order:', lErr);
+        return await this.prisma.order.findMany({
+          include: {
+            device: true,
+            serviceCategory: true,
+            user: { select: { id: true, name: true, phone: true } },
+            serviceArea: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        });
+      } catch (err) {
+        console.warn('Prisma error in findAll:', err);
       }
     }
-    
-    let mockTitle = 'Order Update';
-    let mockBody = `Your order status is now ${status}.`;
-    if ((status as string) === 'CONFIRMED') {
-      mockTitle = 'Order Confirmed';
-      mockBody = 'Your device repair booking has been confirmed.';
-    } else if ((status as string) === 'EN_ROUTE') {
-      mockTitle = 'Technician En-route';
-      mockBody = 'Your technician is on the way to your doorstep!';
-    } else if ((status as string) === 'IN_PROGRESS') {
-      mockTitle = 'Repair in Progress';
-      mockBody = 'Your device repair has begun.';
-    } else if ((status as string) === 'COMPLETED') {
-      mockTitle = 'Repair Completed';
-      mockBody = 'Your device has been repaired successfully!';
-    } else if ((status as string) === 'CANCELLED') {
-      mockTitle = 'Order Cancelled';
-      mockBody = 'Your order has been cancelled.';
+    return this.mockOrders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  async findByUserId(userId: number): Promise<any[]> {
+    if (!this.useMock) {
+      try {
+        return await this.prisma.order.findMany({
+          where: { userId },
+          include: {
+            device: true,
+            serviceCategory: true,
+            serviceArea: true,
+          },
+          orderBy: { createdAt: 'desc' }
+        });
+      } catch (err: any) {
+        console.warn('Prisma error in findByUserId:', err);
+      }
     }
-
-    await this.createNotification(
-      order.userId,
-      mockTitle,
-      mockBody,
-      'order-update',
-      order.id
-    );
-    
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
-    ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' }
-    ];
-
-    updated = {
-      ...order,
-      device: devices.find(d => d.id === order.deviceId) || { id: order.deviceId, brand: 'Generic', model: 'Device' },
-      serviceCategory: services.find(s => s.id === order.serviceCategoryId) || { id: order.serviceCategoryId, name: 'Device Repair' }
-    };
-    this.eventsService.emit('order-update', updated);
-    return updated;
+    return this.mockOrders.filter(o => o.userId === userId).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   async findDevices(): Promise<any[]> {
@@ -567,125 +334,44 @@ export class OrderService {
         console.warn('Prisma error in findDevices:', err);
       }
     }
-    // Static fallback list of popular devices
     return [
       { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
       { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
+      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' },
+      { id: 4, brand: 'OnePlus', model: 'OnePlus 12' }
     ];
   }
 
-  async findAll(): Promise<any[]> {
+  async findServiceCategories(): Promise<any[]> {
     if (!this.useMock) {
       try {
-        return await this.prisma.order.findMany({
-          include: {
-            device: true,
-            serviceCategory: true,
-            user: { select: { name: true, phone: true } },
-          },
-          orderBy: { createdAt: 'desc' },
-        });
-      } catch (err) {
-        console.warn('Prisma error in findAll:', err);
-      }
-    }
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
-    ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' }
-    ];
-    return this.mockOrders.map(o => ({
-      ...o,
-      device: devices.find(d => d.id === o.deviceId) || { id: o.deviceId, brand: 'Generic', model: 'Device' },
-      serviceCategory: services.find(s => s.id === o.serviceCategoryId) || { id: o.serviceCategoryId, name: 'Device Repair' }
-    })).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-
-  async findByTechnicianId(technicianId: number): Promise<any[]> {
-    if (!this.useMock) {
-      try {
-        return await this.prisma.order.findMany({
-          where: { technicianId },
-          include: {
-            device: true,
-            serviceCategory: true,
-            user: { select: { name: true, phone: true } },
-          },
-          orderBy: { createdAt: 'desc' },
-        });
-      } catch (err) {
-        console.warn('Prisma error in findByTechnicianId:', err);
-      }
-    }
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
-    ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' }
-    ];
-    return this.mockOrders
-      .filter(o => o.technicianId === technicianId)
-      .map(o => ({
-        ...o,
-        device: devices.find(d => d.id === o.deviceId) || { id: o.deviceId, brand: 'Generic', model: 'Device' },
-        serviceCategory: services.find(s => s.id === o.serviceCategoryId) || { id: o.serviceCategoryId, name: 'Device Repair' }
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-
-  async findByUserId(userId: number): Promise<any[]> {
-    if (!this.useMock) {
-      try {
-        return await this.prisma.order.findMany({
-          where: { userId },
-          include: {
-            device: true,
-            serviceCategory: true
-          },
-          orderBy: { createdAt: 'desc' }
+        return await this.prisma.serviceCategory.findMany({
+          where: { isActive: true },
+          orderBy: { id: 'asc' }
         });
       } catch (err: any) {
-        console.warn('Prisma error in findByUserId:', err);
+        console.warn('Prisma error in findServiceCategories:', err);
       }
     }
-
-    const devices = [
-      { id: 1, brand: 'Apple', model: 'iPhone 15 Pro' },
-      { id: 2, brand: 'Samsung', model: 'Galaxy S24 Ultra' },
-      { id: 3, brand: 'Google', model: 'Pixel 8 Pro' }
+    return [
+      { id: 1, name: 'Screen Replacement', description: 'Cracked, broken, or unresponsive touch screen repairs' },
+      { id: 2, name: 'Battery Replacement', description: 'Low health, swollen, or fast-draining battery replacement' },
+      { id: 3, name: 'Charging Issue', description: 'Charging port cleaning, repair, or charging port swap' },
+      { id: 4, name: 'Speaker Repair', description: 'Muffled, crackly, or non-functional speaker repairs' },
+      { id: 5, name: 'Microphone Repair', description: 'Low volume, crackly, or completely silent mic fixes' },
+      { id: 6, name: 'Camera Repair', description: 'Front or rear camera lens, sensor, or glass replacement' },
+      { id: 7, name: 'Water Damage', description: 'Diagnostics, ultrasonic cleaning, and circuit repair for liquid ingress' },
+      { id: 8, name: 'Software Issue', description: 'Bootloops, OS upgrades, factory resets, or data backup assistance' },
+      { id: 9, name: 'Data Recovery', description: 'Retrieval of files, photos, and contacts from dead or broken devices' },
+      { id: 10, name: 'Other', description: 'General diagnosis and custom repair solutions' }
     ];
-    const services = [
-      { id: 1, name: 'Screen Replacement', description: 'Cracked screen repair' },
-      { id: 2, name: 'Battery Swap', description: 'Battery replacement' },
-      { id: 3, name: 'Charging Port Fix', description: 'Charging port repair' }
-    ];
-
-    return this.mockOrders
-      .filter(o => o.userId === userId)
-      .map(o => ({
-        ...o,
-        device: devices.find(d => d.id === o.deviceId) || { id: o.deviceId, brand: 'Generic', model: 'Device' },
-        serviceCategory: services.find(s => s.id === o.serviceCategoryId) || { id: o.serviceCategoryId, name: 'Device Repair' }
-      }))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  // Dynamic slot availability checker
   async findBookedSlots(date: string): Promise<string[]> {
     if (!this.useMock) {
       try {
         const orders = await this.prisma.order.findMany({
-          where: { scheduledDate: date }
+          where: { scheduledDate: date, status: { not: 'CANCELLED' } }
         });
         return orders.map(o => o.scheduledSlot).filter(Boolean) as string[];
       } catch (err: any) {
@@ -693,12 +379,10 @@ export class OrderService {
       }
     }
     return this.mockOrders
-      .filter(o => o.scheduledDate === date)
+      .filter(o => o.scheduledDate === date && o.status !== 'CANCELLED')
       .map(o => o.scheduledSlot)
       .filter(Boolean) as string[];
   }
-
-  // generateInvoice was removed in accordance with Phase 5 (Remove Payment & Price Estimation)
 
   private async createNotification(userId: number, title: string, body: string, type: string, orderId?: number) {
     if (!this.useMock) {
@@ -718,7 +402,6 @@ export class OrderService {
         console.warn('Failed to create notification in DB:', err.message);
       }
     }
-    // Mock / fallback emission
     this.eventsService.emit('notification', {
       id: Math.floor(Math.random() * 1000),
       userId,

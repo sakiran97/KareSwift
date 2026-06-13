@@ -29,6 +29,8 @@ services:
         sync: false # Add if you want actual emails sent
       - key: GMAIL_PASS
         sync: false # Add if you want actual emails sent
+      - key: SUPABASE_JWT_SECRET
+        sync: false # Set this in Render Dashboard from Supabase (Project API Settings -> JWT Secret)
 
   # 3. Customer & Technician App (Angular/Ionic PWA)
   - type: web

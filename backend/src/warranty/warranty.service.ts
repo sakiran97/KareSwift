@@ -210,8 +210,6 @@ export class WarrantyService {
           deviceId: order.deviceId,
           serviceCategoryId: order.serviceCategoryId,
           address: order.address || undefined,
-          latitude: order.latitude || undefined,
-          longitude: order.longitude || undefined,
           notes: `Warranty claim for order #${orderId}`,
           diagnosticNotes: `Warranty claim for order #${orderId}`,
         });

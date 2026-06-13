@@ -1,17 +1,15 @@
 import { Controller, Get, Post, Body, Param, Patch, Query, BadRequestException, UseGuards, Req } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { SlotService } from '../slot/slot.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
 import { Order } from '../generated/prisma';
-import { ConfigService } from '../config/config.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,
-    private readonly configService: ConfigService,
+    private readonly slotService: SlotService,
   ) {}
 
   @Get()
@@ -22,9 +20,6 @@ export class OrderController {
     }
     if (req.user.role === 'admin') {
       return this.orderService.findAll();
-    }
-    if (req.user.role === 'technician') {
-      return this.orderService.findByTechnicianId(userId);
     }
     return this.orderService.findByUserId(userId);
   }
@@ -38,13 +33,13 @@ export class OrderController {
       serviceCategoryId: number; 
       estimatedTime?: number;
       address?: string;
-      latitude?: number;
-      longitude?: number;
       scheduledDate?: string;
       scheduledSlot?: string;
       notes?: string;
       diagnosticNotes?: string;
       diagnosticPhotos?: string[];
+      travelCharge?: number;
+      serviceAreaId?: number;
     }
   ) {
     const userId = req.user?.id ? Number(req.user.id) : createOrderDto.userId;
@@ -61,36 +56,17 @@ export class OrderController {
     if (!date) {
       throw new BadRequestException('Date query parameter is required');
     }
-    const allSlots = [
-      "09:00 AM - 11:00 AM",
-      "11:00 AM - 01:00 PM",
-      "01:00 PM - 03:00 PM",
-      "03:00 PM - 05:00 PM",
-      "05:00 PM - 07:00 PM"
-    ];
-    const maxPerSlot = await this.configService.getNumber('max_orders_per_slot').catch(() => 3);
-    const bookedSlots = await this.orderService.findBookedSlots(date);
-    
-    // Count occurrences of each slot booked
-    const slotCounts = bookedSlots.reduce((acc, slot) => {
-      acc[slot] = (acc[slot] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return allSlots.map(slot => {
-      const bookedCount = slotCounts[slot] || 0;
-      return {
-        slot,
-        available: bookedCount < maxPerSlot,
-        bookedCount,
-        maxCount: maxPerSlot
-      };
-    });
+    return this.slotService.getAvailableSlotsForDate(date);
   }
 
   @Get('devices')
   async getDevices() {
     return this.orderService.findDevices();
+  }
+
+  @Get('categories')
+  async getCategories() {
+    return this.orderService.findServiceCategories();
   }
 
   @Get(':id')
@@ -110,14 +86,24 @@ export class OrderController {
     @Body('partsUsed') partsUsed?: string,
     @Body('laborNotes') laborNotes?: string,
     @Body('finalAmount') finalAmount?: number,
+    @Body('paymentMethod') paymentMethod?: string,
+    @Body('repairNotes') repairNotes?: string,
+    @Body('otp') otp?: string,
   ) {
     const cleanId = id.startsWith('ORD-') ? id.replace('ORD-', '') : id;
     const parsedId = Number(cleanId);
     if (isNaN(parsedId)) {
       throw new BadRequestException('Invalid order ID format');
     }
-    return this.orderService.updateStatus(parsedId, status as any, partsUsed, laborNotes, finalAmount);
+    return this.orderService.updateStatus(
+      parsedId,
+      status as any,
+      partsUsed,
+      laborNotes,
+      finalAmount,
+      paymentMethod,
+      repairNotes,
+      otp
+    );
   }
-
-  // getInvoice endpoint was removed in accordance with Phase 5 (Remove Payment & Price Estimation)
 }

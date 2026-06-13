@@ -1,0 +1,133 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section glass-panel">
+    <div class="hero-content">
+      <div class="badge-new">✨ Certified Mobile Repair Technician</div>
+      <h1>Trusted Doorstep Mobile Repairs, Done Right in Front of You</h1>
+      <p class="hero-subtitle">Professional diagnostics, genuine parts, and 90-day warranty. Book your doorstep repair in under 2 minutes.</p>
+      <div class="hero-actions">
+        <button class="btn-primary-lg" (click)="bookNow()">Book Repair Now</button>
+        <a routerLink="/about" class="btn-secondary-lg">Meet Our Founder</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="info-section">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Convenient three-step repair service at your doorstep.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card glass-panel animate-hover" *ngFor="let step of howItWorks">
+        <div class="step-badge">{{ step.step }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="section-header">
+      <h2>Our Repair Services</h2>
+      <p>We fix all major smartphone, tablet, and laptop issues on-site.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card glass-panel animate-hover" *ngFor="let service of servicesList">
+        <span class="service-icon">{{ service.icon }}</span>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.desc }}</p>
+        <button class="btn-link" (click)="bookNow()">Book Now →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose KareSwift Section -->
+  <section class="why-us-section glass-panel">
+    <div class="section-header">
+      <h2>Why Choose KareSwift?</h2>
+      <p>A trusted local expert service built on quality, transparency, and safety.</p>
+    </div>
+    <div class="perks-grid">
+      <div class="perk-card">
+        <div class="perk-icon">🚗</div>
+        <h4>Doorstep Service</h4>
+        <p>No more traveling or waiting in line. We repair at your home, office, or cafe.</p>
+      </div>
+      <div class="perk-card">
+        <div class="perk-icon">🔍</div>
+        <h4>Transparent Diagnosis</h4>
+        <p>Repairs are done right in front of you. Complete peace of mind and data security.</p>
+      </div>
+      <div class="perk-card">
+        <div class="perk-icon">🛡️</div>
+        <h4>Service Warranty</h4>
+        <p>All parts replaced come with a hassle-free 90-day repair warranty.</p>
+      </div>
+      <div class="perk-card">
+        <div class="perk-icon">🔑</div>
+        <h4>Secure OTP Verification</h4>
+        <p>Order is finalized only when you verify the fix and share your secure completion OTP.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder Profile Section -->
+  <section class="founder-section">
+    <div class="founder-grid glass-panel">
+      <div class="founder-image-wrap">
+        <div class="founder-image-fallback">👨‍🔧</div>
+      </div>
+      <div class="founder-info">
+        <span class="sub-badge">THE FACE OF KARESWIFT</span>
+        <h2>Meet Sai Kiran</h2>
+        <p class="role">Founder & Certified Senior Technician</p>
+        <p class="bio">
+          Sai Kiran is a certified repair expert with over 8 years of experience servicing thousands of Apple, Samsung, and OnePlus devices. KareSwift was founded to bring transparent, honest, and high-quality doorstep tech repairs directly to customers.
+        </p>
+        <div class="highlights-grid">
+          <div class="highlight-item">✓ Certified Mobile Repair Specialist</div>
+          <div class="highlight-item">✓ Government Approved Provider</div>
+          <div class="highlight-item">✓ Trusted Local Service Expert</div>
+          <div class="highlight-item">✓ 100% Secure Data & Clean Record</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verified Reviews Section -->
+  <section class="reviews-section" *ngIf="reviews().length > 0">
+    <div class="section-header">
+      <h2>Verified Reviews</h2>
+      <p>See what our customers say about our doorstep repairs.</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card glass-panel" *ngFor="let review of reviews()">
+        <div class="review-header">
+          <div class="stars">★ ★ ★ ★ ★</div>
+          <span class="device-tag">{{ review.device }}</span>
+        </div>
+        <p class="review-comment">"{{ review.comments || 'Excellent repair work!' }}"</p>
+        <div class="review-footer">
+          <div class="cust-info">
+            <span class="cust-name">{{ review.customerName }}</span>
+            <span class="cust-service">Service: {{ review.service }}</span>
+          </div>
+          <span class="verified-badge">✓ Verified Customer</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Booking CTA Section -->
+  <section class="cta-section glass-panel">
+    <h2>Ready to get your device fixed?</h2>
+    <p>Get an instant quote and book your slot in under 2 minutes.</p>
+    <button class="btn-primary-lg" (click)="bookNow()">Book Repair Now</button>
+    <div class="contact-details">
+      <span>📞 Call Us: +91 98765 43210</span>
+      <span>✉ Email: support@kareswift.com</span>
+    </div>
+  </section>
+</div>

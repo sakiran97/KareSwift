@@ -15,7 +15,6 @@ import { ThemeService } from '../../services/theme.service';
 })
 export class Navbar implements OnInit, OnDestroy {
   isMenuOpen = false;
-  newOrdersCount = 0;
   isScrolled = false;
 
   // Notifications state
@@ -34,21 +33,12 @@ export class Navbar implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.refreshNewOrdersCount();
     if (this.isLoggedIn()) {
       this.loadNotifications();
     }
     window.addEventListener('scroll', this.onScroll, { passive: true });
     this.sseSub = this.sse.connect().subscribe({
       next: (event: SseEvent) => {
-        if (event.type === 'order-available') {
-          this.newOrdersCount++;
-          this.cdr.detectChanges();
-        }
-        if (event.type === 'order-accepted') {
-          this.newOrdersCount = Math.max(0, this.newOrdersCount - 1);
-          this.cdr.detectChanges();
-        }
         if (event.type === 'notification') {
           const currentUser = this.getCurrentUser();
           if (currentUser && event.data.userId === currentUser.id) {
@@ -58,12 +48,6 @@ export class Navbar implements OnInit, OnDestroy {
               this.cdr.detectChanges();
             }
           }
-        }
-        if (event.type === 'new-technician-pending') {
-          const tech = event.data;
-          const alertMsg = `New technician registered: ${tech.name || tech.email} (${tech.technicianId || 'N/A'})`;
-          alert(alertMsg);
-          this.cdr.detectChanges();
         }
       },
     });
@@ -133,32 +117,8 @@ export class Navbar implements OnInit, OnDestroy {
     this.cdr.detectChanges();
 
     if (note.orderId) {
-      if (note.type === 'chat') {
-        this.router.navigate(['/order/chat', note.orderId]);
-      } else {
-        const role = this.getUserRole();
-        if (role === 'technician') {
-          this.router.navigate(['/technician/orders', note.orderId]);
-        } else {
-          this.router.navigate(['/order/track', note.orderId]);
-        }
-      }
+      this.router.navigate(['/order/track', note.orderId]);
     }
-  }
-
-  private refreshNewOrdersCount() {
-    const role = this.getUserRole();
-    if (role !== 'technician' && role !== 'admin') return;
-    this.http.get('/api/technician/orders/available').subscribe({
-      next: (res: any) => {
-        this.newOrdersCount = (res || []).length;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-  getDisplayCount(): string {
-    return this.newOrdersCount > 9 ? '9+' : String(this.newOrdersCount);
   }
 
   toggleMenu(): void {
@@ -181,10 +141,6 @@ export class Navbar implements OnInit, OnDestroy {
   getUserRole(): string | null {
     const user = this.getCurrentUser();
     return user?.role || null;
-  }
-
-  isTechnician(): boolean {
-    return this.getUserRole() === 'technician';
   }
 
   isAdmin(): boolean {

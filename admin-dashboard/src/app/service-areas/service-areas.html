@@ -1,0 +1,90 @@
+<div class="areas-container">
+  <div class="areas-header glass-panel">
+    <div>
+      <h2>Doorstep Service Areas</h2>
+      <p>Configure geographical service availability and doorstep travel charge rates.</p>
+    </div>
+    <button class="btn-add" (click)="showForm()" *ngIf="!isEditing">
+      + Add New Area
+    </button>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Area Form (Side-by-side or overlay depending on state) -->
+    <div class="form-card-area glass-panel animate-fade-right" *ngIf="isEditing">
+      <h3>{{ editingAreaId ? 'Edit Service Area' : 'Add New Service Area' }}</h3>
+      <div *ngIf="formError" class="error-banner">{{ formError }}</div>
+      <div *ngIf="formSuccess" class="success-banner">{{ formSuccess }}</div>
+
+      <form [formGroup]="areaForm" (ngSubmit)="saveArea()" class="area-form-element">
+        <div class="form-group">
+          <label>Area / Locality Name</label>
+          <input type="text" formControlName="name" placeholder="e.g. ECIL, Hitech City, Sainikpuri" />
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" formControlName="city" placeholder="Hyderabad" />
+        </div>
+        <div class="form-group">
+          <label>Doorstep Travel Charge (₹)</label>
+          <input type="number" formControlName="travelCharge" placeholder="e.g. 0, 199, 299" />
+          <span class="hint">Charge ₹0 for local areas close to service base, and ₹199-299 for further areas.</span>
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isActive" />
+            Enable Bookings for this Area
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="areaForm.invalid">Save Area Config</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Area List Table -->
+    <div class="list-card-area glass-panel" [class.full-width]="!isEditing">
+      <h3>Active Service Locations</h3>
+      <div class="table-responsive">
+        <table class="areas-table">
+          <thead>
+            <tr>
+              <th>Area / Locality</th>
+              <th>City</th>
+              <th>Doorstep Travel Charge</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="no-records" *ngIf="areas().length === 0">
+              <td colspan="5">No service areas configured yet. Add one to start doorstep service.</td>
+            </tr>
+            <tr *ngFor="let area of areas()" [class.inactive-row]="!area.isActive">
+              <td><strong>{{ area.name }}</strong></td>
+              <td>{{ area.city }}</td>
+              <td>
+                <span class="charge-badge" [class.free]="Number(area.travelCharge) === 0">
+                  {{ Number(area.travelCharge) === 0 ? 'FREE' : '₹' + area.travelCharge }}
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn-status-toggle" [class.active-status]="area.isActive" (click)="toggleActiveStatus(area)">
+                  {{ area.isActive ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <div class="actions-row">
+                  <button type="button" class="btn-icon edit" (click)="showForm(area)" title="Edit">✏️</button>
+                  <button type="button" class="btn-icon delete" (click)="deleteArea(area.id)" title="Delete">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

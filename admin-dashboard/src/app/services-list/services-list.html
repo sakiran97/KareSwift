@@ -1,0 +1,79 @@
+<div class="services-container">
+  <div class="services-header glass-panel">
+    <div>
+      <h2>Service Catalog Management</h2>
+      <p>Configure supported device repair services, descriptions, and active status.</p>
+    </div>
+    <button class="btn-add" (click)="showForm()" *ngIf="!isEditing">
+      + Add New Service
+    </button>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Service Form -->
+    <div class="form-card-service glass-panel animate-fade-right" *ngIf="isEditing">
+      <h3>{{ editingServiceId ? 'Edit Service' : 'Add New Service' }}</h3>
+      <div *ngIf="formError" class="error-banner">{{ formError }}</div>
+      <div *ngIf="formSuccess" class="success-banner">{{ formSuccess }}</div>
+
+      <form [formGroup]="serviceForm" (ngSubmit)="saveService()" class="service-form-element">
+        <div class="form-group">
+          <label>Service Name</label>
+          <input type="text" formControlName="name" placeholder="e.g. Screen Replacement, Charging Issue" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3" placeholder="Enter service description details..."></textarea>
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isActive" />
+            Enable in Booking Options
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="serviceForm.invalid">Save Service Config</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Service List Table -->
+    <div class="list-card-service glass-panel" [class.full-width]="!isEditing">
+      <h3>Catalog Items</h3>
+      <div class="table-responsive">
+        <table class="services-table">
+          <thead>
+            <tr>
+              <th>Service Name</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="no-records" *ngIf="services().length === 0">
+              <td colspan="4">No services configured in catalog yet. Add one to show booking options.</td>
+            </tr>
+            <tr *ngFor="let s of services()" [class.inactive-row]="!s.isActive">
+              <td><strong>{{ s.name }}</strong></td>
+              <td>{{ s.description || '—' }}</td>
+              <td>
+                <button type="button" class="btn-status-toggle" [class.active-status]="s.isActive" (click)="toggleActiveStatus(s)">
+                  {{ s.isActive ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <div class="actions-row">
+                  <button type="button" class="btn-icon edit" (click)="showForm(s)" title="Edit">✏️</button>
+                  <button type="button" class="btn-icon delete" (click)="deleteService(s.id)" title="Delete">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

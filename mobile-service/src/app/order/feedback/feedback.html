@@ -1,76 +1,137 @@
 <div class="feedback-container">
   <!-- Success State -->
-  <div class="success-card" *ngIf="isSubmitted">
+  <div class="success-card glass-panel animate-fade" *ngIf="isSubmitted">
     <div class="success-badge">
       <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" fill="currentColor">
         <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
       </svg>
     </div>
     <h2>Thank You!</h2>
-    <p>Your feedback helps us maintain our premium doorstep service standards. Your payment has been processed successfully.</p>
+    <p>Your review helps us maintain premium repair standards. We hope you are satisfied with KareSwift's doorstep service.</p>
     <button (click)="goHome()" class="btn-home">Return to Dashboard</button>
   </div>
 
   <!-- Form State -->
-  <div class="feedback-card" *ngIf="!isSubmitted">
+  <div class="feedback-card glass-panel animate-fade" *ngIf="!isSubmitted">
     <div class="feedback-header">
-      <h2>Share Your Experience</h2>
-      <p class="subtitle">Your repair order <strong>{{ orderId }}</strong> has been completed. How was your service?</p>
+      <h2>Rate Your Repair Experience</h2>
+      <p class="subtitle">Your repair order <strong>ORD-{{ orderId }}</strong> has been completed. Please rate your doorstep service:</p>
+    </div>
+
+    <!-- Error Banner -->
+    <div *ngIf="errorMessage" class="error-banner" style="color: #ef4444; background: rgba(239,68,68,0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.2); margin-bottom: 20px; font-weight: 600; font-size: 0.9rem;">
+      {{ errorMessage }}
     </div>
 
     <form (ngSubmit)="onSubmit()" class="feedback-form">
-      <!-- Stars Selection -->
+      
+      <!-- 1. Overall Rating -->
       <div class="rating-box">
-        <label>Your Rating</label>
-        <div class="stars-row" (mouseleave)="setHoverRating(0)">
+        <label>Overall Experience</label>
+        <div class="stars-row" (mouseleave)="setHoverRating('overall', 0)">
           <button 
             type="button"
             *ngFor="let star of [1, 2, 3, 4, 5]" 
             class="star-btn"
-            (mouseenter)="setHoverRating(star)"
-            (click)="setRating(star)"
-            [class.filled]="star <= (hoverRating || rating)"
+            (mouseenter)="setHoverRating('overall', star)"
+            (click)="setRating('overall', star)"
+            [class.filled]="star <= (hoverOverall || overallRating)"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
               <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
             </svg>
           </button>
         </div>
       </div>
 
-      <!-- Quick Tag Pills -->
-      <div class="tags-box">
-        <label>What did you like most?</label>
-        <div class="tags-row">
+      <!-- 2. Service Quality -->
+      <div class="rating-box">
+        <label>Service & Repair Quality</label>
+        <div class="stars-row" (mouseleave)="setHoverRating('quality', 0)">
           <button 
             type="button"
-            *ngFor="let tag of tags; let i = index" 
-            class="tag-pill"
-            [class.selected]="tag.selected"
-            (click)="toggleTag(i)"
+            *ngFor="let star of [1, 2, 3, 4, 5]" 
+            class="star-btn"
+            (mouseenter)="setHoverRating('quality', star)"
+            (click)="setRating('quality', star)"
+            [class.filled]="star <= (hoverQuality || serviceQuality)"
           >
-            {{ tag.label }}
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
+              <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
+            </svg>
           </button>
         </div>
       </div>
 
-      <!-- Comment Box -->
-      <div class="form-group">
-        <label for="comment">Additional Comments</label>
-        <div class="textarea-wrapper">
-          <textarea
-            id="comment"
-            [(ngModel)]="comment"
-            name="comment"
-            rows="4"
-            placeholder="Tell us more about the doorstep experience, technician behavior, repair quality..."
-          ></textarea>
-          <span class="focus-border"></span>
+      <!-- 3. Timeliness -->
+      <div class="rating-box">
+        <label>Punctuality & Timeliness</label>
+        <div class="stars-row" (mouseleave)="setHoverRating('timeliness', 0)">
+          <button 
+            type="button"
+            *ngFor="let star of [1, 2, 3, 4, 5]" 
+            class="star-btn"
+            (mouseenter)="setHoverRating('timeliness', star)"
+            (click)="setRating('timeliness', star)"
+            [class.filled]="star <= (hoverTimeliness || timeliness)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
+              <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <button type="submit" [disabled]="rating === 0 || isLoading" class="btn-submit">
-        <span *ngIf="!isLoading">Submit Review & Finish</span>
+      <!-- 4. Professionalism -->
+      <div class="rating-box">
+        <label>Technician Professionalism</label>
+        <div class="stars-row" (mouseleave)="setHoverRating('professionalism', 0)">
+          <button 
+            type="button"
+            *ngFor="let star of [1, 2, 3, 4, 5]" 
+            class="star-btn"
+            (mouseenter)="setHoverRating('professionalism', star)"
+            (click)="setRating('professionalism', star)"
+            [class.filled]="star <= (hoverProfessionalism || professionalism)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
+              <path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Photo Upload -->
+      <div class="photo-upload-section" style="margin-top: 20px;">
+        <label style="font-weight: 600; font-size: 0.9rem; text-transform: uppercase; color: rgba(255,255,255,0.7); display: block; margin-bottom: 8px;">Upload Repaired Device Photos (Optional)</label>
+        <input type="file" id="reviewPhotos" multiple accept="image/*" (change)="triggerPhotoUpload($event)" style="display: none;" />
+        <label for="reviewPhotos" class="btn-photo-upload" style="display: inline-block; padding: 10px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+          📷 Attach Repaired Device Image
+        </label>
+        <div class="photo-previews" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;" *ngIf="uploadedPhotos.length > 0">
+          <div class="photo-item" *ngFor="let p of uploadedPhotos; let idx = index" style="position: relative; width: 60px; height: 60px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+            <img [src]="p" style="width: 100%; height: 100%; object-fit: cover;" />
+            <button type="button" (click)="removePhoto(idx)" style="position: absolute; top: 2px; right: 2px; border: none; background: rgba(0,0,0,0.8); color: #fff; width: 16px; height: 16px; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment Box -->
+      <div class="form-group" style="margin-top: 20px;">
+        <label for="comments">Additional Comments</label>
+        <div class="textarea-wrapper">
+          <textarea
+            id="comments"
+            [(ngModel)]="comments"
+            name="comments"
+            rows="4"
+            placeholder="Tell us about the repair quality, your interaction, and the visiting expert..."
+          ></textarea>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="overallRating === 0 || serviceQuality === 0 || timeliness === 0 || professionalism === 0 || isLoading" class="btn-submit" style="margin-top: 25px;">
+        <span *ngIf="!isLoading">Submit Review</span>
         <div *ngIf="isLoading" class="spinner"></div>
       </button>
     </form>

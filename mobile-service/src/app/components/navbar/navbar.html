@@ -14,43 +14,19 @@
       <ng-container *ngIf="isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Dashboard</a>
         <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
-        <a routerLink="/wallet" routerLinkActive="active" class="nav-link">Wallet</a>
         <a routerLink="/order/warranty" routerLinkActive="active" class="nav-link">Warranties</a>
-        <a routerLink="/rewards" routerLinkActive="active" class="nav-link">Rewards</a>
         <a routerLink="/about" routerLinkActive="active" class="nav-link">About Us</a>
         <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact Us</a>
         <a routerLink="/help" routerLinkActive="active" class="nav-link">Help & Queries</a>
-      </ng-container>
-      <!-- Technician Links -->
-      <ng-container *ngIf="isTechnician()">
-        <a routerLink="/technician/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-        <a routerLink="/technician/new-orders" routerLinkActive="active" class="nav-link nav-link-with-badge">
-          New Orders
-          <span class="badge" *ngIf="newOrdersCount > 0">{{ getDisplayCount() }}</span>
-        </a>
-        <a routerLink="/technician/orders" routerLinkActive="active" class="nav-link">Orders</a>
-        <a routerLink="/technician/profile" routerLinkActive="active" class="nav-link">Profile</a>
       </ng-container>
       <!-- Admin Links -->
       <ng-container *ngIf="isAdmin()">
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
         <a routerLink="/admin/orders" routerLinkActive="active" class="nav-link">Orders</a>
-        <a routerLink="/admin/kyc-review" routerLinkActive="active" class="nav-link">KYC Review</a>
-        <a routerLink="/admin/shop-review" routerLinkActive="active" class="nav-link">Shop Review</a>
-        <a routerLink="/admin/technicians" routerLinkActive="active" class="nav-link">Technicians</a>
         <a routerLink="/admin/config" routerLinkActive="active" class="nav-link">Configuration</a>
-        <a routerLink="/admin/create-technician" routerLinkActive="active" class="nav-link">Create Technician</a>
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Customer View</a>
       </ng-container>
       <div class="nav-actions">
-        <!-- New Orders Available Bell (Technician only) -->
-        <a routerLink="/technician/new-orders" class="bell-btn new-orders-bell" *ngIf="isTechnician()" title="Available Orders">
-          <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22" fill="currentColor">
-            <path d="M240-200q-33 0-56.5-23.5T160-280q0-33 23.5-56.5T240-360q33 0 56.5 23.5T320-280q0 33-23.5 56.5T240-200Zm480 0q-33 0-56.5-23.5T640-280q0-33 23.5-56.5T720-360q33 0 56.5 23.5T800-280q0 33-23.5 56.5T720-200ZM120-640v200h40v120h44q12-32 39.5-51T303-390q32 0 59.5 19t39.5 51h156q12-32 39.5-51t59.5-19q32 0 59.5 19t39.5 51h48v-200l-80-160H360v80h-80v-80H120Zm320 80h120v-80H440v80Z"/>
-          </svg>
-          <span class="bell-badge" *ngIf="newOrdersCount > 0">{{ getDisplayCount() }}</span>
-        </a>
-
         <!-- Theme Toggle Button -->
         <button class="bell-btn theme-toggle-btn" (click)="themeService.toggle()" title="Toggle Theme">
           <!-- Sun Icon (for dark theme) -->
@@ -89,33 +65,17 @@
       <ng-container *ngIf="isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
         <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Profile</a>
-        <a routerLink="/wallet" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Wallet</a>
         <a routerLink="/order/history" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Order History</a>
         <a routerLink="/order/warranty" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Warranties</a>
-        <a routerLink="/rewards" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Rewards</a>
         <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">About Us</a>
         <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Contact Us</a>
         <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Help & Queries</a>
-      </ng-container>
-      <!-- Technician Links -->
-      <ng-container *ngIf="isTechnician()">
-        <a routerLink="/technician/dashboard" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
-        <a routerLink="/technician/new-orders" routerLinkActive="active" (click)="closeMenu()" class="mobile-link mobile-link-with-badge">
-          New Orders
-          <span class="badge" *ngIf="newOrdersCount > 0">{{ getDisplayCount() }}</span>
-        </a>
-        <a routerLink="/technician/orders" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Orders</a>
-        <a routerLink="/technician/profile" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Profile</a>
       </ng-container>
       <!-- Admin Links -->
       <ng-container *ngIf="isAdmin()">
         <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
         <a routerLink="/admin/orders" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Orders</a>
-        <a routerLink="/admin/kyc-review" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">KYC Review</a>
-        <a routerLink="/admin/shop-review" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Shop Review</a>
-        <a routerLink="/admin/technicians" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Technicians</a>
         <a routerLink="/admin/config" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Configuration</a>
-        <a routerLink="/admin/create-technician" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Create Technician</a>
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Customer View</a>
       </ng-container>
       <!-- Mobile Notifications trigger -->

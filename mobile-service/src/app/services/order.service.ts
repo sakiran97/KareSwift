@@ -26,6 +26,10 @@ export class OrderService {
     return this.http.get<Device[]>(`${this.apiUrl}/devices`);
   }
 
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/categories`);
+  }
+
   createOrder(deviceId: string, details: any): Observable<OrderResponse> {
     return this.http.post<OrderResponse>(this.apiUrl, details);
   }
@@ -44,11 +48,9 @@ export class OrderService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  // getInvoice was removed in accordance with Phase 5
-
-  checkServiceAvailability(lat: number, lng: number): Observable<{ available: boolean, techniciansCount: number }> {
-    return this.http.get<{ available: boolean, techniciansCount: number }>(`/api/geo/check-availability`, {
-      params: { lat: String(lat), lng: String(lng) }
+  checkServiceAreaAvailability(addressId: number): Observable<{ available: boolean, travelCharge: number, serviceAreaId?: number }> {
+    return this.http.get<{ available: boolean, travelCharge: number, serviceAreaId?: number }>(`/api/service-areas/check`, {
+      params: { addressId: String(addressId) }
     });
   }
 }

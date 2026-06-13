@@ -14,19 +14,25 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Feedback implements OnInit {
   orderId = '';
-  rating = 0;
-  hoverRating = 0;
-  comment = '';
-  tags = [
-    { label: 'Fast Repair', selected: false },
-    { label: 'Polite Technician', selected: false },
-    { label: 'Great Communication', selected: false },
-    { label: 'Fair Price', selected: false },
-    { label: 'Clean Workspace', selected: false },
-  ];
+  
+  overallRating = 0;
+  hoverOverall = 0;
+
+  serviceQuality = 0;
+  hoverQuality = 0;
+
+  timeliness = 0;
+  hoverTimeliness = 0;
+
+  professionalism = 0;
+  hoverProfessionalism = 0;
+
+  comments = '';
+  uploadedPhotos: string[] = [];
   
   isLoading = false;
   isSubmitted = false;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,34 +48,63 @@ export class Feedback implements OnInit {
     });
   }
 
-  setRating(val: number): void {
-    this.rating = val;
+  setRating(category: 'overall' | 'quality' | 'timeliness' | 'professionalism', val: number): void {
+    if (category === 'overall') this.overallRating = val;
+    if (category === 'quality') this.serviceQuality = val;
+    if (category === 'timeliness') this.timeliness = val;
+    if (category === 'professionalism') this.professionalism = val;
     this.cdr.detectChanges();
   }
 
-  setHoverRating(val: number): void {
-    this.hoverRating = val;
+  setHoverRating(category: 'overall' | 'quality' | 'timeliness' | 'professionalism', val: number): void {
+    if (category === 'overall') this.hoverOverall = val;
+    if (category === 'quality') this.hoverQuality = val;
+    if (category === 'timeliness') this.hoverTimeliness = val;
+    if (category === 'professionalism') this.hoverProfessionalism = val;
     this.cdr.detectChanges();
   }
 
-  toggleTag(index: number): void {
-    this.tags[index].selected = !this.tags[index].selected;
+  triggerPhotoUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.uploadedPhotos.push(e.target.result);
+          this.cdr.detectChanges();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  removePhoto(index: number): void {
+    this.uploadedPhotos.splice(index, 1);
     this.cdr.detectChanges();
   }
 
   onSubmit(): void {
-    if (this.rating === 0) return;
+    if (this.overallRating === 0 || this.serviceQuality === 0 || this.timeliness === 0 || this.professionalism === 0) {
+      this.errorMessage = 'Please provide ratings for all service criteria.';
+      return;
+    }
 
     this.isLoading = true;
+    this.errorMessage = null;
     this.cdr.detectChanges();
-    
-    const selectedTags = this.tags.filter(t => t.selected).map(t => t.label);
 
-    this.http.post(`/api/feedback/${this.orderId}`, {
-      rating: this.rating,
-      comment: this.comment,
-      tags: selectedTags
-    }).subscribe({
+    const payload = {
+      orderId: Number(this.orderId),
+      overallRating: this.overallRating,
+      serviceQuality: this.serviceQuality,
+      timeliness: this.timeliness,
+      professionalism: this.professionalism,
+      comments: this.comments,
+      photos: this.uploadedPhotos
+    };
+
+    this.http.post('/api/reviews', payload).subscribe({
       next: () => {
         this.isLoading = false;
         this.isSubmitted = true;
@@ -78,8 +113,9 @@ export class Feedback implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        console.error('Failed to submit feedback', err);
+        console.error('Failed to submit review', err);
         this.isLoading = false;
+        this.errorMessage = err.error?.message || 'Failed to submit review. Please try again.';
         this.cdr.detectChanges();
       }
     });

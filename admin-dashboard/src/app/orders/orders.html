@@ -1,0 +1,197 @@
+<div class="orders-container">
+  <div class="orders-header glass-panel">
+    <div>
+      <h2>Order Management</h2>
+      <p>Monitor doorstep repair requests and transition orders through the lifecycle.</p>
+    </div>
+    <button class="btn-refresh" (click)="loadOrders()">
+      🔄 Refresh Queue
+    </button>
+  </div>
+
+  <div class="orders-grid" *ngIf="!loading()">
+    <div class="no-orders glass-panel" *ngIf="orders().length === 0">
+      <p>No customer doorstep orders found in the system queue.</p>
+    </div>
+
+    <!-- Order Card -->
+    <div class="order-card-admin glass-panel" *ngFor="let order of orders()" [class.cancelled]="order.status === 'CANCELLED'">
+      <div class="card-header">
+        <span class="order-id">ORD-{{ order.id }}</span>
+        <span class="status-badge" [class]="getStatusBadgeClass(order.status)">
+          {{ order.status }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-section">
+          <h4>Customer Details</h4>
+          <p class="txt-primary"><strong>Name:</strong> {{ order.user?.name || 'Valued Customer' }}</p>
+          <p>
+            <strong>Phone:</strong> 
+            <a href="tel:{{ order.user?.phone }}" class="call-link">
+              📞 {{ order.user?.phone || 'N/A' }}
+            </a>
+          </p>
+          <p><strong>Address:</strong> {{ order.address }}</p>
+          <p *ngIf="order.travelCharge !== undefined">
+            <strong>Travel Charge:</strong> 
+            <span class="charge-amount">{{ Number(order.travelCharge) === 0 ? 'FREE (₹0)' : '₹' + order.travelCharge }}</span>
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Device & Service Details</h4>
+          <p><strong>Device:</strong> {{ order.device?.brand }} {{ order.device?.model }}</p>
+          <p><strong>Service:</strong> {{ order.serviceCategory?.name || 'General Diagnosis' }}</p>
+          <p><strong>Schedule:</strong> {{ order.scheduledDate }} at {{ order.scheduledSlot }}</p>
+          <p><strong>Notes:</strong> {{ order.notes || order.diagnosticNotes || 'None' }}</p>
+        </div>
+
+        <!-- Diagnostic Photos if available -->
+        <div class="detail-section" *ngIf="order.diagnosticPhotos?.length > 0">
+          <h4>Uploaded Photos</h4>
+          <div class="photos-preview-row">
+            <a *ngFor="let photo of order.diagnosticPhotos" [href]="photo" target="_blank">
+              <img [src]="photo" alt="Device Issue Photo" class="photo-thumbnail" />
+            </a>
+          </div>
+        </div>
+
+        <!-- Finalized Pricing details if available -->
+        <div class="detail-section pricing-details" *ngIf="order.finalAmount || order.completionOtp">
+          <h4>Pricing & Completion details</h4>
+          <p *ngIf="order.finalAmount"><strong>Final Amount:</strong> <span class="price">₹{{ order.finalAmount }}</span></p>
+          <p *ngIf="order.paymentMethod"><strong>Payment Method:</strong> {{ order.paymentMethod | uppercase }}</p>
+          <p *ngIf="order.completionOtp && order.status !== 'COMPLETED'"><strong>Completion OTP:</strong> <span class="otp-code">{{ order.completionOtp }}</span></p>
+          <p *ngIf="order.repairNotes"><strong>Repair Notes:</strong> {{ order.repairNotes }}</p>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="card-footer" *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'">
+        <!-- Standard Status Transition -->
+        <button 
+          *ngIf="getNextStatusValue(order.status)"
+          type="button" 
+          class="btn-status-next" 
+          (click)="updateStatus(order.id, getNextStatusValue(order.status))"
+        >
+          {{ getNextStatusText(order.status) }}
+        </button>
+
+        <!-- Finalize Price (when IN_PROGRESS) -->
+        <button 
+          *ngIf="order.status === 'IN_PROGRESS'"
+          type="button" 
+          class="btn-status-finalize"
+          (click)="openFinalizeModal(order.id)"
+        >
+          💰 Finalize Price & Notes
+        </button>
+
+        <!-- Complete Order OTP (when PRICE_FINALIZED) -->
+        <button 
+          *ngIf="order.status === 'PRICE_FINALIZED'"
+          type="button" 
+          class="btn-status-complete"
+          (click)="openCompleteModal(order.id)"
+        >
+          ✓ Complete Order (Verify OTP)
+        </button>
+
+        <button 
+          type="button" 
+          class="btn-status-cancel" 
+          (click)="openCancelModal(order.id)"
+        >
+          Cancel Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-panel glass-panel" *ngIf="loading()">
+    <span class="spinner"></span>
+    <p>Loading active orders queue...</p>
+  </div>
+
+  <!-- FINALIZE PRICE MODAL -->
+  <div class="modal-backdrop" *ngIf="showFinalizeModal()">
+    <div class="modal-content glass-panel animate-fade-up">
+      <div class="modal-header">
+        <h3>Finalize Repair Details</h3>
+        <button class="close-btn" (click)="closeFinalizeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Final Negotiated Amount (₹)</label>
+          <input type="number" [(ngModel)]="finalAmount" placeholder="e.g. 1800" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Payment Method</label>
+          <select [(ngModel)]="paymentMethod">
+            <option value="upi">UPI</option>
+            <option value="cash">Cash</option>
+            <option value="qr">QR Code (Static Image)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Internal / Repair Notes</label>
+          <textarea [(ngModel)]="repairNotes" rows="3" placeholder="Parts replaced, warranties offered, etc..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeFinalizeModal()">Cancel</button>
+        <button class="btn-primary" (click)="submitFinalizePrice()" [disabled]="finalAmount <= 0">
+          Finalize & Send OTP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPLETE ORDER (OTP) MODAL -->
+  <div class="modal-backdrop" *ngIf="showCompleteModal()">
+    <div class="modal-content glass-panel animate-fade-up">
+      <div class="modal-header">
+        <h3>Complete Order Verification</h3>
+        <button class="close-btn" (click)="closeCompleteModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <p>Please enter the 6-digit completion OTP shared by the customer to verify payment and close this repair order.</p>
+        <div class="form-group">
+          <label>Customer Completion OTP</label>
+          <input type="text" [(ngModel)]="completeOtp" placeholder="Enter OTP Code" maxlength="8" style="text-align: center; letter-spacing: 4px; font-size: 1.5rem; font-weight: bold;" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCompleteModal()">Cancel</button>
+        <button class="btn-primary" (click)="submitCompleteOrder()" [disabled]="!completeOtp">
+          Verify OTP & Complete Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANCEL ORDER MODAL -->
+  <div class="modal-backdrop" *ngIf="showCancelModal()">
+    <div class="modal-content glass-panel animate-fade-up">
+      <div class="modal-header">
+        <h3>Cancel Order</h3>
+        <button class="close-btn" (click)="closeCancelModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Reason for Cancellation</label>
+          <textarea [(ngModel)]="cancelReason" rows="3" placeholder="Enter reason for cancelling..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCancelModal()">Cancel</button>
+        <button class="btn-primary" (click)="submitCancelOrder()" [disabled]="!cancelReason.trim()" style="background: #ef4444;">
+          Confirm Cancellation
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

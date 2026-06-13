@@ -1,0 +1,4 @@
+// Design System Mixins Placeholder
+@mixin transition($properties: all, $duration: 0.3s, $timing: ease-in-out) {
+  transition: $properties $duration $timing;
+}

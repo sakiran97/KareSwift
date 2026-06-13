@@ -1,0 +1,24 @@
+// Theme variables mapped to CSS custom properties
+$color-primary: var(--primary);
+$color-primary-light: var(--accent);
+$color-primary-dark: var(--primary-glow);
+$color-on-primary: #ffffff;
+
+$color-secondary: var(--accent);
+$color-secondary-light: var(--accent-glow);
+$color-secondary-dark: var(--accent);
+$color-on-secondary: #ffffff;
+
+$color-on-background: var(--text-primary);
+$color-on-surface: var(--text-primary);
+$color-text-muted: var(--text-muted);
+
+$color-surface: var(--bg-card);
+$color-surface-variant: var(--bg-card-hover);
+
+$color-success: var(--status-approved);
+$color-warning: var(--status-pending);
+$color-error: var(--status-rejected);
+
+$elevation-1: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+$elevation-2: 0 12px 40px 0 rgba(0, 0, 0, 0.45);

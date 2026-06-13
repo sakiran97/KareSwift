@@ -1,0 +1,96 @@
+<div class="slots-container">
+  <div class="slots-header glass-panel">
+    <div>
+      <h2>Booking Slots Configuration</h2>
+      <p>Configure appointment slots, timings, and maximum booking capacities per slot.</p>
+    </div>
+    <button class="btn-add" (click)="showForm()" *ngIf="!isEditing">
+      + Add New Slot
+    </button>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Slot Form -->
+    <div class="form-card-slot glass-panel animate-fade-right" *ngIf="isEditing">
+      <h3>{{ editingSlotId ? 'Edit Booking Slot' : 'Add New Booking Slot' }}</h3>
+      <div *ngIf="formError" class="error-banner">{{ formError }}</div>
+      <div *ngIf="formSuccess" class="success-banner">{{ formSuccess }}</div>
+
+      <form [formGroup]="slotForm" (ngSubmit)="saveSlot()" class="slot-form-element">
+        <div class="form-group">
+          <label>Slot Label / Name</label>
+          <input type="text" formControlName="name" placeholder="e.g. 09:00 AM, Morning Rush" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Time (24h)</label>
+            <input type="text" formControlName="startTime" placeholder="09:00" />
+          </div>
+          <div class="form-group">
+            <label>End Time (24h)</label>
+            <input type="text" formControlName="endTime" placeholder="11:00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Max Bookings Cap</label>
+          <input type="number" formControlName="maxBookings" placeholder="5" />
+          <span class="hint">Maximum number of doorstep repairs that can be booked in this slot.</span>
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isActive" />
+            Enable Booking Slot
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="slotForm.invalid">Save Slot Config</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Slot List Table -->
+    <div class="list-card-slot glass-panel" [class.full-width]="!isEditing">
+      <h3>Active Booking Slots</h3>
+      <div class="table-responsive">
+        <table class="slots-table">
+          <thead>
+            <tr>
+              <th>Slot Name</th>
+              <th>Timings (Start - End)</th>
+              <th>Max Capacity</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="no-records" *ngIf="slots().length === 0">
+              <td colspan="5">No booking slots configured yet. Add one to open slots.</td>
+            </tr>
+            <tr *ngFor="let slot of slots()" [class.inactive-row]="!slot.isActive">
+              <td><strong>{{ slot.name }}</strong></td>
+              <td>{{ slot.startTime }} - {{ slot.endTime }}</td>
+              <td>
+                <span class="capacity-badge">
+                  {{ slot.maxBookings }} Max Bookings
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn-status-toggle" [class.active-status]="slot.isActive" (click)="toggleActiveStatus(slot)">
+                  {{ slot.isActive ? 'Active' : 'Inactive' }}
+                </button>
+              </td>
+              <td>
+                <div class="actions-row">
+                  <button type="button" class="btn-icon edit" (click)="showForm(slot)" title="Edit">✏️</button>
+                  <button type="button" class="btn-icon delete" (click)="deleteSlot(slot.id)" title="Delete">🗑️</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

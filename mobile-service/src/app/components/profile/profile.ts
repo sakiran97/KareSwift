@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -23,15 +23,37 @@ export class ProfileComponent implements OnInit {
   activeOrderId: string | null = null;
   pastOrders: any[] = [];
 
+  // Saved Address management variables
+  addresses: any[] = [];
+  addressForm: FormGroup;
+  isEditingAddress = false;
+  editingAddressId: number | null = null;
+  addressError: string | null = null;
+  addressSuccess: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private orderService: OrderService,
+    private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {
     this.editForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.pattern('^[0-9]{10}$')]],
+    });
+
+    this.addressForm = this.fb.group({
+      fullName: ['', [Validators.required]],
+      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      houseNumber: ['', [Validators.required]],
+      street: ['', [Validators.required]],
+      area: ['', [Validators.required]],
+      landmark: [''],
+      city: ['', [Validators.required]],
+      state: ['', [Validators.required]],
+      pincode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      isDefault: [false]
     });
   }
 
@@ -44,6 +66,9 @@ export class ProfileComponent implements OnInit {
     }
     this.loadProfile();
     this.loadOrders();
+    if (this.user.role === 'customer') {
+      this.loadAddresses();
+    }
   }
 
   loadProfile(): void {
@@ -53,6 +78,9 @@ export class ProfileComponent implements OnInit {
         this.editForm.patchValue({ name: u.name || '', phone: u.phone || '' });
         // Update stored user with fresh data from API
         localStorage.setItem('user', JSON.stringify(u));
+        if (this.user.role === 'customer') {
+          this.loadAddresses();
+        }
         this.cdr.detectChanges();
       },
       error: () => {
@@ -72,10 +100,10 @@ export class ProfileComponent implements OnInit {
             service: o.serviceCategory?.name || 'Device Repair',
             device: o.device ? `${o.device.brand} ${o.device.model}` : 'Registered Device',
             date: o.scheduledDate || new Date(o.createdAt).toLocaleDateString(),
-            price: o.serviceCategoryId === 1 ? 149 : o.serviceCategoryId === 2 ? 89 : 69,
+            price: o.finalAmount ? Number(o.finalAmount) : (o.travelCharge ? Number(o.travelCharge) : 0),
             status: o.status
           }));
-          const active = orders.find((o: any) => o.status !== 'COMPLETED');
+          const active = orders.find((o: any) => o.status !== 'COMPLETED' && o.status !== 'CANCELLED');
           if (active) {
             this.activeOrderId = String(active.id);
             localStorage.setItem('activeOrderId', this.activeOrderId);
@@ -131,6 +159,87 @@ export class ProfileComponent implements OnInit {
         this.isSaving = false;
         this.editError = err.error?.message || 'Failed to update profile';
         this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // Address CRUD Operations
+  loadAddresses() {
+    this.http.get<any[]>('/api/addresses').subscribe({
+      next: (res: any) => {
+        this.addresses = res || [];
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Failed to load addresses', err);
+      }
+    });
+  }
+
+  showAddressForm(addr: any = null) {
+    this.isEditingAddress = true;
+    this.addressError = null;
+    this.addressSuccess = null;
+    if (addr) {
+      this.editingAddressId = addr.id;
+      this.addressForm.patchValue(addr);
+    } else {
+      this.editingAddressId = null;
+      this.addressForm.reset({ isDefault: false });
+    }
+    this.cdr.detectChanges();
+  }
+
+  cancelAddressEdit() {
+    this.isEditingAddress = false;
+    this.editingAddressId = null;
+    this.addressForm.reset();
+    this.cdr.detectChanges();
+  }
+
+  saveAddress() {
+    if (this.addressForm.invalid) return;
+    const data = this.addressForm.value;
+
+    const request = this.editingAddressId
+      ? this.http.put(`/api/addresses/${this.editingAddressId}`, data)
+      : this.http.post('/api/addresses', data);
+
+    request.subscribe({
+      next: () => {
+        this.addressSuccess = this.editingAddressId ? 'Address updated successfully' : 'Address added successfully';
+        this.loadAddresses();
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.cancelAddressEdit();
+        }, 1000);
+      },
+      error: (err: any) => {
+        this.addressError = err.error?.message || 'Failed to save address';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  deleteAddress(id: number) {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+    this.http.delete(`/api/addresses/${id}`).subscribe({
+      next: () => {
+        this.loadAddresses();
+      },
+      error: (err: any) => {
+        alert(err.error?.message || 'Failed to delete address');
+      }
+    });
+  }
+
+  setDefaultAddress(id: number) {
+    this.http.patch(`/api/addresses/${id}/default`, {}).subscribe({
+      next: () => {
+        this.loadAddresses();
+      },
+      error: (err: any) => {
+        alert(err.error?.message || 'Failed to set default address');
       }
     });
   }

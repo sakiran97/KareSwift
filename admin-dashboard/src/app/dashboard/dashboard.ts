@@ -4,10 +4,11 @@ import { RouterLink } from '@angular/router';
 import { AdminService } from '../services/admin.service';
 
 interface Stats {
-  totalTechnicians: number;
-  pendingKycCount: number;
+  totalOrders: number;
   activeOrders: number;
-  onlineTechnicians: number;
+  completedOrders: number;
+  cancelledOrders: number;
+  totalRevenue: number;
 }
 
 @Component({
@@ -31,8 +32,14 @@ export class DashboardComponent implements OnInit {
   fetchStats() {
     this.loading.set(true);
     this.adminService.getStats().subscribe({
-      next: (res) => {
-        this.stats.set(res);
+      next: (res: any) => {
+        this.stats.set({
+          totalOrders: Number(res.totalOrders || 0),
+          activeOrders: Number(res.activeOrders || 0),
+          completedOrders: Number(res.completedOrders || 0),
+          cancelledOrders: Number(res.cancelledOrders || 0),
+          totalRevenue: Number(res.totalRevenue || 0)
+        });
         this.loading.set(false);
       },
       error: (err) => {
