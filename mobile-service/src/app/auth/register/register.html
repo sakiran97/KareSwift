@@ -10,357 +10,99 @@
       <p class="subtitle">Join us to manage your device repair requests</p>
     </div>
 
-    <!-- Step Progress Indicator for Technicians -->
-    <div class="step-indicator mb-4" *ngIf="isTechnician">
-      <div class="step-progress-bar">
-        <div class="step-progress-fill" [style.width.%]="(currentStep - 1) * 50"></div>
-      </div>
-      <div class="step-labels text-center small text-secondary mt-2">
-        <span *ngIf="currentStep === 1">Step 1 of 3: Basic Profile</span>
-        <span *ngIf="currentStep === 2">Step 2 of 3: KYC Documents</span>
-        <span *ngIf="currentStep === 3">Step 3 of 3: Workshop Location</span>
-      </div>
-    </div>
-
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
       <div *ngIf="errorMessage" class="error-banner mb-3">{{ errorMessage }}</div>
 
-      <!-- STEP 1: Basic Profile Details -->
-      <div *ngIf="currentStep === 1" class="step-content">
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <div class="input-wrapper">
-            <input
-              id="name"
-              type="text"
-              formControlName="name"
-              placeholder="John Doe"
-              [class.invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="validation-error">
-            Name is required (min 2 characters).
-          </div>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <div class="input-wrapper">
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="John Doe"
+            [class.invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+          />
+          <span class="focus-border"></span>
         </div>
-
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <div class="input-wrapper">
-            <input
-              id="email"
-              type="email"
-              formControlName="email"
-              placeholder="you@gmail.com"
-              [class.invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="validation-error">
-            Please enter a valid email address.
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Phone Number <span class="optional">(optional)</span></label>
-          <div class="input-wrapper">
-            <input
-              id="phone"
-              type="tel"
-              formControlName="phone"
-              placeholder="9876543210"
-              [class.invalid]="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid" class="validation-error">
-            Phone must be a valid 10-digit number.
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="input-wrapper">
-            <input
-              id="password"
-              type="password"
-              formControlName="password"
-              placeholder="Min 6 characters"
-              [class.invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="validation-error">
-            Password must be at least 6 characters.
-          </div>
-        </div>
-
-        <div class="role-toggle">
-          <label class="toggle-label">
-            <input type="checkbox" [checked]="isTechnician" (change)="toggleRole()" class="toggle-input" />
-            <span class="toggle-slider"></span>
-            <span class="toggle-text">Register as Technician</span>
-          </label>
-        </div>
-
-        <ng-container *ngIf="isTechnician">
-          <div class="form-group">
-            <label for="technicianId">Technician ID</label>
-            <div class="input-wrapper">
-              <input
-                id="technicianId"
-                type="text"
-                formControlName="technicianId"
-                placeholder="e.g. TECH-001"
-                [class.invalid]="registerForm.get('technicianId')?.touched && registerForm.get('technicianId')?.invalid"
-              />
-              <span class="focus-border"></span>
-            </div>
-            <div *ngIf="registerForm.get('technicianId')?.touched && registerForm.get('technicianId')?.invalid" class="validation-error">
-              Technician ID is required.
-            </div>
-          </div>
-        </ng-container>
-
-        <button type="button" class="btn-submit" (click)="nextStep()" [disabled]="isLoading">
-          <span *ngIf="!isLoading">{{ isTechnician ? 'Continue' : 'Sign Up' }}</span>
-          <div *ngIf="isLoading" class="spinner"></div>
-        </button>
-
-        <ng-container *ngIf="!isTechnician">
-          <div class="social-separator">
-            <span>or sign up with</span>
-          </div>
-
-          <button type="button" class="btn-google" (click)="signUpWithGoogle()" [disabled]="isLoading">
-            <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
-            </svg>
-            Sign up with Google
-          </button>
-        </ng-container>
-      </div>
-
-      <!-- STEP 2: KYC Documents (Technician Only) -->
-      <div *ngIf="currentStep === 2 && isTechnician" class="step-content">
-        <h4 class="fw-semibold mb-3">KYC Verification Details</h4>
-
-        <div class="form-group">
-          <label for="govtIdType">Government ID Type</label>
-          <div class="input-wrapper">
-            <select id="govtIdType" formControlName="govtIdType" class="form-control select-dark">
-              <option value="aadhaar">Aadhaar Card (12 Digits)</option>
-              <option value="pan">PAN Card (Format XXXXX0000X)</option>
-              <option value="voter_id">Voter ID Card</option>
-              <option value="driving_license">Driving License</option>
-              <option value="passport">Passport</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="govtIdNumber">ID Number</label>
-          <div class="input-wrapper">
-            <input
-              id="govtIdNumber"
-              type="text"
-              formControlName="govtIdNumber"
-              placeholder="Enter ID number"
-              [class.invalid]="registerForm.get('govtIdNumber')?.touched && registerForm.get('govtIdNumber')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('govtIdNumber')?.touched && registerForm.get('govtIdNumber')?.invalid" class="validation-error">
-            ID Number is required.
-          </div>
-        </div>
-
-        <!-- Aadhaar Verification Section -->
-        <div class="aadhaar-verification-section p-3 rounded-3 mb-3 border border-secondary bg-dark bg-opacity-20" *ngIf="registerForm.get('govtIdType')?.value === 'aadhaar'">
-          <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
-            <span class="small fw-semibold text-secondary">Aadhaar verification via registered OTP</span>
-            <span class="badge bg-success" *ngIf="isAadhaarOtpVerified">✓ Verified</span>
-            <span class="badge bg-warning text-dark" *ngIf="!isAadhaarOtpVerified">Verification Required</span>
-          </div>
-
-          <!-- Buttons/Inputs -->
-          <div class="d-flex gap-2" *ngIf="!isAadhaarOtpVerified">
-            <input 
-              type="text" 
-              class="w-100 py-2 px-3 bg-dark border border-secondary text-white rounded-3 small"
-              placeholder="12-digit Aadhaar Number"
-              [value]="registerForm.get('govtIdNumber')?.value"
-              readonly
-            />
-            <button 
-              type="button" 
-              class="btn-location py-2 px-3 small nowrap"
-              [disabled]="registerForm.get('govtIdNumber')?.invalid || aadhaarOtpLoading"
-              (click)="sendAadhaarOtp()">
-              {{ aadhaarOtpSent ? 'Resend OTP' : 'Send OTP' }}
-            </button>
-          </div>
-
-          <div class="mt-3" *ngIf="aadhaarOtpSent && !isAadhaarOtpVerified">
-            <label class="small text-secondary mb-1 d-block">Enter 6-Digit Aadhaar OTP</label>
-            <div class="d-flex gap-2">
-              <input 
-                type="text" 
-                class="w-100 py-2 px-3 bg-dark border border-secondary text-white rounded-3 font-mono"
-                placeholder="••••••"
-                maxLength="6"
-                #aadhaarOtpInput
-              />
-              <button 
-                type="button" 
-                class="btn-submit py-2 px-4 small w-auto"
-                [disabled]="aadhaarOtpLoading"
-                (click)="verifyAadhaarOtp(aadhaarOtpInput.value)">
-                Verify
-              </button>
-            </div>
-            <div class="text-success small mt-2" *ngIf="aadhaarDevOtp">
-              💡 Dev OTP Code: <strong>{{ aadhaarDevOtp }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="govtIdFrontFile">ID Front Photo</label>
-          <div class="input-wrapper">
-            <input
-              id="govtIdFrontFile"
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png"
-              class="form-control select-dark py-2"
-              (change)="onFileSelected($event, 'govtIdFrontUrl')"
-            />
-          </div>
-          <!-- Show upload status / filename -->
-          <div *ngIf="govtIdFrontUploading" class="text-secondary small mt-1">
-            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
-          </div>
-          <div *ngIf="govtIdFrontName" class="text-success small mt-1">
-            ✓ Uploaded: {{ govtIdFrontName }}
-          </div>
-          <div *ngIf="registerForm.get('govtIdFrontUrl')?.touched && registerForm.get('govtIdFrontUrl')?.invalid" class="validation-error">
-            ID Front photo is required.
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="govtIdBackFile">ID Back Photo <span class="optional">(optional)</span></label>
-          <div class="input-wrapper">
-            <input
-              id="govtIdBackFile"
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png"
-              class="form-control select-dark py-2"
-              (change)="onFileSelected($event, 'govtIdBackUrl')"
-            />
-          </div>
-          <!-- Show upload status / filename -->
-          <div *ngIf="govtIdBackUploading" class="text-secondary small mt-1">
-            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
-          </div>
-          <div *ngIf="govtIdBackName" class="text-success small mt-1">
-            ✓ Uploaded: {{ govtIdBackName }}
-          </div>
-        </div>
-
-        <div class="wizard-buttons d-flex gap-2">
-          <button type="button" class="btn-secondary w-50" (click)="prevStep()">Back</button>
-          <button type="button" class="btn-submit w-50" (click)="nextStep()" [disabled]="registerForm.get('govtIdType')?.value === 'aadhaar' && !isAadhaarOtpVerified">Continue</button>
+        <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="validation-error">
+          Name is required (min 2 characters).
         </div>
       </div>
 
-      <!-- STEP 3: Shop / Workshop Details (Technician Only) -->
-      <div *ngIf="currentStep === 3 && isTechnician" class="step-content">
-        <h4 class="fw-semibold mb-3">Workshop details</h4>
-
-        <div class="form-group">
-          <label for="shopName">Shop / Service Center Name</label>
-          <div class="input-wrapper">
-            <input
-              id="shopName"
-              type="text"
-              formControlName="shopName"
-              placeholder="e.g. Apex Repairs"
-              [class.invalid]="registerForm.get('shopName')?.touched && registerForm.get('shopName')?.invalid"
-            />
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('shopName')?.touched && registerForm.get('shopName')?.invalid" class="validation-error">
-            Shop Name is required.
-          </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="you@gmail.com"
+            [class.invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+          />
+          <span class="focus-border"></span>
         </div>
-
-        <div class="form-group">
-          <label for="shopAddress">Shop Address</label>
-          <div class="input-wrapper">
-            <textarea
-              id="shopAddress"
-              formControlName="shopAddress"
-              placeholder="Full shop address location"
-              rows="2"
-              [class.invalid]="registerForm.get('shopAddress')?.touched && registerForm.get('shopAddress')?.invalid"
-            ></textarea>
-            <span class="focus-border"></span>
-          </div>
-          <div *ngIf="registerForm.get('shopAddress')?.touched && registerForm.get('shopAddress')?.invalid" class="validation-error">
-            Shop Address is required.
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="d-block mb-2">Location Coordinates</label>
-          <div class="d-flex align-items-center justify-content-between gap-3">
-            <button type="button" class="btn-location py-2 w-100 small" (click)="captureLocation()">
-              📍 Pin Live Shop GPS Location
-            </button>
-            <span *ngIf="registerForm.get('shopLatitude')?.value" class="text-success small nowrap">
-              Captured
-            </span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="shopPhotosFile">Shop Photo <span class="optional">(optional)</span></label>
-          <div class="input-wrapper">
-            <input
-              id="shopPhotosFile"
-              type="file"
-              accept="image/*"
-              class="form-control select-dark py-2"
-              (change)="onFileSelected($event, 'shopPhotos')"
-            />
-          </div>
-          <!-- Show upload status / filename -->
-          <div *ngIf="shopPhotosUploading" class="text-secondary small mt-1">
-            <span class="spinner-border spinner-border-sm me-1 text-primary"></span> Uploading...
-          </div>
-          <div *ngIf="shopPhotosName" class="text-success small mt-1">
-            ✓ Uploaded: {{ shopPhotosName }}
-          </div>
-        </div>
-
-        <div class="wizard-buttons d-flex gap-2">
-          <button type="button" class="btn-secondary w-50" (click)="prevStep()">Back</button>
-          <button type="button" class="btn-submit w-50" (click)="nextStep()" [disabled]="isLoading">
-            <span *ngIf="!isLoading">Submit & Register</span>
-            <div *ngIf="isLoading" class="spinner"></div>
-          </button>
+        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="validation-error">
+          Please enter a valid email address.
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number <span class="optional">(optional)</span></label>
+        <div class="input-wrapper">
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="9876543210"
+            [class.invalid]="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid"
+          />
+          <span class="focus-border"></span>
+        </div>
+        <div *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid" class="validation-error">
+          Phone must be a valid 10-digit number.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Min 6 characters"
+            [class.invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+          />
+          <span class="focus-border"></span>
+        </div>
+        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="validation-error">
+          Password must be at least 6 characters.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Sign Up</span>
+        <div *ngIf="isLoading" class="spinner"></div>
+      </button>
+
+      <div class="social-separator">
+        <span>or sign up with</span>
+      </div>
+
+      <button type="button" class="btn-google" (click)="signUpWithGoogle()" [disabled]="isLoading">
+        <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+        </svg>
+        Sign up with Google
+      </button>
     </form>
 
-    <div class="register-footer" *ngIf="currentStep === 1">
+    <div class="register-footer">
       <p>Already have an account? <a routerLink="/auth/login">Sign in here</a></p>
-      <p class="tech-link">Are you a technician? <a routerLink="/technician/login">Sign in with Tech ID</a></p>
     </div>
   </div>
 </div>
-
