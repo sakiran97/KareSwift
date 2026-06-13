@@ -81,9 +81,14 @@ export class Register {
           this.router.navigate(['/order/device-select']);
         }
       },
-      error: (err: HttpErrorResponse) => {
+      error: (err: any) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || err.message || 'Registration failed. Please try again.';
+        const msg = err.error?.message || err.message || '';
+        if (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('already_registered')) {
+          this.errorMessage = 'This email address is already registered. Please click "Sign in here" below to log in.';
+        } else {
+          this.errorMessage = msg || 'Registration failed. Please try again.';
+        }
         this.cdr.detectChanges();
       }
     });
