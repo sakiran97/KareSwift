@@ -91,20 +91,8 @@ export class Login {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.authService.checkEmail(email).subscribe({
-          next: (res: { exists: boolean }) => {
-            if (!res.exists) {
-              this.errorMessage = 'No account found with this email address. Please sign up first.';
-            } else {
-              this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
-            }
-            this.cdr.detectChanges();
-          },
-          error: () => {
-            this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
-            this.cdr.detectChanges();
-          }
-        });
+        this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
+        this.cdr.detectChanges();
       }
     });
   }
