@@ -48,6 +48,8 @@ export class AuthService {
 
   async checkEmailExists(email: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({ where: { email } });
-    return !!user;
+    const exists = !!user;
+    console.log(`[checkEmailExists] email=${email} exists=${exists}`);
+    return exists;
   }
 }

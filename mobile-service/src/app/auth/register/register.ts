@@ -63,6 +63,7 @@ export class Register {
     this.isLoading = true;
     this.errorMessage = null;
     const { name, email, phone, password } = this.registerForm.value;
+    localStorage.removeItem('user');
 
     this.authService.signUpWithPassword(email, password, name, phone).subscribe({
       next: (res: LoginResponse) => {
@@ -75,6 +76,7 @@ export class Register {
       },
       error: (err: any) => {
         this.isLoading = false;
+        console.log('[Register] signup error:', err);
         const msg = err.error?.message || err.message || '';
         if (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists') || msg.toLowerCase().includes('already_registered')) {
           this.errorMessage = 'This email address is already registered. Please click "Sign in here" below to log in.';

@@ -32,6 +32,27 @@ export class AuthService {
         if (currentToken !== token) {
           localStorage.setItem('jwt', token);
         }
+        localStorage.removeItem('user');
+        this.http.get<any>(`${this.apiUrl}/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }).subscribe({
+          next: (profile) => {
+            const user = {
+              id: profile.id,
+              email: profile.email,
+              phone: profile.phone,
+              name: profile.name,
+              role: profile.role,
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+            this.isLoggedIn.set(true);
+          },
+          error: () => {
+            const fallbackUser = { id: '', email: session.user?.email, role: 'customer' };
+            localStorage.setItem('user', JSON.stringify(fallbackUser));
+            this.isLoggedIn.set(true);
+          }
+        });
       }
     });
   }
@@ -45,6 +66,7 @@ export class AuthService {
   signUpWithPassword(email: string, password: string, name: string, phone?: string): Observable<LoginResponse> {
     return this.checkEmail(email).pipe(
       switchMap((res: { exists: boolean }) => {
+        console.log('[Auth] checkEmail result:', email, res);
         if (res.exists) {
           return throwError(() => new HttpErrorResponse({ error: { message: 'User already exists. Please login instead.' } }));
         }
@@ -59,7 +81,10 @@ export class AuthService {
           }
         })).pipe(
           switchMap(({ data, error }) => {
-            if (error) throw error;
+            if (error) {
+              console.log('[Auth] supabase signUp error:', error);
+              throw error;
+            }
             const session = data.session;
             const user = data.user;
             const token = session?.access_token;

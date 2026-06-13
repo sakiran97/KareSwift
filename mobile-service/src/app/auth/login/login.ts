@@ -53,6 +53,7 @@ export class Login {
   signInWithGoogle(): void {
     this.isLoading = true;
     this.errorMessage = null;
+    localStorage.removeItem('user');
     this.authService.signInWithGoogle().subscribe({
       error: (err: any) => {
         this.isLoading = false;
@@ -71,6 +72,7 @@ export class Login {
     this.isLoading = true;
     this.errorMessage = null;
     const { email, password } = this.loginForm.value;
+    localStorage.removeItem('user');
 
     this.authService.signInWithPassword(email, password).subscribe({
       next: (res: LoginResponse) => {
