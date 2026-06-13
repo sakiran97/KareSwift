@@ -312,6 +312,7 @@
               id="scheduledDate" 
               type="date" 
               formControlName="scheduledDate"
+              [min]="minDate"
               [class.invalid]="orderForm.get('scheduledDate')?.touched && orderForm.get('scheduledDate')?.invalid"
             />
           </div>

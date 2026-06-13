@@ -42,6 +42,7 @@ export class CreateOrder implements OnInit {
 
   // Images upload mock
   uploadedImages: string[] = [];
+  minDate = '';
 
   brandLogos: { [brand: string]: string } = {
     'Apple': 'https://ongofix.com/storage/brands/Tbu65WUjuzMlTzKKyjgZBJQq7h4IRhI1SI2rkEVd.png',
@@ -100,6 +101,13 @@ export class CreateOrder implements OnInit {
   }
 
   ngOnInit(): void {
+    // Set minDate to current date to block past dates
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    this.minDate = `${yyyy}-${mm}-${dd}`;
+
     // Set default date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
