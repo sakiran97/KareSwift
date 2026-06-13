@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Inject, forwardRef, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Order, OrderStatus } from '../generated/prisma';
 import { EventsService } from '../events/events.service';
@@ -73,8 +73,10 @@ export class OrderService {
         if (err.code === 'ECONNREFUSED' || err.message?.includes('conn') || err.message?.includes('refused')) {
           console.warn('Database offline. Falling back to NestJS backend in-memory mock database.');
           this.useMock = true;
+        } else if (err.code === 'P2003' || err.code === 'P2025') {
+          throw new BadRequestException('Invalid reference: the selected device or service category does not exist. Please refresh and try again.');
         } else {
-          throw err;
+          throw new InternalServerErrorException('Failed to create order. Please try again later.');
         }
       }
     }

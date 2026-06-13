@@ -1800,15 +1800,15 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    orders: number
-    notifications: number
     addresses: number
+    notifications: number
+    orders: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    orders?: boolean | UserCountOutputTypeCountOrdersArgs
-    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     addresses?: boolean | UserCountOutputTypeCountAddressesArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+    orders?: boolean | UserCountOutputTypeCountOrdersArgs
   }
 
   // Custom InputTypes
@@ -1825,8 +1825,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OrderWhereInput
+  export type UserCountOutputTypeCountAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AddressWhereInput
   }
 
   /**
@@ -1839,8 +1839,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AddressWhereInput
+  export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
   }
 
 
@@ -1999,43 +1999,34 @@ export namespace Prisma {
   export type UserMinAggregateOutputType = {
     id: number | null
     email: string | null
-    passwordHash: string | null
     name: string | null
     phone: string | null
     role: string | null
-    otpCode: string | null
-    otpExpiresAt: Date | null
+    createdAt: Date | null
     averageRating: number | null
     totalReviews: number | null
-    createdAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: number | null
     email: string | null
-    passwordHash: string | null
     name: string | null
     phone: string | null
     role: string | null
-    otpCode: string | null
-    otpExpiresAt: Date | null
+    createdAt: Date | null
     averageRating: number | null
     totalReviews: number | null
-    createdAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
-    passwordHash: number
     name: number
     phone: number
     role: number
-    otpCode: number
-    otpExpiresAt: number
+    createdAt: number
     averageRating: number
     totalReviews: number
-    createdAt: number
     _all: number
   }
 
@@ -2055,43 +2046,34 @@ export namespace Prisma {
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
-    passwordHash?: true
     name?: true
     phone?: true
     role?: true
-    otpCode?: true
-    otpExpiresAt?: true
+    createdAt?: true
     averageRating?: true
     totalReviews?: true
-    createdAt?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
-    passwordHash?: true
     name?: true
     phone?: true
     role?: true
-    otpCode?: true
-    otpExpiresAt?: true
+    createdAt?: true
     averageRating?: true
     totalReviews?: true
-    createdAt?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
-    passwordHash?: true
     name?: true
     phone?: true
     role?: true
-    otpCode?: true
-    otpExpiresAt?: true
+    createdAt?: true
     averageRating?: true
     totalReviews?: true
-    createdAt?: true
     _all?: true
   }
 
@@ -2184,15 +2166,12 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: number
     email: string | null
-    passwordHash: string | null
     name: string | null
     phone: string | null
     role: string
-    otpCode: string | null
-    otpExpiresAt: Date | null
+    createdAt: Date
     averageRating: number | null
     totalReviews: number | null
-    createdAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -2217,68 +2196,56 @@ export namespace Prisma {
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    passwordHash?: boolean
     name?: boolean
     phone?: boolean
     role?: boolean
-    otpCode?: boolean
-    otpExpiresAt?: boolean
+    createdAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
-    createdAt?: boolean
-    orders?: boolean | User$ordersArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
     addresses?: boolean | User$addressesArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
+    orders?: boolean | User$ordersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    passwordHash?: boolean
     name?: boolean
     phone?: boolean
     role?: boolean
-    otpCode?: boolean
-    otpExpiresAt?: boolean
+    createdAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
-    createdAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    passwordHash?: boolean
     name?: boolean
     phone?: boolean
     role?: boolean
-    otpCode?: boolean
-    otpExpiresAt?: boolean
+    createdAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
-    createdAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
-    passwordHash?: boolean
     name?: boolean
     phone?: boolean
     role?: boolean
-    otpCode?: boolean
-    otpExpiresAt?: boolean
+    createdAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
-    createdAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "phone" | "role" | "otpCode" | "otpExpiresAt" | "averageRating" | "totalReviews" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "role" | "createdAt" | "averageRating" | "totalReviews", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    orders?: boolean | User$ordersArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
     addresses?: boolean | User$addressesArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
+    orders?: boolean | User$ordersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2287,22 +2254,19 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      orders: Prisma.$OrderPayload<ExtArgs>[]
-      notifications: Prisma.$NotificationPayload<ExtArgs>[]
       addresses: Prisma.$AddressPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      orders: Prisma.$OrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       email: string | null
-      passwordHash: string | null
       name: string | null
       phone: string | null
       role: string
-      otpCode: string | null
-      otpExpiresAt: Date | null
+      createdAt: Date
       averageRating: number | null
       totalReviews: number | null
-      createdAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2697,9 +2661,9 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     addresses<T extends User$addressesArgs<ExtArgs> = {}>(args?: Subset<T, User$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2731,15 +2695,12 @@ export namespace Prisma {
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'Int'>
     readonly email: FieldRef<"User", 'String'>
-    readonly passwordHash: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
-    readonly otpCode: FieldRef<"User", 'String'>
-    readonly otpExpiresAt: FieldRef<"User", 'DateTime'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly averageRating: FieldRef<"User", 'Float'>
     readonly totalReviews: FieldRef<"User", 'Int'>
-    readonly createdAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -3133,27 +3094,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.orders
+   * User.addresses
    */
-  export type User$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$addressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Order
+     * Select specific fields to fetch from the Address
      */
-    select?: OrderSelect<ExtArgs> | null
+    select?: AddressSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Order
+     * Omit specific fields from the Address
      */
-    omit?: OrderOmit<ExtArgs> | null
+    omit?: AddressOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: OrderInclude<ExtArgs> | null
-    where?: OrderWhereInput
-    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
-    cursor?: OrderWhereUniqueInput
+    include?: AddressInclude<ExtArgs> | null
+    where?: AddressWhereInput
+    orderBy?: AddressOrderByWithRelationInput | AddressOrderByWithRelationInput[]
+    cursor?: AddressWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+    distinct?: AddressScalarFieldEnum | AddressScalarFieldEnum[]
   }
 
   /**
@@ -3181,27 +3142,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.addresses
+   * User.orders
    */
-  export type User$addressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Address
+     * Select specific fields to fetch from the Order
      */
-    select?: AddressSelect<ExtArgs> | null
+    select?: OrderSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Address
+     * Omit specific fields from the Order
      */
-    omit?: AddressOmit<ExtArgs> | null
+    omit?: OrderOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: AddressInclude<ExtArgs> | null
-    where?: AddressWhereInput
-    orderBy?: AddressOrderByWithRelationInput | AddressOrderByWithRelationInput[]
-    cursor?: AddressWhereUniqueInput
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: AddressScalarFieldEnum | AddressScalarFieldEnum[]
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
   }
 
   /**
@@ -5421,8 +5382,8 @@ export namespace Prisma {
     serviceCategoryId: number | null
     estimatedTime: number | null
     finalAmount: Decimal | null
-    travelCharge: Decimal | null
     serviceAreaId: number | null
+    travelCharge: Decimal | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -5432,8 +5393,8 @@ export namespace Prisma {
     serviceCategoryId: number | null
     estimatedTime: number | null
     finalAmount: Decimal | null
-    travelCharge: Decimal | null
     serviceAreaId: number | null
+    travelCharge: Decimal | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -5444,22 +5405,22 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
-    completedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
     scheduledSlot: string | null
-    diagnosticNotes: string | null
-    partsUsed: string | null
-    laborNotes: string | null
-    finalAmount: Decimal | null
-    paymentMethod: string | null
-    completionOtp: string | null
     amountConfirmedAt: Date | null
+    completedAt: Date | null
+    completionOtp: string | null
     completionVerifiedAt: Date | null
+    diagnosticNotes: string | null
+    finalAmount: Decimal | null
+    laborNotes: string | null
+    partsUsed: string | null
+    paymentMethod: string | null
     repairNotes: string | null
-    travelCharge: Decimal | null
     serviceAreaId: number | null
+    travelCharge: Decimal | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -5470,22 +5431,22 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
-    completedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
     scheduledSlot: string | null
-    diagnosticNotes: string | null
-    partsUsed: string | null
-    laborNotes: string | null
-    finalAmount: Decimal | null
-    paymentMethod: string | null
-    completionOtp: string | null
     amountConfirmedAt: Date | null
+    completedAt: Date | null
+    completionOtp: string | null
     completionVerifiedAt: Date | null
+    diagnosticNotes: string | null
+    finalAmount: Decimal | null
+    laborNotes: string | null
+    partsUsed: string | null
+    paymentMethod: string | null
     repairNotes: string | null
-    travelCharge: Decimal | null
     serviceAreaId: number | null
+    travelCharge: Decimal | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -5496,23 +5457,23 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
-    completedAt: number
     estimatedTime: number
     address: number
     scheduledDate: number
     scheduledSlot: number
+    amountConfirmedAt: number
+    completedAt: number
+    completionOtp: number
+    completionVerifiedAt: number
     diagnosticNotes: number
     diagnosticPhotos: number
-    partsUsed: number
-    laborNotes: number
     finalAmount: number
+    laborNotes: number
+    partsUsed: number
     paymentMethod: number
-    completionOtp: number
-    amountConfirmedAt: number
-    completionVerifiedAt: number
     repairNotes: number
-    travelCharge: number
     serviceAreaId: number
+    travelCharge: number
     _all: number
   }
 
@@ -5524,8 +5485,8 @@ export namespace Prisma {
     serviceCategoryId?: true
     estimatedTime?: true
     finalAmount?: true
-    travelCharge?: true
     serviceAreaId?: true
+    travelCharge?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -5535,8 +5496,8 @@ export namespace Prisma {
     serviceCategoryId?: true
     estimatedTime?: true
     finalAmount?: true
-    travelCharge?: true
     serviceAreaId?: true
+    travelCharge?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -5547,22 +5508,22 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
-    completedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
     scheduledSlot?: true
-    diagnosticNotes?: true
-    partsUsed?: true
-    laborNotes?: true
-    finalAmount?: true
-    paymentMethod?: true
-    completionOtp?: true
     amountConfirmedAt?: true
+    completedAt?: true
+    completionOtp?: true
     completionVerifiedAt?: true
+    diagnosticNotes?: true
+    finalAmount?: true
+    laborNotes?: true
+    partsUsed?: true
+    paymentMethod?: true
     repairNotes?: true
-    travelCharge?: true
     serviceAreaId?: true
+    travelCharge?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -5573,22 +5534,22 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
-    completedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
     scheduledSlot?: true
-    diagnosticNotes?: true
-    partsUsed?: true
-    laborNotes?: true
-    finalAmount?: true
-    paymentMethod?: true
-    completionOtp?: true
     amountConfirmedAt?: true
+    completedAt?: true
+    completionOtp?: true
     completionVerifiedAt?: true
+    diagnosticNotes?: true
+    finalAmount?: true
+    laborNotes?: true
+    partsUsed?: true
+    paymentMethod?: true
     repairNotes?: true
-    travelCharge?: true
     serviceAreaId?: true
+    travelCharge?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -5599,23 +5560,23 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
-    completedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
     scheduledSlot?: true
+    amountConfirmedAt?: true
+    completedAt?: true
+    completionOtp?: true
+    completionVerifiedAt?: true
     diagnosticNotes?: true
     diagnosticPhotos?: true
-    partsUsed?: true
-    laborNotes?: true
     finalAmount?: true
+    laborNotes?: true
+    partsUsed?: true
     paymentMethod?: true
-    completionOtp?: true
-    amountConfirmedAt?: true
-    completionVerifiedAt?: true
     repairNotes?: true
-    travelCharge?: true
     serviceAreaId?: true
+    travelCharge?: true
     _all?: true
   }
 
@@ -5713,23 +5674,23 @@ export namespace Prisma {
     status: $Enums.OrderStatus
     createdAt: Date
     updatedAt: Date
-    completedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
     scheduledSlot: string | null
+    amountConfirmedAt: Date | null
+    completedAt: Date | null
+    completionOtp: string | null
+    completionVerifiedAt: Date | null
     diagnosticNotes: string | null
     diagnosticPhotos: string[]
-    partsUsed: string | null
-    laborNotes: string | null
     finalAmount: Decimal | null
+    laborNotes: string | null
+    partsUsed: string | null
     paymentMethod: string | null
-    completionOtp: string | null
-    amountConfirmedAt: Date | null
-    completionVerifiedAt: Date | null
     repairNotes: string | null
-    travelCharge: Decimal | null
     serviceAreaId: number | null
+    travelCharge: Decimal | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -5759,29 +5720,29 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    completedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
     scheduledSlot?: boolean
+    amountConfirmedAt?: boolean
+    completedAt?: boolean
+    completionOtp?: boolean
+    completionVerifiedAt?: boolean
     diagnosticNotes?: boolean
     diagnosticPhotos?: boolean
-    partsUsed?: boolean
-    laborNotes?: boolean
     finalAmount?: boolean
+    laborNotes?: boolean
+    partsUsed?: boolean
     paymentMethod?: boolean
-    completionOtp?: boolean
-    amountConfirmedAt?: boolean
-    completionVerifiedAt?: boolean
     repairNotes?: boolean
-    travelCharge?: boolean
     serviceAreaId?: boolean
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    review?: boolean | Order$reviewArgs<ExtArgs>
+    travelCharge?: boolean
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
+    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | Order$reviewArgs<ExtArgs>
     warranty?: boolean | Order$warrantyArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -5794,27 +5755,27 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    completedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
     scheduledSlot?: boolean
+    amountConfirmedAt?: boolean
+    completedAt?: boolean
+    completionOtp?: boolean
+    completionVerifiedAt?: boolean
     diagnosticNotes?: boolean
     diagnosticPhotos?: boolean
-    partsUsed?: boolean
-    laborNotes?: boolean
     finalAmount?: boolean
+    laborNotes?: boolean
+    partsUsed?: boolean
     paymentMethod?: boolean
-    completionOtp?: boolean
-    amountConfirmedAt?: boolean
-    completionVerifiedAt?: boolean
     repairNotes?: boolean
-    travelCharge?: boolean
     serviceAreaId?: boolean
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    travelCharge?: boolean
     device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5825,27 +5786,27 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    completedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
     scheduledSlot?: boolean
+    amountConfirmedAt?: boolean
+    completedAt?: boolean
+    completionOtp?: boolean
+    completionVerifiedAt?: boolean
     diagnosticNotes?: boolean
     diagnosticPhotos?: boolean
-    partsUsed?: boolean
-    laborNotes?: boolean
     finalAmount?: boolean
+    laborNotes?: boolean
+    partsUsed?: boolean
     paymentMethod?: boolean
-    completionOtp?: boolean
-    amountConfirmedAt?: boolean
-    completionVerifiedAt?: boolean
     repairNotes?: boolean
-    travelCharge?: boolean
     serviceAreaId?: boolean
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    travelCharge?: boolean
     device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
   export type OrderSelectScalar = {
@@ -5856,58 +5817,58 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    completedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
     scheduledSlot?: boolean
+    amountConfirmedAt?: boolean
+    completedAt?: boolean
+    completionOtp?: boolean
+    completionVerifiedAt?: boolean
     diagnosticNotes?: boolean
     diagnosticPhotos?: boolean
-    partsUsed?: boolean
-    laborNotes?: boolean
     finalAmount?: boolean
+    laborNotes?: boolean
+    partsUsed?: boolean
     paymentMethod?: boolean
-    completionOtp?: boolean
-    amountConfirmedAt?: boolean
-    completionVerifiedAt?: boolean
     repairNotes?: boolean
-    travelCharge?: boolean
     serviceAreaId?: boolean
+    travelCharge?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "completedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "diagnosticNotes" | "diagnosticPhotos" | "partsUsed" | "laborNotes" | "finalAmount" | "paymentMethod" | "completionOtp" | "amountConfirmedAt" | "completionVerifiedAt" | "repairNotes" | "travelCharge" | "serviceAreaId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    review?: boolean | Order$reviewArgs<ExtArgs>
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
+    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    review?: boolean | Order$reviewArgs<ExtArgs>
     warranty?: boolean | Order$warrantyArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
     device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type OrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
     device?: boolean | DeviceDefaultArgs<ExtArgs>
+    serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $OrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Order"
     objects: {
-      serviceArea: Prisma.$ServiceAreaPayload<ExtArgs> | null
-      user: Prisma.$UserPayload<ExtArgs>
-      device: Prisma.$DevicePayload<ExtArgs>
-      serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
-      review: Prisma.$ReviewPayload<ExtArgs> | null
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      device: Prisma.$DevicePayload<ExtArgs>
+      serviceArea: Prisma.$ServiceAreaPayload<ExtArgs> | null
+      serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      review: Prisma.$ReviewPayload<ExtArgs> | null
       warranty: Prisma.$WarrantyPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -5918,23 +5879,23 @@ export namespace Prisma {
       status: $Enums.OrderStatus
       createdAt: Date
       updatedAt: Date
-      completedAt: Date | null
       estimatedTime: number | null
       address: string | null
       scheduledDate: string | null
       scheduledSlot: string | null
+      amountConfirmedAt: Date | null
+      completedAt: Date | null
+      completionOtp: string | null
+      completionVerifiedAt: Date | null
       diagnosticNotes: string | null
       diagnosticPhotos: string[]
-      partsUsed: string | null
-      laborNotes: string | null
       finalAmount: Prisma.Decimal | null
+      laborNotes: string | null
+      partsUsed: string | null
       paymentMethod: string | null
-      completionOtp: string | null
-      amountConfirmedAt: Date | null
-      completionVerifiedAt: Date | null
       repairNotes: string | null
-      travelCharge: Prisma.Decimal | null
       serviceAreaId: number | null
+      travelCharge: Prisma.Decimal | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -6329,12 +6290,12 @@ export namespace Prisma {
    */
   export interface Prisma__OrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    serviceArea<T extends Order$serviceAreaArgs<ExtArgs> = {}>(args?: Subset<T, Order$serviceAreaArgs<ExtArgs>>): Prisma__ServiceAreaClient<$Result.GetResult<Prisma.$ServiceAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    device<T extends DeviceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DeviceDefaultArgs<ExtArgs>>): Prisma__DeviceClient<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    review<T extends Order$reviewArgs<ExtArgs> = {}>(args?: Subset<T, Order$reviewArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     notifications<T extends Order$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Order$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    device<T extends DeviceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DeviceDefaultArgs<ExtArgs>>): Prisma__DeviceClient<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    serviceArea<T extends Order$serviceAreaArgs<ExtArgs> = {}>(args?: Subset<T, Order$serviceAreaArgs<ExtArgs>>): Prisma__ServiceAreaClient<$Result.GetResult<Prisma.$ServiceAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    review<T extends Order$reviewArgs<ExtArgs> = {}>(args?: Subset<T, Order$reviewArgs<ExtArgs>>): Prisma__ReviewClient<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     warranty<T extends Order$warrantyArgs<ExtArgs> = {}>(args?: Subset<T, Order$warrantyArgs<ExtArgs>>): Prisma__WarrantyClient<$Result.GetResult<Prisma.$WarrantyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6372,23 +6333,23 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
-    readonly completedAt: FieldRef<"Order", 'DateTime'>
     readonly estimatedTime: FieldRef<"Order", 'Int'>
     readonly address: FieldRef<"Order", 'String'>
     readonly scheduledDate: FieldRef<"Order", 'String'>
     readonly scheduledSlot: FieldRef<"Order", 'String'>
+    readonly amountConfirmedAt: FieldRef<"Order", 'DateTime'>
+    readonly completedAt: FieldRef<"Order", 'DateTime'>
+    readonly completionOtp: FieldRef<"Order", 'String'>
+    readonly completionVerifiedAt: FieldRef<"Order", 'DateTime'>
     readonly diagnosticNotes: FieldRef<"Order", 'String'>
     readonly diagnosticPhotos: FieldRef<"Order", 'String[]'>
-    readonly partsUsed: FieldRef<"Order", 'String'>
-    readonly laborNotes: FieldRef<"Order", 'String'>
     readonly finalAmount: FieldRef<"Order", 'Decimal'>
+    readonly laborNotes: FieldRef<"Order", 'String'>
+    readonly partsUsed: FieldRef<"Order", 'String'>
     readonly paymentMethod: FieldRef<"Order", 'String'>
-    readonly completionOtp: FieldRef<"Order", 'String'>
-    readonly amountConfirmedAt: FieldRef<"Order", 'DateTime'>
-    readonly completionVerifiedAt: FieldRef<"Order", 'DateTime'>
     readonly repairNotes: FieldRef<"Order", 'String'>
-    readonly travelCharge: FieldRef<"Order", 'Decimal'>
     readonly serviceAreaId: FieldRef<"Order", 'Int'>
+    readonly travelCharge: FieldRef<"Order", 'Decimal'>
   }
     
 
@@ -6790,6 +6751,30 @@ export namespace Prisma {
   }
 
   /**
+   * Order.notifications
+   */
+  export type Order$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
    * Order.serviceArea
    */
   export type Order$serviceAreaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6825,30 +6810,6 @@ export namespace Prisma {
      */
     include?: ReviewInclude<ExtArgs> | null
     where?: ReviewWhereInput
-  }
-
-  /**
-   * Order.notifications
-   */
-  export type Order$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Notification
-     */
-    select?: NotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Notification
-     */
-    omit?: NotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: NotificationInclude<ExtArgs> | null
-    where?: NotificationWhereInput
-    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
-    cursor?: NotificationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -8297,8 +8258,8 @@ export namespace Prisma {
     isRead?: boolean
     orderId?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8310,8 +8271,8 @@ export namespace Prisma {
     isRead?: boolean
     orderId?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8323,8 +8284,8 @@ export namespace Prisma {
     isRead?: boolean
     orderId?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectScalar = {
@@ -8340,23 +8301,23 @@ export namespace Prisma {
 
   export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "title" | "body" | "type" | "isRead" | "orderId" | "createdAt", ExtArgs["result"]["notification"]>
   export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type NotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type NotificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     order?: boolean | Notification$orderArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Notification"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       order: Prisma.$OrderPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8761,8 +8722,8 @@ export namespace Prisma {
    */
   export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     order<T extends Notification$orderArgs<ExtArgs> = {}>(args?: Subset<T, Notification$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14845,15 +14806,12 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    passwordHash: 'passwordHash',
     name: 'name',
     phone: 'phone',
     role: 'role',
-    otpCode: 'otpCode',
-    otpExpiresAt: 'otpExpiresAt',
+    createdAt: 'createdAt',
     averageRating: 'averageRating',
-    totalReviews: 'totalReviews',
-    createdAt: 'createdAt'
+    totalReviews: 'totalReviews'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -14886,23 +14844,23 @@ export namespace Prisma {
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    completedAt: 'completedAt',
     estimatedTime: 'estimatedTime',
     address: 'address',
     scheduledDate: 'scheduledDate',
     scheduledSlot: 'scheduledSlot',
+    amountConfirmedAt: 'amountConfirmedAt',
+    completedAt: 'completedAt',
+    completionOtp: 'completionOtp',
+    completionVerifiedAt: 'completionVerifiedAt',
     diagnosticNotes: 'diagnosticNotes',
     diagnosticPhotos: 'diagnosticPhotos',
-    partsUsed: 'partsUsed',
-    laborNotes: 'laborNotes',
     finalAmount: 'finalAmount',
+    laborNotes: 'laborNotes',
+    partsUsed: 'partsUsed',
     paymentMethod: 'paymentMethod',
-    completionOtp: 'completionOtp',
-    amountConfirmedAt: 'amountConfirmedAt',
-    completionVerifiedAt: 'completionVerifiedAt',
     repairNotes: 'repairNotes',
-    travelCharge: 'travelCharge',
-    serviceAreaId: 'serviceAreaId'
+    serviceAreaId: 'serviceAreaId',
+    travelCharge: 'travelCharge'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -15137,35 +15095,29 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: IntFilter<"User"> | number
     email?: StringNullableFilter<"User"> | string | null
-    passwordHash?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
     phone?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
-    otpCode?: StringNullableFilter<"User"> | string | null
-    otpExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
     averageRating?: FloatNullableFilter<"User"> | number | null
     totalReviews?: IntNullableFilter<"User"> | number | null
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    orders?: OrderListRelationFilter
-    notifications?: NotificationListRelationFilter
     addresses?: AddressListRelationFilter
+    notifications?: NotificationListRelationFilter
+    orders?: OrderListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrderInput | SortOrder
-    passwordHash?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     role?: SortOrder
-    otpCode?: SortOrderInput | SortOrder
-    otpExpiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     averageRating?: SortOrderInput | SortOrder
     totalReviews?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    orders?: OrderOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
     addresses?: AddressOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+    orders?: OrderOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -15175,31 +15127,25 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    passwordHash?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
-    otpCode?: StringNullableFilter<"User"> | string | null
-    otpExpiresAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
     averageRating?: FloatNullableFilter<"User"> | number | null
     totalReviews?: IntNullableFilter<"User"> | number | null
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    orders?: OrderListRelationFilter
-    notifications?: NotificationListRelationFilter
     addresses?: AddressListRelationFilter
+    notifications?: NotificationListRelationFilter
+    orders?: OrderListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrderInput | SortOrder
-    passwordHash?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     role?: SortOrder
-    otpCode?: SortOrderInput | SortOrder
-    otpExpiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     averageRating?: SortOrderInput | SortOrder
     totalReviews?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -15213,15 +15159,12 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"User"> | number
     email?: StringNullableWithAggregatesFilter<"User"> | string | null
-    passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: StringWithAggregatesFilter<"User"> | string
-    otpCode?: StringNullableWithAggregatesFilter<"User"> | string | null
-    otpExpiresAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     averageRating?: FloatNullableWithAggregatesFilter<"User"> | number | null
     totalReviews?: IntNullableWithAggregatesFilter<"User"> | number | null
-    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type DeviceWhereInput = {
@@ -15334,29 +15277,29 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
-    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableFilter<"Order"> | number | null
     address?: StringNullableFilter<"Order"> | string | null
     scheduledDate?: StringNullableFilter<"Order"> | string | null
     scheduledSlot?: StringNullableFilter<"Order"> | string | null
+    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionOtp?: StringNullableFilter<"Order"> | string | null
+    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     diagnosticNotes?: StringNullableFilter<"Order"> | string | null
     diagnosticPhotos?: StringNullableListFilter<"Order">
-    partsUsed?: StringNullableFilter<"Order"> | string | null
-    laborNotes?: StringNullableFilter<"Order"> | string | null
     finalAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: StringNullableFilter<"Order"> | string | null
+    partsUsed?: StringNullableFilter<"Order"> | string | null
     paymentMethod?: StringNullableFilter<"Order"> | string | null
-    completionOtp?: StringNullableFilter<"Order"> | string | null
-    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     repairNotes?: StringNullableFilter<"Order"> | string | null
-    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: IntNullableFilter<"Order"> | number | null
-    serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
-    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
+    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationListRelationFilter
+    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
+    serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
+    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
     warranty?: XOR<WarrantyNullableScalarRelationFilter, WarrantyWhereInput> | null
   }
 
@@ -15368,29 +15311,29 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    completedAt?: SortOrderInput | SortOrder
     estimatedTime?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     scheduledDate?: SortOrderInput | SortOrder
     scheduledSlot?: SortOrderInput | SortOrder
+    amountConfirmedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completionOtp?: SortOrderInput | SortOrder
+    completionVerifiedAt?: SortOrderInput | SortOrder
     diagnosticNotes?: SortOrderInput | SortOrder
     diagnosticPhotos?: SortOrder
-    partsUsed?: SortOrderInput | SortOrder
-    laborNotes?: SortOrderInput | SortOrder
     finalAmount?: SortOrderInput | SortOrder
+    laborNotes?: SortOrderInput | SortOrder
+    partsUsed?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
-    completionOtp?: SortOrderInput | SortOrder
-    amountConfirmedAt?: SortOrderInput | SortOrder
-    completionVerifiedAt?: SortOrderInput | SortOrder
     repairNotes?: SortOrderInput | SortOrder
-    travelCharge?: SortOrderInput | SortOrder
     serviceAreaId?: SortOrderInput | SortOrder
-    serviceArea?: ServiceAreaOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-    device?: DeviceOrderByWithRelationInput
-    serviceCategory?: ServiceCategoryOrderByWithRelationInput
-    review?: ReviewOrderByWithRelationInput
+    travelCharge?: SortOrderInput | SortOrder
     notifications?: NotificationOrderByRelationAggregateInput
+    device?: DeviceOrderByWithRelationInput
+    serviceArea?: ServiceAreaOrderByWithRelationInput
+    serviceCategory?: ServiceCategoryOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    review?: ReviewOrderByWithRelationInput
     warranty?: WarrantyOrderByWithRelationInput
   }
 
@@ -15405,29 +15348,29 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
-    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableFilter<"Order"> | number | null
     address?: StringNullableFilter<"Order"> | string | null
     scheduledDate?: StringNullableFilter<"Order"> | string | null
     scheduledSlot?: StringNullableFilter<"Order"> | string | null
+    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionOtp?: StringNullableFilter<"Order"> | string | null
+    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     diagnosticNotes?: StringNullableFilter<"Order"> | string | null
     diagnosticPhotos?: StringNullableListFilter<"Order">
-    partsUsed?: StringNullableFilter<"Order"> | string | null
-    laborNotes?: StringNullableFilter<"Order"> | string | null
     finalAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: StringNullableFilter<"Order"> | string | null
+    partsUsed?: StringNullableFilter<"Order"> | string | null
     paymentMethod?: StringNullableFilter<"Order"> | string | null
-    completionOtp?: StringNullableFilter<"Order"> | string | null
-    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     repairNotes?: StringNullableFilter<"Order"> | string | null
-    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: IntNullableFilter<"Order"> | number | null
-    serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
-    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
+    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationListRelationFilter
+    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
+    serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
+    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    review?: XOR<ReviewNullableScalarRelationFilter, ReviewWhereInput> | null
     warranty?: XOR<WarrantyNullableScalarRelationFilter, WarrantyWhereInput> | null
   }, "id">
 
@@ -15439,23 +15382,23 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    completedAt?: SortOrderInput | SortOrder
     estimatedTime?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     scheduledDate?: SortOrderInput | SortOrder
     scheduledSlot?: SortOrderInput | SortOrder
+    amountConfirmedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completionOtp?: SortOrderInput | SortOrder
+    completionVerifiedAt?: SortOrderInput | SortOrder
     diagnosticNotes?: SortOrderInput | SortOrder
     diagnosticPhotos?: SortOrder
-    partsUsed?: SortOrderInput | SortOrder
-    laborNotes?: SortOrderInput | SortOrder
     finalAmount?: SortOrderInput | SortOrder
+    laborNotes?: SortOrderInput | SortOrder
+    partsUsed?: SortOrderInput | SortOrder
     paymentMethod?: SortOrderInput | SortOrder
-    completionOtp?: SortOrderInput | SortOrder
-    amountConfirmedAt?: SortOrderInput | SortOrder
-    completionVerifiedAt?: SortOrderInput | SortOrder
     repairNotes?: SortOrderInput | SortOrder
-    travelCharge?: SortOrderInput | SortOrder
     serviceAreaId?: SortOrderInput | SortOrder
+    travelCharge?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -15474,23 +15417,23 @@ export namespace Prisma {
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
-    completedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableWithAggregatesFilter<"Order"> | number | null
     address?: StringNullableWithAggregatesFilter<"Order"> | string | null
     scheduledDate?: StringNullableWithAggregatesFilter<"Order"> | string | null
     scheduledSlot?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    amountConfirmedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    completionOtp?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    completionVerifiedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     diagnosticNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     diagnosticPhotos?: StringNullableListFilter<"Order">
-    partsUsed?: StringNullableWithAggregatesFilter<"Order"> | string | null
-    laborNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     finalAmount?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    partsUsed?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paymentMethod?: StringNullableWithAggregatesFilter<"Order"> | string | null
-    completionOtp?: StringNullableWithAggregatesFilter<"Order"> | string | null
-    amountConfirmedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
-    completionVerifiedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     repairNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
-    travelCharge?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    travelCharge?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type ReviewWhereInput = {
@@ -15587,8 +15530,8 @@ export namespace Prisma {
     isRead?: BoolFilter<"Notification"> | boolean
     orderId?: IntNullableFilter<"Notification"> | number | null
     createdAt?: DateTimeFilter<"Notification"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type NotificationOrderByWithRelationInput = {
@@ -15600,8 +15543,8 @@ export namespace Prisma {
     isRead?: SortOrder
     orderId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     order?: OrderOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type NotificationWhereUniqueInput = Prisma.AtLeast<{
@@ -15616,8 +15559,8 @@ export namespace Prisma {
     isRead?: BoolFilter<"Notification"> | boolean
     orderId?: IntNullableFilter<"Notification"> | number | null
     createdAt?: DateTimeFilter<"Notification"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type NotificationOrderByWithAggregationInput = {
@@ -16006,109 +15949,88 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     email?: string | null
-    passwordHash?: string | null
     name?: string | null
     phone?: string | null
     role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
+    createdAt?: Date | string
     averageRating?: number | null
     totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
     addresses?: AddressCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: number
     email?: string | null
-    passwordHash?: string | null
     name?: string | null
     phone?: string | null
     role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
+    createdAt?: Date | string
     averageRating?: number | null
     totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
     addresses?: AddressUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
     id?: number
     email?: string | null
-    passwordHash?: string | null
     name?: string | null
     phone?: string | null
     role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
+    createdAt?: Date | string
     averageRating?: number | null
     totalReviews?: number | null
-    createdAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DeviceCreateInput = {
@@ -16208,28 +16130,28 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    user: UserCreateNestedOneWithoutOrdersInput
-    device: DeviceCreateNestedOneWithoutOrdersInput
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
-    review?: ReviewCreateNestedOneWithoutOrderInput
     notifications?: NotificationCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
+    review?: ReviewCreateNestedOneWithoutOrderInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
@@ -16241,25 +16163,25 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -16267,28 +16189,28 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
-    review?: ReviewUpdateOneWithoutOrderNestedInput
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    review?: ReviewUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
 
@@ -16300,25 +16222,25 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -16330,43 +16252,43 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderUpdateManyMutationInput = {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
@@ -16379,23 +16301,23 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type ReviewCreateInput = {
@@ -16491,8 +16413,8 @@ export namespace Prisma {
     type: string
     isRead?: boolean
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutNotificationsInput
     order?: OrderCreateNestedOneWithoutNotificationsInput
+    user: UserCreateNestedOneWithoutNotificationsInput
   }
 
   export type NotificationUncheckedCreateInput = {
@@ -16512,8 +16434,8 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
     order?: OrderUpdateOneWithoutNotificationsNestedInput
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
   }
 
   export type NotificationUncheckedUpdateInput = {
@@ -16970,15 +16892,15 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -17003,21 +16925,10 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type OrderListRelationFilter = {
-    every?: OrderWhereInput
-    some?: OrderWhereInput
-    none?: OrderWhereInput
+  export type AddressListRelationFilter = {
+    every?: AddressWhereInput
+    some?: AddressWhereInput
+    none?: AddressWhereInput
   }
 
   export type NotificationListRelationFilter = {
@@ -17026,10 +16937,10 @@ export namespace Prisma {
     none?: NotificationWhereInput
   }
 
-  export type AddressListRelationFilter = {
-    every?: AddressWhereInput
-    some?: AddressWhereInput
-    none?: AddressWhereInput
+  export type OrderListRelationFilter = {
+    every?: OrderWhereInput
+    some?: OrderWhereInput
+    none?: OrderWhereInput
   }
 
   export type SortOrderInput = {
@@ -17037,7 +16948,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type OrderOrderByRelationAggregateInput = {
+  export type AddressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17045,22 +16956,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type AddressOrderByRelationAggregateInput = {
+  export type OrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    passwordHash?: SortOrder
     name?: SortOrder
     phone?: SortOrder
     role?: SortOrder
-    otpCode?: SortOrder
-    otpExpiresAt?: SortOrder
+    createdAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -17072,29 +16980,23 @@ export namespace Prisma {
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    passwordHash?: SortOrder
     name?: SortOrder
     phone?: SortOrder
     role?: SortOrder
-    otpCode?: SortOrder
-    otpExpiresAt?: SortOrder
+    createdAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    passwordHash?: SortOrder
     name?: SortOrder
     phone?: SortOrder
     role?: SortOrder
-    otpCode?: SortOrder
-    otpExpiresAt?: SortOrder
+    createdAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -17155,18 +17057,18 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17199,20 +17101,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type DeviceCountOrderByAggregateInput = {
@@ -17290,6 +17178,17 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type StringNullableListFilter<$PrismaModel = never> = {
     equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     has?: string | StringFieldRefInput<$PrismaModel> | null
@@ -17309,24 +17208,24 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
-  export type ServiceAreaNullableScalarRelationFilter = {
-    is?: ServiceAreaWhereInput | null
-    isNot?: ServiceAreaWhereInput | null
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type DeviceScalarRelationFilter = {
     is?: DeviceWhereInput
     isNot?: DeviceWhereInput
   }
 
+  export type ServiceAreaNullableScalarRelationFilter = {
+    is?: ServiceAreaWhereInput | null
+    isNot?: ServiceAreaWhereInput | null
+  }
+
   export type ServiceCategoryScalarRelationFilter = {
     is?: ServiceCategoryWhereInput
     isNot?: ServiceCategoryWhereInput
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type ReviewNullableScalarRelationFilter = {
@@ -17347,23 +17246,23 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    completedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
     scheduledSlot?: SortOrder
+    amountConfirmedAt?: SortOrder
+    completedAt?: SortOrder
+    completionOtp?: SortOrder
+    completionVerifiedAt?: SortOrder
     diagnosticNotes?: SortOrder
     diagnosticPhotos?: SortOrder
-    partsUsed?: SortOrder
-    laborNotes?: SortOrder
     finalAmount?: SortOrder
+    laborNotes?: SortOrder
+    partsUsed?: SortOrder
     paymentMethod?: SortOrder
-    completionOtp?: SortOrder
-    amountConfirmedAt?: SortOrder
-    completionVerifiedAt?: SortOrder
     repairNotes?: SortOrder
-    travelCharge?: SortOrder
     serviceAreaId?: SortOrder
+    travelCharge?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -17373,8 +17272,8 @@ export namespace Prisma {
     serviceCategoryId?: SortOrder
     estimatedTime?: SortOrder
     finalAmount?: SortOrder
-    travelCharge?: SortOrder
     serviceAreaId?: SortOrder
+    travelCharge?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -17385,22 +17284,22 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    completedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
     scheduledSlot?: SortOrder
-    diagnosticNotes?: SortOrder
-    partsUsed?: SortOrder
-    laborNotes?: SortOrder
-    finalAmount?: SortOrder
-    paymentMethod?: SortOrder
-    completionOtp?: SortOrder
     amountConfirmedAt?: SortOrder
+    completedAt?: SortOrder
+    completionOtp?: SortOrder
     completionVerifiedAt?: SortOrder
+    diagnosticNotes?: SortOrder
+    finalAmount?: SortOrder
+    laborNotes?: SortOrder
+    partsUsed?: SortOrder
+    paymentMethod?: SortOrder
     repairNotes?: SortOrder
-    travelCharge?: SortOrder
     serviceAreaId?: SortOrder
+    travelCharge?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -17411,22 +17310,22 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    completedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
     scheduledSlot?: SortOrder
-    diagnosticNotes?: SortOrder
-    partsUsed?: SortOrder
-    laborNotes?: SortOrder
-    finalAmount?: SortOrder
-    paymentMethod?: SortOrder
-    completionOtp?: SortOrder
     amountConfirmedAt?: SortOrder
+    completedAt?: SortOrder
+    completionOtp?: SortOrder
     completionVerifiedAt?: SortOrder
+    diagnosticNotes?: SortOrder
+    finalAmount?: SortOrder
+    laborNotes?: SortOrder
+    partsUsed?: SortOrder
+    paymentMethod?: SortOrder
     repairNotes?: SortOrder
-    travelCharge?: SortOrder
     serviceAreaId?: SortOrder
+    travelCharge?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -17436,8 +17335,8 @@ export namespace Prisma {
     serviceCategoryId?: SortOrder
     estimatedTime?: SortOrder
     finalAmount?: SortOrder
-    travelCharge?: SortOrder
     serviceAreaId?: SortOrder
+    travelCharge?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -17448,6 +17347,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17820,11 +17733,11 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type OrderCreateNestedManyWithoutUserInput = {
-    create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
-    createMany?: OrderCreateManyUserInputEnvelope
-    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  export type AddressCreateNestedManyWithoutUserInput = {
+    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
+    createMany?: AddressCreateManyUserInputEnvelope
+    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
   }
 
   export type NotificationCreateNestedManyWithoutUserInput = {
@@ -17834,18 +17747,18 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
-  export type AddressCreateNestedManyWithoutUserInput = {
-    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
-    createMany?: AddressCreateManyUserInputEnvelope
-    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-  }
-
-  export type OrderUncheckedCreateNestedManyWithoutUserInput = {
+  export type OrderCreateNestedManyWithoutUserInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
     createMany?: OrderCreateManyUserInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type AddressUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
+    createMany?: AddressCreateManyUserInputEnvelope
+    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
@@ -17855,11 +17768,11 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
-  export type AddressUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
-    createMany?: AddressCreateManyUserInputEnvelope
-    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+  export type OrderUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
+    createMany?: OrderCreateManyUserInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -17870,8 +17783,8 @@ export namespace Prisma {
     set?: string
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -17890,22 +17803,18 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
-  export type OrderUpdateManyWithoutUserNestedInput = {
-    create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
-    upsert?: OrderUpsertWithWhereUniqueWithoutUserInput | OrderUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: OrderCreateManyUserInputEnvelope
-    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
-    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
-    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
-    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
-    update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  export type AddressUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
+    upsert?: AddressUpsertWithWhereUniqueWithoutUserInput | AddressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AddressCreateManyUserInputEnvelope
+    set?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    disconnect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    delete?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    update?: AddressUpdateWithWhereUniqueWithoutUserInput | AddressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AddressUpdateManyWithWhereWithoutUserInput | AddressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
   }
 
   export type NotificationUpdateManyWithoutUserNestedInput = {
@@ -17922,29 +17831,7 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
-  export type AddressUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
-    upsert?: AddressUpsertWithWhereUniqueWithoutUserInput | AddressUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AddressCreateManyUserInputEnvelope
-    set?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    disconnect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    delete?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    update?: AddressUpdateWithWhereUniqueWithoutUserInput | AddressUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AddressUpdateManyWithWhereWithoutUserInput | AddressUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
+  export type OrderUpdateManyWithoutUserNestedInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
     upsert?: OrderUpsertWithWhereUniqueWithoutUserInput | OrderUpsertWithWhereUniqueWithoutUserInput[]
@@ -17956,6 +17843,28 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
+    upsert?: AddressUpsertWithWhereUniqueWithoutUserInput | AddressUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AddressCreateManyUserInputEnvelope
+    set?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    disconnect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    delete?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+    update?: AddressUpdateWithWhereUniqueWithoutUserInput | AddressUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AddressUpdateManyWithWhereWithoutUserInput | AddressUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
@@ -17972,18 +17881,18 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
-  export type AddressUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
-    upsert?: AddressUpsertWithWhereUniqueWithoutUserInput | AddressUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AddressCreateManyUserInputEnvelope
-    set?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    disconnect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    delete?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
-    update?: AddressUpdateWithWhereUniqueWithoutUserInput | AddressUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AddressUpdateManyWithWhereWithoutUserInput | AddressUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
+  export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutUserInput | OrderUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: OrderCreateManyUserInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutUserInput | OrderUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutUserInput | OrderUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
   export type OrderCreateNestedManyWithoutDeviceInput = {
@@ -18078,16 +17987,11 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type ServiceAreaCreateNestedOneWithoutOrdersInput = {
-    create?: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: ServiceAreaCreateOrConnectWithoutOrdersInput
-    connect?: ServiceAreaWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutOrdersInput = {
-    create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
-    connect?: UserWhereUniqueInput
+  export type NotificationCreateNestedManyWithoutOrderInput = {
+    create?: XOR<NotificationCreateWithoutOrderInput, NotificationUncheckedCreateWithoutOrderInput> | NotificationCreateWithoutOrderInput[] | NotificationUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutOrderInput | NotificationCreateOrConnectWithoutOrderInput[]
+    createMany?: NotificationCreateManyOrderInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type DeviceCreateNestedOneWithoutOrdersInput = {
@@ -18096,10 +18000,22 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput
   }
 
+  export type ServiceAreaCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ServiceAreaCreateOrConnectWithoutOrdersInput
+    connect?: ServiceAreaWhereUniqueInput
+  }
+
   export type ServiceCategoryCreateNestedOneWithoutOrdersInput = {
     create?: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: ServiceCategoryCreateOrConnectWithoutOrdersInput
     connect?: ServiceCategoryWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
+    connect?: UserWhereUniqueInput
   }
 
   export type ReviewCreateNestedOneWithoutOrderInput = {
@@ -18108,23 +18024,10 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput
   }
 
-  export type NotificationCreateNestedManyWithoutOrderInput = {
-    create?: XOR<NotificationCreateWithoutOrderInput, NotificationUncheckedCreateWithoutOrderInput> | NotificationCreateWithoutOrderInput[] | NotificationUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutOrderInput | NotificationCreateOrConnectWithoutOrderInput[]
-    createMany?: NotificationCreateManyOrderInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-  }
-
   export type WarrantyCreateNestedOneWithoutOrderInput = {
     create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
     connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput
     connect?: WarrantyWhereUniqueInput
-  }
-
-  export type ReviewUncheckedCreateNestedOneWithoutOrderInput = {
-    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
-    connect?: ReviewWhereUniqueInput
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutOrderInput = {
@@ -18132,6 +18035,12 @@ export namespace Prisma {
     connectOrCreate?: NotificationCreateOrConnectWithoutOrderInput | NotificationCreateOrConnectWithoutOrderInput[]
     createMany?: NotificationCreateManyOrderInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type ReviewUncheckedCreateNestedOneWithoutOrderInput = {
+    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
+    connect?: ReviewWhereUniqueInput
   }
 
   export type WarrantyUncheckedCreateNestedOneWithoutOrderInput = {
@@ -18142,6 +18051,10 @@ export namespace Prisma {
 
   export type EnumOrderStatusFieldUpdateOperationsInput = {
     set?: $Enums.OrderStatus
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type OrderUpdatediagnosticPhotosInput = {
@@ -18155,50 +18068,6 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type ServiceAreaUpdateOneWithoutOrdersNestedInput = {
-    create?: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: ServiceAreaCreateOrConnectWithoutOrdersInput
-    upsert?: ServiceAreaUpsertWithoutOrdersInput
-    disconnect?: ServiceAreaWhereInput | boolean
-    delete?: ServiceAreaWhereInput | boolean
-    connect?: ServiceAreaWhereUniqueInput
-    update?: XOR<XOR<ServiceAreaUpdateToOneWithWhereWithoutOrdersInput, ServiceAreaUpdateWithoutOrdersInput>, ServiceAreaUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
-    create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
-    upsert?: UserUpsertWithoutOrdersInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrdersInput, UserUpdateWithoutOrdersInput>, UserUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type DeviceUpdateOneRequiredWithoutOrdersNestedInput = {
-    create?: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: DeviceCreateOrConnectWithoutOrdersInput
-    upsert?: DeviceUpsertWithoutOrdersInput
-    connect?: DeviceWhereUniqueInput
-    update?: XOR<XOR<DeviceUpdateToOneWithWhereWithoutOrdersInput, DeviceUpdateWithoutOrdersInput>, DeviceUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput = {
-    create?: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
-    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutOrdersInput
-    upsert?: ServiceCategoryUpsertWithoutOrdersInput
-    connect?: ServiceCategoryWhereUniqueInput
-    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutOrdersInput, ServiceCategoryUpdateWithoutOrdersInput>, ServiceCategoryUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type ReviewUpdateOneWithoutOrderNestedInput = {
-    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
-    upsert?: ReviewUpsertWithoutOrderInput
-    disconnect?: ReviewWhereInput | boolean
-    delete?: ReviewWhereInput | boolean
-    connect?: ReviewWhereUniqueInput
-    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutOrderInput, ReviewUpdateWithoutOrderInput>, ReviewUncheckedUpdateWithoutOrderInput>
   }
 
   export type NotificationUpdateManyWithoutOrderNestedInput = {
@@ -18215,6 +18084,50 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type DeviceUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: DeviceCreateOrConnectWithoutOrdersInput
+    upsert?: DeviceUpsertWithoutOrdersInput
+    connect?: DeviceWhereUniqueInput
+    update?: XOR<XOR<DeviceUpdateToOneWithWhereWithoutOrdersInput, DeviceUpdateWithoutOrdersInput>, DeviceUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ServiceAreaUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ServiceAreaCreateOrConnectWithoutOrdersInput
+    upsert?: ServiceAreaUpsertWithoutOrdersInput
+    disconnect?: ServiceAreaWhereInput | boolean
+    delete?: ServiceAreaWhereInput | boolean
+    connect?: ServiceAreaWhereUniqueInput
+    update?: XOR<XOR<ServiceAreaUpdateToOneWithWhereWithoutOrdersInput, ServiceAreaUpdateWithoutOrdersInput>, ServiceAreaUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutOrdersInput
+    upsert?: ServiceCategoryUpsertWithoutOrdersInput
+    connect?: ServiceCategoryWhereUniqueInput
+    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutOrdersInput, ServiceCategoryUpdateWithoutOrdersInput>, ServiceCategoryUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
+    create?: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOrdersInput
+    upsert?: UserUpsertWithoutOrdersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrdersInput, UserUpdateWithoutOrdersInput>, UserUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type ReviewUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
+    upsert?: ReviewUpsertWithoutOrderInput
+    disconnect?: ReviewWhereInput | boolean
+    delete?: ReviewWhereInput | boolean
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutOrderInput, ReviewUpdateWithoutOrderInput>, ReviewUncheckedUpdateWithoutOrderInput>
+  }
+
   export type WarrantyUpdateOneWithoutOrderNestedInput = {
     create?: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
     connectOrCreate?: WarrantyCreateOrConnectWithoutOrderInput
@@ -18223,16 +18136,6 @@ export namespace Prisma {
     delete?: WarrantyWhereInput | boolean
     connect?: WarrantyWhereUniqueInput
     update?: XOR<XOR<WarrantyUpdateToOneWithWhereWithoutOrderInput, WarrantyUpdateWithoutOrderInput>, WarrantyUncheckedUpdateWithoutOrderInput>
-  }
-
-  export type ReviewUncheckedUpdateOneWithoutOrderNestedInput = {
-    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
-    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
-    upsert?: ReviewUpsertWithoutOrderInput
-    disconnect?: ReviewWhereInput | boolean
-    delete?: ReviewWhereInput | boolean
-    connect?: ReviewWhereUniqueInput
-    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutOrderInput, ReviewUpdateWithoutOrderInput>, ReviewUncheckedUpdateWithoutOrderInput>
   }
 
   export type NotificationUncheckedUpdateManyWithoutOrderNestedInput = {
@@ -18247,6 +18150,16 @@ export namespace Prisma {
     update?: NotificationUpdateWithWhereUniqueWithoutOrderInput | NotificationUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: NotificationUpdateManyWithWhereWithoutOrderInput | NotificationUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type ReviewUncheckedUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
+    upsert?: ReviewUpsertWithoutOrderInput
+    disconnect?: ReviewWhereInput | boolean
+    delete?: ReviewWhereInput | boolean
+    connect?: ReviewWhereUniqueInput
+    update?: XOR<XOR<ReviewUpdateToOneWithWhereWithoutOrderInput, ReviewUpdateWithoutOrderInput>, ReviewUncheckedUpdateWithoutOrderInput>
   }
 
   export type WarrantyUncheckedUpdateOneWithoutOrderNestedInput = {
@@ -18282,24 +18195,16 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutReviewInput, OrderUpdateWithoutReviewInput>, OrderUncheckedUpdateWithoutReviewInput>
   }
 
-  export type UserCreateNestedOneWithoutNotificationsInput = {
-    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type OrderCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<OrderCreateWithoutNotificationsInput, OrderUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: OrderCreateOrConnectWithoutNotificationsInput
     connect?: OrderWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
-    upsert?: UserUpsertWithoutNotificationsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
   }
 
   export type OrderUpdateOneWithoutNotificationsNestedInput = {
@@ -18310,6 +18215,14 @@ export namespace Prisma {
     delete?: OrderWhereInput | boolean
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutNotificationsInput, OrderUpdateWithoutNotificationsInput>, OrderUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    upsert?: UserUpsertWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
   }
 
   export type OrderCreateNestedOneWithoutWarrantyInput = {
@@ -18429,15 +18342,15 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -18460,17 +18373,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -18534,18 +18436,18 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18580,20 +18482,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -18612,6 +18500,17 @@ export namespace Prisma {
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
@@ -18633,6 +18532,20 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18678,102 +18591,6 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
-  export type OrderCreateWithoutUserInput = {
-    status?: $Enums.OrderStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    completedAt?: Date | string | null
-    estimatedTime?: number | null
-    address?: string | null
-    scheduledDate?: string | null
-    scheduledSlot?: string | null
-    diagnosticNotes?: string | null
-    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
-    finalAmount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
-    repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    device: DeviceCreateNestedOneWithoutOrdersInput
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
-    review?: ReviewCreateNestedOneWithoutOrderInput
-    notifications?: NotificationCreateNestedManyWithoutOrderInput
-    warranty?: WarrantyCreateNestedOneWithoutOrderInput
-  }
-
-  export type OrderUncheckedCreateWithoutUserInput = {
-    id?: number
-    deviceId: number
-    serviceCategoryId: number
-    status?: $Enums.OrderStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    completedAt?: Date | string | null
-    estimatedTime?: number | null
-    address?: string | null
-    scheduledDate?: string | null
-    scheduledSlot?: string | null
-    diagnosticNotes?: string | null
-    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
-    finalAmount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
-    repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceAreaId?: number | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
-    warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
-  }
-
-  export type OrderCreateOrConnectWithoutUserInput = {
-    where: OrderWhereUniqueInput
-    create: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput>
-  }
-
-  export type OrderCreateManyUserInputEnvelope = {
-    data: OrderCreateManyUserInput | OrderCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type NotificationCreateWithoutUserInput = {
-    title: string
-    body: string
-    type: string
-    isRead?: boolean
-    createdAt?: Date | string
-    order?: OrderCreateNestedOneWithoutNotificationsInput
-  }
-
-  export type NotificationUncheckedCreateWithoutUserInput = {
-    id?: number
-    title: string
-    body: string
-    type: string
-    isRead?: boolean
-    orderId?: number | null
-    createdAt?: Date | string
-  }
-
-  export type NotificationCreateOrConnectWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
-  }
-
-  export type NotificationCreateManyUserInputEnvelope = {
-    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type AddressCreateWithoutUserInput = {
     fullName: string
     mobileNumber: string
@@ -18815,80 +18632,100 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type OrderUpsertWithWhereUniqueWithoutUserInput = {
-    where: OrderWhereUniqueInput
-    update: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
-    create: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput>
+  export type NotificationCreateWithoutUserInput = {
+    title: string
+    body: string
+    type: string
+    isRead?: boolean
+    createdAt?: Date | string
+    order?: OrderCreateNestedOneWithoutNotificationsInput
   }
 
-  export type OrderUpdateWithWhereUniqueWithoutUserInput = {
-    where: OrderWhereUniqueInput
-    data: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: number
+    title: string
+    body: string
+    type: string
+    isRead?: boolean
+    orderId?: number | null
+    createdAt?: Date | string
   }
 
-  export type OrderUpdateManyWithWhereWithoutUserInput = {
-    where: OrderScalarWhereInput
-    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type OrderScalarWhereInput = {
-    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    OR?: OrderScalarWhereInput[]
-    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
-    id?: IntFilter<"Order"> | number
-    userId?: IntFilter<"Order"> | number
-    deviceId?: IntFilter<"Order"> | number
-    serviceCategoryId?: IntFilter<"Order"> | number
-    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
-    createdAt?: DateTimeFilter<"Order"> | Date | string
-    updatedAt?: DateTimeFilter<"Order"> | Date | string
-    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    estimatedTime?: IntNullableFilter<"Order"> | number | null
-    address?: StringNullableFilter<"Order"> | string | null
-    scheduledDate?: StringNullableFilter<"Order"> | string | null
-    scheduledSlot?: StringNullableFilter<"Order"> | string | null
-    diagnosticNotes?: StringNullableFilter<"Order"> | string | null
-    diagnosticPhotos?: StringNullableListFilter<"Order">
-    partsUsed?: StringNullableFilter<"Order"> | string | null
-    laborNotes?: StringNullableFilter<"Order"> | string | null
-    finalAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: StringNullableFilter<"Order"> | string | null
-    completionOtp?: StringNullableFilter<"Order"> | string | null
-    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
-    repairNotes?: StringNullableFilter<"Order"> | string | null
-    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
-    serviceAreaId?: IntNullableFilter<"Order"> | number | null
-  }
-
-  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+  export type NotificationCreateOrConnectWithoutUserInput = {
     where: NotificationWhereUniqueInput
-    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
     create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
   }
 
-  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
-  export type NotificationUpdateManyWithWhereWithoutUserInput = {
-    where: NotificationScalarWhereInput
-    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  export type OrderCreateWithoutUserInput = {
+    status?: $Enums.OrderStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estimatedTime?: number | null
+    address?: string | null
+    scheduledDate?: string | null
+    scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
+    diagnosticNotes?: string | null
+    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
+    finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
+    paymentMethod?: string | null
+    repairNotes?: string | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    review?: ReviewCreateNestedOneWithoutOrderInput
+    warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
-  export type NotificationScalarWhereInput = {
-    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    OR?: NotificationScalarWhereInput[]
-    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    id?: IntFilter<"Notification"> | number
-    userId?: IntFilter<"Notification"> | number
-    title?: StringFilter<"Notification"> | string
-    body?: StringFilter<"Notification"> | string
-    type?: StringFilter<"Notification"> | string
-    isRead?: BoolFilter<"Notification"> | boolean
-    orderId?: IntNullableFilter<"Notification"> | number | null
-    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  export type OrderUncheckedCreateWithoutUserInput = {
+    id?: number
+    deviceId: number
+    serviceCategoryId: number
+    status?: $Enums.OrderStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estimatedTime?: number | null
+    address?: string | null
+    scheduledDate?: string | null
+    scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
+    diagnosticNotes?: string | null
+    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
+    finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
+    paymentMethod?: string | null
+    repairNotes?: string | null
+    serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutUserInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput>
+  }
+
+  export type OrderCreateManyUserInputEnvelope = {
+    data: OrderCreateManyUserInput | OrderCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
@@ -18927,31 +18764,107 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Address"> | Date | string
   }
 
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: IntFilter<"Notification"> | number
+    userId?: IntFilter<"Notification"> | number
+    title?: StringFilter<"Notification"> | string
+    body?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    isRead?: BoolFilter<"Notification"> | boolean
+    orderId?: IntNullableFilter<"Notification"> | number | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutUserInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
+    create: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutUserInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutUserInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type OrderScalarWhereInput = {
+    AND?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    OR?: OrderScalarWhereInput[]
+    NOT?: OrderScalarWhereInput | OrderScalarWhereInput[]
+    id?: IntFilter<"Order"> | number
+    userId?: IntFilter<"Order"> | number
+    deviceId?: IntFilter<"Order"> | number
+    serviceCategoryId?: IntFilter<"Order"> | number
+    status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    createdAt?: DateTimeFilter<"Order"> | Date | string
+    updatedAt?: DateTimeFilter<"Order"> | Date | string
+    estimatedTime?: IntNullableFilter<"Order"> | number | null
+    address?: StringNullableFilter<"Order"> | string | null
+    scheduledDate?: StringNullableFilter<"Order"> | string | null
+    scheduledSlot?: StringNullableFilter<"Order"> | string | null
+    amountConfirmedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    completionOtp?: StringNullableFilter<"Order"> | string | null
+    completionVerifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    diagnosticNotes?: StringNullableFilter<"Order"> | string | null
+    diagnosticPhotos?: StringNullableListFilter<"Order">
+    finalAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: StringNullableFilter<"Order"> | string | null
+    partsUsed?: StringNullableFilter<"Order"> | string | null
+    paymentMethod?: StringNullableFilter<"Order"> | string | null
+    repairNotes?: StringNullableFilter<"Order"> | string | null
+    serviceAreaId?: IntNullableFilter<"Order"> | number | null
+    travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type OrderCreateWithoutDeviceInput = {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    user: UserCreateNestedOneWithoutOrdersInput
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
-    review?: ReviewCreateNestedOneWithoutOrderInput
     notifications?: NotificationCreateNestedManyWithoutOrderInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
+    review?: ReviewCreateNestedOneWithoutOrderInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
@@ -18962,25 +18875,25 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -19014,27 +18927,27 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     user: UserCreateNestedOneWithoutOrdersInput
-    device: DeviceCreateNestedOneWithoutOrdersInput
     review?: ReviewCreateNestedOneWithoutOrderInput
-    notifications?: NotificationCreateNestedManyWithoutOrderInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
@@ -19045,25 +18958,25 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -19091,128 +19004,6 @@ export namespace Prisma {
   export type OrderUpdateManyWithWhereWithoutServiceCategoryInput = {
     where: OrderScalarWhereInput
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutServiceCategoryInput>
-  }
-
-  export type ServiceAreaCreateWithoutOrdersInput = {
-    name: string
-    city: string
-    travelCharge?: Decimal | DecimalJsLike | number | string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ServiceAreaUncheckedCreateWithoutOrdersInput = {
-    id?: number
-    name: string
-    city: string
-    travelCharge?: Decimal | DecimalJsLike | number | string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ServiceAreaCreateOrConnectWithoutOrdersInput = {
-    where: ServiceAreaWhereUniqueInput
-    create: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
-  }
-
-  export type UserCreateWithoutOrdersInput = {
-    email?: string | null
-    passwordHash?: string | null
-    name?: string | null
-    phone?: string | null
-    role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
-    averageRating?: number | null
-    totalReviews?: number | null
-    createdAt?: Date | string
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    addresses?: AddressCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutOrdersInput = {
-    id?: number
-    email?: string | null
-    passwordHash?: string | null
-    name?: string | null
-    phone?: string | null
-    role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
-    averageRating?: number | null
-    totalReviews?: number | null
-    createdAt?: Date | string
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutOrdersInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
-  }
-
-  export type DeviceCreateWithoutOrdersInput = {
-    brand: string
-    model: string
-  }
-
-  export type DeviceUncheckedCreateWithoutOrdersInput = {
-    id?: number
-    brand: string
-    model: string
-  }
-
-  export type DeviceCreateOrConnectWithoutOrdersInput = {
-    where: DeviceWhereUniqueInput
-    create: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
-  }
-
-  export type ServiceCategoryCreateWithoutOrdersInput = {
-    name: string
-    description?: string | null
-    isActive?: boolean
-  }
-
-  export type ServiceCategoryUncheckedCreateWithoutOrdersInput = {
-    id?: number
-    name: string
-    description?: string | null
-    isActive?: boolean
-  }
-
-  export type ServiceCategoryCreateOrConnectWithoutOrdersInput = {
-    where: ServiceCategoryWhereUniqueInput
-    create: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
-  }
-
-  export type ReviewCreateWithoutOrderInput = {
-    overallRating?: number
-    serviceQuality?: number
-    timeliness?: number
-    professionalism?: number
-    comments?: string | null
-    photos?: ReviewCreatephotosInput | string[]
-    isVerified?: boolean
-    createdAt?: Date | string
-  }
-
-  export type ReviewUncheckedCreateWithoutOrderInput = {
-    id?: number
-    overallRating?: number
-    serviceQuality?: number
-    timeliness?: number
-    professionalism?: number
-    comments?: string | null
-    photos?: ReviewCreatephotosInput | string[]
-    isVerified?: boolean
-    createdAt?: Date | string
-  }
-
-  export type ReviewCreateOrConnectWithoutOrderInput = {
-    where: ReviewWhereUniqueInput
-    create: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
   }
 
   export type NotificationCreateWithoutOrderInput = {
@@ -19244,6 +19035,122 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DeviceCreateWithoutOrdersInput = {
+    brand: string
+    model: string
+  }
+
+  export type DeviceUncheckedCreateWithoutOrdersInput = {
+    id?: number
+    brand: string
+    model: string
+  }
+
+  export type DeviceCreateOrConnectWithoutOrdersInput = {
+    where: DeviceWhereUniqueInput
+    create: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type ServiceAreaCreateWithoutOrdersInput = {
+    name: string
+    city: string
+    travelCharge?: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceAreaUncheckedCreateWithoutOrdersInput = {
+    id?: number
+    name: string
+    city: string
+    travelCharge?: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceAreaCreateOrConnectWithoutOrdersInput = {
+    where: ServiceAreaWhereUniqueInput
+    create: XOR<ServiceAreaCreateWithoutOrdersInput, ServiceAreaUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type ServiceCategoryCreateWithoutOrdersInput = {
+    name: string
+    description?: string | null
+    isActive?: boolean
+  }
+
+  export type ServiceCategoryUncheckedCreateWithoutOrdersInput = {
+    id?: number
+    name: string
+    description?: string | null
+    isActive?: boolean
+  }
+
+  export type ServiceCategoryCreateOrConnectWithoutOrdersInput = {
+    where: ServiceCategoryWhereUniqueInput
+    create: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type UserCreateWithoutOrdersInput = {
+    email?: string | null
+    name?: string | null
+    phone?: string | null
+    role?: string
+    createdAt?: Date | string
+    averageRating?: number | null
+    totalReviews?: number | null
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOrdersInput = {
+    id?: number
+    email?: string | null
+    name?: string | null
+    phone?: string | null
+    role?: string
+    createdAt?: Date | string
+    averageRating?: number | null
+    totalReviews?: number | null
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOrdersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type ReviewCreateWithoutOrderInput = {
+    overallRating?: number
+    serviceQuality?: number
+    timeliness?: number
+    professionalism?: number
+    comments?: string | null
+    photos?: ReviewCreatephotosInput | string[]
+    isVerified?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ReviewUncheckedCreateWithoutOrderInput = {
+    id?: number
+    overallRating?: number
+    serviceQuality?: number
+    timeliness?: number
+    professionalism?: number
+    comments?: string | null
+    photos?: ReviewCreatephotosInput | string[]
+    isVerified?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ReviewCreateOrConnectWithoutOrderInput = {
+    where: ReviewWhereUniqueInput
+    create: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
+  }
+
   export type WarrantyCreateWithoutOrderInput = {
     warrantyDays?: number
     expiresAt: Date | string
@@ -19262,6 +19169,44 @@ export namespace Prisma {
   export type WarrantyCreateOrConnectWithoutOrderInput = {
     where: WarrantyWhereUniqueInput
     create: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutOrderInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutOrderInput, NotificationUncheckedUpdateWithoutOrderInput>
+    create: XOR<NotificationCreateWithoutOrderInput, NotificationUncheckedCreateWithoutOrderInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutOrderInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutOrderInput, NotificationUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutOrderInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type DeviceUpsertWithoutOrdersInput = {
+    update: XOR<DeviceUpdateWithoutOrdersInput, DeviceUncheckedUpdateWithoutOrdersInput>
+    create: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
+    where?: DeviceWhereInput
+  }
+
+  export type DeviceUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: DeviceWhereInput
+    data: XOR<DeviceUpdateWithoutOrdersInput, DeviceUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type DeviceUpdateWithoutOrdersInput = {
+    brand?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DeviceUncheckedUpdateWithoutOrdersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    brand?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
   }
 
   export type ServiceAreaUpsertWithoutOrdersInput = {
@@ -19294,70 +19239,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserUpsertWithoutOrdersInput = {
-    update: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
-    create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutOrdersInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type UserUpdateWithoutOrdersInput = {
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
-    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    addresses?: AddressUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutOrdersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
-    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type DeviceUpsertWithoutOrdersInput = {
-    update: XOR<DeviceUpdateWithoutOrdersInput, DeviceUncheckedUpdateWithoutOrdersInput>
-    create: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
-    where?: DeviceWhereInput
-  }
-
-  export type DeviceUpdateToOneWithWhereWithoutOrdersInput = {
-    where?: DeviceWhereInput
-    data: XOR<DeviceUpdateWithoutOrdersInput, DeviceUncheckedUpdateWithoutOrdersInput>
-  }
-
-  export type DeviceUpdateWithoutOrdersInput = {
-    brand?: StringFieldUpdateOperationsInput | string
-    model?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type DeviceUncheckedUpdateWithoutOrdersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    brand?: StringFieldUpdateOperationsInput | string
-    model?: StringFieldUpdateOperationsInput | string
-  }
-
   export type ServiceCategoryUpsertWithoutOrdersInput = {
     update: XOR<ServiceCategoryUpdateWithoutOrdersInput, ServiceCategoryUncheckedUpdateWithoutOrdersInput>
     create: XOR<ServiceCategoryCreateWithoutOrdersInput, ServiceCategoryUncheckedCreateWithoutOrdersInput>
@@ -19380,6 +19261,42 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type UserUpsertWithoutOrdersInput = {
+    update: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
+    create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type UserUpdateWithoutOrdersInput = {
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOrdersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewUpsertWithoutOrderInput = {
@@ -19416,22 +19333,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type NotificationUpsertWithWhereUniqueWithoutOrderInput = {
-    where: NotificationWhereUniqueInput
-    update: XOR<NotificationUpdateWithoutOrderInput, NotificationUncheckedUpdateWithoutOrderInput>
-    create: XOR<NotificationCreateWithoutOrderInput, NotificationUncheckedCreateWithoutOrderInput>
-  }
-
-  export type NotificationUpdateWithWhereUniqueWithoutOrderInput = {
-    where: NotificationWhereUniqueInput
-    data: XOR<NotificationUpdateWithoutOrderInput, NotificationUncheckedUpdateWithoutOrderInput>
-  }
-
-  export type NotificationUpdateManyWithWhereWithoutOrderInput = {
-    where: NotificationScalarWhereInput
-    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutOrderInput>
-  }
-
   export type WarrantyUpsertWithoutOrderInput = {
     update: XOR<WarrantyUpdateWithoutOrderInput, WarrantyUncheckedUpdateWithoutOrderInput>
     create: XOR<WarrantyCreateWithoutOrderInput, WarrantyUncheckedCreateWithoutOrderInput>
@@ -19462,27 +19363,27 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    user: UserCreateNestedOneWithoutOrdersInput
-    device: DeviceCreateNestedOneWithoutOrdersInput
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
     notifications?: NotificationCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
@@ -19494,23 +19395,23 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -19535,27 +19436,27 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
 
@@ -19567,87 +19468,51 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
-  }
-
-  export type UserCreateWithoutNotificationsInput = {
-    email?: string | null
-    passwordHash?: string | null
-    name?: string | null
-    phone?: string | null
-    role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
-    averageRating?: number | null
-    totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderCreateNestedManyWithoutUserInput
-    addresses?: AddressCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutNotificationsInput = {
-    id?: number
-    email?: string | null
-    passwordHash?: string | null
-    name?: string | null
-    phone?: string | null
-    role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
-    averageRating?: number | null
-    totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
-    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutNotificationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
   }
 
   export type OrderCreateWithoutNotificationsInput = {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    user: UserCreateNestedOneWithoutOrdersInput
     device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
     review?: ReviewCreateNestedOneWithoutOrderInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
@@ -19660,23 +19525,23 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -19686,46 +19551,34 @@ export namespace Prisma {
     create: XOR<OrderCreateWithoutNotificationsInput, OrderUncheckedCreateWithoutNotificationsInput>
   }
 
-  export type UserUpsertWithoutNotificationsInput = {
-    update: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+  export type UserCreateWithoutNotificationsInput = {
+    email?: string | null
+    name?: string | null
+    phone?: string | null
+    role?: string
+    createdAt?: Date | string
+    averageRating?: number | null
+    totalReviews?: number | null
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNotificationsInput = {
+    id?: number
+    email?: string | null
+    name?: string | null
+    phone?: string | null
+    role?: string
+    createdAt?: Date | string
+    averageRating?: number | null
+    totalReviews?: number | null
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNotificationsInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type UserUpdateWithoutNotificationsInput = {
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
-    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUpdateManyWithoutUserNestedInput
-    addresses?: AddressUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutNotificationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
-    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
-    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderUpsertWithoutNotificationsInput = {
@@ -19743,26 +19596,26 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     review?: ReviewUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
@@ -19775,53 +19628,89 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type UserUpsertWithoutNotificationsInput = {
+    update: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateWithoutNotificationsInput = {
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotificationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutWarrantyInput = {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
-    user: UserCreateNestedOneWithoutOrdersInput
-    device: DeviceCreateNestedOneWithoutOrdersInput
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
-    review?: ReviewCreateNestedOneWithoutOrderInput
     notifications?: NotificationCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
+    review?: ReviewCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutWarrantyInput = {
@@ -19832,25 +19721,25 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutWarrantyInput = {
@@ -19873,28 +19762,28 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
-    review?: ReviewUpdateOneWithoutOrderNestedInput
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    review?: ReviewUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutWarrantyInput = {
@@ -19905,56 +19794,50 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
     email?: string | null
-    passwordHash?: string | null
     name?: string | null
     phone?: string | null
     role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
+    createdAt?: Date | string
     averageRating?: number | null
     totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
     id?: number
     email?: string | null
-    passwordHash?: string | null
     name?: string | null
     phone?: string | null
     role?: string
-    otpCode?: string | null
-    otpExpiresAt?: Date | string | null
+    createdAt?: Date | string
     averageRating?: number | null
     totalReviews?: number | null
-    createdAt?: Date | string
-    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -19975,60 +19858,54 @@ export namespace Prisma {
 
   export type UserUpdateWithoutAddressesInput = {
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
-    otpCode?: NullableStringFieldUpdateOperationsInput | string | null
-    otpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderCreateWithoutServiceAreaInput = {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    user: UserCreateNestedOneWithoutOrdersInput
+    notifications?: NotificationCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
     review?: ReviewCreateNestedOneWithoutOrderInput
-    notifications?: NotificationCreateNestedManyWithoutOrderInput
     warranty?: WarrantyCreateNestedOneWithoutOrderInput
   }
 
@@ -20040,24 +19917,24 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
-    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -20087,42 +19964,6 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutServiceAreaInput>
   }
 
-  export type OrderCreateManyUserInput = {
-    id?: number
-    deviceId: number
-    serviceCategoryId: number
-    status?: $Enums.OrderStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    completedAt?: Date | string | null
-    estimatedTime?: number | null
-    address?: string | null
-    scheduledDate?: string | null
-    scheduledSlot?: string | null
-    diagnosticNotes?: string | null
-    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
-    finalAmount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
-    repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
-    serviceAreaId?: number | null
-  }
-
-  export type NotificationCreateManyUserInput = {
-    id?: number
-    title: string
-    body: string
-    type: string
-    isRead?: boolean
-    orderId?: number | null
-    createdAt?: Date | string
-  }
-
   export type AddressCreateManyUserInput = {
     id?: number
     fullName: string
@@ -20139,116 +19980,40 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type OrderUpdateWithoutUserInput = {
-    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
-    review?: ReviewUpdateOneWithoutOrderNestedInput
-    notifications?: NotificationUpdateManyWithoutOrderNestedInput
-    warranty?: WarrantyUpdateOneWithoutOrderNestedInput
+  export type NotificationCreateManyUserInput = {
+    id?: number
+    title: string
+    body: string
+    type: string
+    isRead?: boolean
+    orderId?: number | null
+    createdAt?: Date | string
   }
 
-  export type OrderUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    deviceId?: IntFieldUpdateOperationsInput | number
-    serviceCategoryId?: IntFieldUpdateOperationsInput | number
-    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
-    warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
-  }
-
-  export type OrderUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    deviceId?: IntFieldUpdateOperationsInput | number
-    serviceCategoryId?: IntFieldUpdateOperationsInput | number
-    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
-    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type NotificationUpdateWithoutUserInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    body?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneWithoutNotificationsNestedInput
-  }
-
-  export type NotificationUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    body?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    orderId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type NotificationUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    body?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    orderId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type OrderCreateManyUserInput = {
+    id?: number
+    deviceId: number
+    serviceCategoryId: number
+    status?: $Enums.OrderStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estimatedTime?: number | null
+    address?: string | null
+    scheduledDate?: string | null
+    scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
+    diagnosticNotes?: string | null
+    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
+    finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
+    paymentMethod?: string | null
+    repairNotes?: string | null
+    serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -20298,6 +20063,118 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NotificationUpdateWithoutUserInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderUpdateWithoutUserInput = {
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
+    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    review?: ReviewUpdateOneWithoutOrderNestedInput
+    warranty?: WarrantyUpdateOneWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    deviceId?: IntFieldUpdateOperationsInput | number
+    serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
+    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    deviceId?: IntFieldUpdateOperationsInput | number
+    serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
+    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type OrderCreateManyDeviceInput = {
     id?: number
     userId: number
@@ -20305,50 +20182,50 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderUpdateWithoutDeviceInput = {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
-    review?: ReviewUpdateOneWithoutOrderNestedInput
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    review?: ReviewUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
 
@@ -20359,25 +20236,25 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -20388,23 +20265,23 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderCreateManyServiceCategoryInput = {
@@ -20414,50 +20291,50 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
-    travelCharge?: Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderUpdateWithoutServiceCategoryInput = {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     review?: ReviewUpdateOneWithoutOrderNestedInput
-    notifications?: NotificationUpdateManyWithoutOrderNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
 
@@ -20468,25 +20345,25 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -20497,23 +20374,23 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type NotificationCreateManyOrderInput = {
@@ -20563,20 +20440,20 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    completedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
     scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
     diagnosticNotes?: string | null
     diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
-    partsUsed?: string | null
-    laborNotes?: string | null
     finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
     paymentMethod?: string | null
-    completionOtp?: string | null
-    amountConfirmedAt?: Date | string | null
-    completionVerifiedAt?: Date | string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
   }
@@ -20585,27 +20462,27 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    notifications?: NotificationUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     review?: ReviewUpdateOneWithoutOrderNestedInput
-    notifications?: NotificationUpdateManyWithoutOrderNestedInput
     warranty?: WarrantyUpdateOneWithoutOrderNestedInput
   }
 
@@ -20617,24 +20494,24 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -20646,20 +20523,20 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
     diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
-    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
-    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
     finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }

@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 
 export interface LoginResponse {
   access_token: string;
-  user: { id: string; email?: string; phone?: string; name?: string; role: string; technicianId?: string };
+  user: { id: string; email?: string; phone?: string; name?: string; role: string };
 }
 
 @Injectable({
@@ -28,39 +28,9 @@ export class AuthService {
     this.supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         const token = session.access_token;
-        const user = session.user;
         const currentToken = localStorage.getItem('jwt');
         if (currentToken !== token) {
           localStorage.setItem('jwt', token);
-          this.http.get<any>(`${this.apiUrl}/profile`, {
-            headers: { Authorization: `Bearer ${token}` }
-          }).subscribe({
-            next: (profile: any) => {
-              const loginRes: LoginResponse = {
-                access_token: token,
-                user: {
-                  id: profile.id,
-                  email: profile.email,
-                  phone: profile.phone,
-                  name: profile.name,
-                  role: profile.role,
-                  technicianId: profile.technicianId
-                }
-              };
-              this.persistLogin(loginRes);
-            },
-            error: () => {
-              const fallbackRes: LoginResponse = {
-                access_token: token,
-                user: {
-                  id: user.id,
-                  email: user.email,
-                  role: 'customer'
-                }
-              };
-              this.persistLogin(fallbackRes);
-            }
-          });
         }
       }
     });
@@ -107,7 +77,6 @@ export class AuthService {
                       phone: profile.phone,
                       name: profile.name,
                       role: profile.role,
-                      technicianId: profile.technicianId
                     }
                   };
                   this.persistLogin(loginRes);
@@ -157,7 +126,6 @@ export class AuthService {
                 phone: profile.phone,
                 name: profile.name,
                 role: profile.role,
-                technicianId: profile.technicianId
               }
             };
             this.persistLogin(loginRes);
@@ -225,24 +193,4 @@ export class AuthService {
     return this.http.patch(`${this.apiUrl}/profile`, data);
   }
 
-  // ─── Technician Methods ───────────────────────────────────────────
-
-  registerTechnician(email: string, password: string, name: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register-technician`, { email, password, name });
-  }
-
-  login(technicianId: string, password: string): Observable<LoginResponse> {
-    // Legacy technician login via backend
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { technicianId, password }).pipe(
-      map((res: LoginResponse) => this.persistLogin(res))
-    );
-  }
-
-  forgotPassword(payload: { email?: string; technicianId?: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/forgot-password`, payload);
-  }
-
-  resetPassword(payload: { email?: string; technicianId?: string; otp: string; newPassword?: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/reset-password`, payload);
-  }
 }

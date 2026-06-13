@@ -5,15 +5,7 @@ import { tap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 const PUBLIC_AUTH_PATHS = [
-  '/auth/send-otp',
-  '/auth/verify-otp',
   '/auth/login',
-  '/auth/request-otp',
-  '/auth/verify-phone-otp',
-  '/auth/register-technician',
-  '/technician/kyc/send-aadhaar-otp',
-  '/technician/kyc/verify-aadhaar-otp',
-  '/technician/kyc/upload-file',
   '/auth/check-email',
 ];
 

@@ -123,15 +123,12 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  passwordHash: 'passwordHash',
   name: 'name',
   phone: 'phone',
   role: 'role',
-  otpCode: 'otpCode',
-  otpExpiresAt: 'otpExpiresAt',
+  createdAt: 'createdAt',
   averageRating: 'averageRating',
-  totalReviews: 'totalReviews',
-  createdAt: 'createdAt'
+  totalReviews: 'totalReviews'
 };
 
 exports.Prisma.DeviceScalarFieldEnum = {
@@ -155,23 +152,23 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  completedAt: 'completedAt',
   estimatedTime: 'estimatedTime',
   address: 'address',
   scheduledDate: 'scheduledDate',
   scheduledSlot: 'scheduledSlot',
+  amountConfirmedAt: 'amountConfirmedAt',
+  completedAt: 'completedAt',
+  completionOtp: 'completionOtp',
+  completionVerifiedAt: 'completionVerifiedAt',
   diagnosticNotes: 'diagnosticNotes',
   diagnosticPhotos: 'diagnosticPhotos',
-  partsUsed: 'partsUsed',
-  laborNotes: 'laborNotes',
   finalAmount: 'finalAmount',
+  laborNotes: 'laborNotes',
+  partsUsed: 'partsUsed',
   paymentMethod: 'paymentMethod',
-  completionOtp: 'completionOtp',
-  amountConfirmedAt: 'amountConfirmedAt',
-  completionVerifiedAt: 'completionVerifiedAt',
   repairNotes: 'repairNotes',
-  travelCharge: 'travelCharge',
-  serviceAreaId: 'serviceAreaId'
+  serviceAreaId: 'serviceAreaId',
+  travelCharge: 'travelCharge'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {

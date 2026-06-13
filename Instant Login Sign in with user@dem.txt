@@ -1,2 +1,0 @@
-Instant Login: Sign in with user@demo.com or admin@demo.com and password password.
-Registration: Attempt to register any account. It will connect to the backend if PostgreSQL is set up, or fall back to the dashboard locally if not.

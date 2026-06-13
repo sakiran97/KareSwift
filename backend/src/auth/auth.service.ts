@@ -30,8 +30,7 @@ export class AuthService {
   async getProfile(userId: number) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
-    const { passwordHash, otpCode, otpExpiresAt, ...safe } = user;
-    return safe;
+    return user;
   }
 
   async updateProfile(userId: number, data: { name?: string; phone?: string }) {
@@ -40,8 +39,7 @@ export class AuthService {
         where: { id: userId },
         data: { ...(data.name !== undefined && { name: data.name }), ...(data.phone !== undefined && { phone: data.phone }) },
       });
-      const { passwordHash, otpCode, otpExpiresAt, ...safe } = user;
-      return { ...safe, message: 'Profile updated successfully' };
+      return { ...user, message: 'Profile updated successfully' };
     } catch (err: any) {
       if (err?.code === 'P2002') throw new BadRequestException('Phone already in use');
       throw err;

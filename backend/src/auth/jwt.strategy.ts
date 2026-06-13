@@ -36,8 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             }
           });
         }
-        const { passwordHash, ...result } = user;
-        return result;
+        return user;
       }
     } catch (err: any) {
       console.warn('JWT validation: DB offline or error, using token payload as user context.', err);

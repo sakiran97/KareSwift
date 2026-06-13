@@ -27,6 +27,7 @@ export class CreateOrder implements OnInit {
   // Catalog data
   brands = ['Apple', 'Samsung', 'OnePlus', 'Vivo', 'Oppo', 'Xiaomi', 'Realme', 'Other'];
   models: string[] = [];
+  devices: any[] = [];
   categories: any[] = [];
   addresses: any[] = [];
   availableSlots: any[] = [];
@@ -114,6 +115,7 @@ export class CreateOrder implements OnInit {
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
     this.orderForm.patchValue({ scheduledDate: tomorrowStr });
 
+    this.loadDevices();
     this.loadCategories();
     this.loadAddresses();
     this.loadAvailableSlots(tomorrowStr);
@@ -174,6 +176,18 @@ export class CreateOrder implements OnInit {
   selectCategory(catId: number): void {
     this.orderForm.get('serviceCategoryId')?.setValue(catId);
     this.nextStep();
+  }
+
+  loadDevices(): void {
+    this.orderService.getDevices().subscribe({
+      next: (res: any) => {
+        this.devices = res || [];
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Failed to load devices', err);
+      }
+    });
   }
 
   loadCategories(): void {
@@ -367,11 +381,16 @@ export class CreateOrder implements OnInit {
 
     const { brand, model, customModel, serviceCategoryId, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
     const finalModel = model === 'Other / Custom Model' ? customModel : model;
+
+    const matchedDevice = this.devices.find(
+      d => d.brand?.toLowerCase() === brand?.toLowerCase() && d.model?.toLowerCase() === finalModel?.toLowerCase()
+    );
+    const deviceId = matchedDevice ? matchedDevice.id : (this.devices.length > 0 ? this.devices[0].id : 1);
     
     const selectedAddress = this.addresses.find(a => a.id === Number(addressId));
 
     const payload = {
-      deviceId: 1, // Default Device Category (smartphone)
+      deviceId,
       serviceCategoryId: Number(serviceCategoryId),
       notes: `${brand} ${finalModel} - ${description}`,
       address: this.getSelectedAddressText(),

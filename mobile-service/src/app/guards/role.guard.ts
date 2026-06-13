@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +8,12 @@ import { Observable } from 'rxjs';
 export class RoleGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
-  canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const token = this.auth.getToken();
-    if (!token) {
+  canActivate(): boolean | UrlTree {
+    const user = this.auth.getCurrentUser();
+    if (!user) {
       return this.router.createUrlTree(['/auth/login']);
     }
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    if (payload.role && payload.role === 'admin') {
+    if (user.role === 'admin') {
       return true;
     }
     // redirect non‑admin users to a safe page (e.g., order selection)

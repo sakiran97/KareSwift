@@ -12,7 +12,6 @@ import { WarrantyModule } from './warranty/warranty.module';
 import { AppConfigModule } from './config/config.module';
 import { AdminModule } from './admin/admin.module';
 import { AiModule } from './ai/ai.module';
-import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -47,7 +46,6 @@ import { ReviewModule } from './review/review.module';
     AppConfigModule,
     AdminModule,
     AiModule,
-    SearchModule,
     AddressModule,
     ServiceAreaModule,
     SlotModule,

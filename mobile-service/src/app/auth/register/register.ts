@@ -26,14 +26,8 @@ export class Register {
     effect(() => {
       if (this.authService.isLoggedIn()) {
         const user = this.authService.getCurrentUser();
-        if (user) {
-          if (user.role === 'admin') {
-            this.router.navigate(['/admin']);
-          } else if (user.role === 'technician') {
-            this.router.navigate(['/technician/dashboard']);
-          } else {
-            this.router.navigate(['/order/device-select']);
-          }
+        if (user && user.role === 'admin') {
+          this.router.navigate(['/admin']);
         } else {
           this.router.navigate(['/order/device-select']);
         }
@@ -75,8 +69,6 @@ export class Register {
         this.isLoading = false;
         if (res.user.role === 'admin') {
           this.router.navigate(['/admin']);
-        } else if (res.user.role === 'technician') {
-          this.router.navigate(['/technician/dashboard']);
         } else {
           this.router.navigate(['/order/device-select']);
         }
