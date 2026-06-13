@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
@@ -44,6 +44,23 @@ export class Register {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        const user = this.authService.getCurrentUser();
+        if (user) {
+          if (user.role === 'admin') {
+            this.router.navigate(['/admin']);
+          } else if (user.role === 'technician') {
+            this.router.navigate(['/technician/dashboard']);
+          } else {
+            this.router.navigate(['/order/device-select']);
+          }
+        } else {
+          this.router.navigate(['/order/device-select']);
+        }
+      }
+    });
+
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
@@ -27,6 +27,23 @@ export class Login {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        const user = this.authService.getCurrentUser();
+        if (user) {
+          if (user.role === 'admin') {
+            this.router.navigate(['/admin']);
+          } else if (user.role === 'technician') {
+            this.router.navigate(['/technician/dashboard']);
+          } else {
+            this.router.navigate(['/order/device-select']);
+          }
+        } else {
+          this.router.navigate(['/order/device-select']);
+        }
+      }
     });
   }
 
@@ -65,8 +82,20 @@ export class Login {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
-        this.cdr.detectChanges();
+        this.authService.checkEmail(email).subscribe({
+          next: (res: { exists: boolean }) => {
+            if (!res.exists) {
+              this.errorMessage = 'No account found with this email address. Please sign up first.';
+            } else {
+              this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
+            }
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.errorMessage = err.error?.message || err.message || 'Invalid email or password. Please try again.';
+            this.cdr.detectChanges();
+          }
+        });
       }
     });
   }
