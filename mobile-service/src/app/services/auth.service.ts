@@ -182,6 +182,27 @@ export class AuthService {
     }));
   }
 
+  // ─── Forgot Password / OTP ──────────────────────────────────────────
+
+  requestPasswordResetOTP(email: string): Observable<any> {
+    return from(this.supabase.auth.resetPasswordForEmail(email));
+  }
+
+  verifyResetOTPAndSetPassword(email: string, token: string, newPassword: string): Observable<any> {
+    return from(this.supabase.auth.verifyOtp({ email, token, type: 'recovery' })).pipe(
+      switchMap(({ data, error }) => {
+        if (error) throw error;
+        // After successful verification, the user session is created
+        return from(this.supabase.auth.updateUser({ password: newPassword })).pipe(
+          map(({ error: updateError }) => {
+            if (updateError) throw updateError;
+            return data;
+          })
+        );
+      })
+    );
+  }
+
   // ─── Helpers ──────────────────────────────────────────────────────
 
   private persistLogin(res: LoginResponse): LoginResponse {
