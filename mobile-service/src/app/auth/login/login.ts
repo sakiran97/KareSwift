@@ -198,12 +198,17 @@ export class Login {
     this.authService.updateUserPassword(newPasswordCtrl?.value).subscribe({
       next: () => {
         this.isLoading = false;
-        this.successMessage = 'Password updated successfully! Redirecting...';
+        this.successMessage = 'Password updated successfully! Please log in with your new password.';
         this.cdr.detectChanges();
         setTimeout(() => {
-          this.cancelForgotPassword();
-          this.router.navigate(['/order/device-select']);
-        }, 1500);
+          this.authService.logout(); // Destroy the hidden recovery session securely
+          this.forgotPasswordState = 'none';
+          this.forgotPasswordForm.reset();
+          this.router.navigate(['/auth/login']).then(() => {
+             // Force a tiny reload of state if needed, or just let the router clear the URL
+             window.location.href = '/auth/login';
+          });
+        }, 2000);
       },
       error: (err: any) => {
         this.isLoading = false;
