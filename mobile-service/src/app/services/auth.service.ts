@@ -17,10 +17,22 @@ export class AuthService {
   private readonly apiUrl = '/api/auth';
   private supabase: SupabaseClient;
   
-  isLoggedIn = signal<boolean>(localStorage.getItem('jwt') !== null);
+  isLoggedIn = signal<boolean>(false);
 
   constructor(private http: HttpClient) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('type=recovery') || window.location.hash.includes('type=recovery')) {
+        // If they are on the password recovery screen, destroy any lingering session
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('user');
+        this.isLoggedIn.set(false);
+      } else {
+        this.isLoggedIn.set(localStorage.getItem('jwt') !== null);
+      }
+    }
+    
     this.listenToAuthChanges();
   }
 
