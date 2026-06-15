@@ -23,9 +23,8 @@ export class Login {
   
   // 'none': showing login form
   // 'email': showing email input for OTP
-  // 'otp': showing OTP and new password inputs
   // 'new_password_only': showing only new password input (accessed via recovery link)
-  forgotPasswordState: 'none' | 'email' | 'otp' | 'new_password_only' = 'none';
+  forgotPasswordState: 'none' | 'email' | 'new_password_only' = 'none';
 
   constructor(
     private fb: FormBuilder,
@@ -40,7 +39,6 @@ export class Login {
 
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
-      otp: [''],
       newPassword: ['']
     });
 
@@ -153,25 +151,22 @@ export class Login {
           return;
         }
         
-        // Email exists, request reset
+        // Email exists, request reset link
         this.authService.requestPasswordResetOTP(emailCtrl?.value).subscribe({
           next: ({ error }) => {
             this.isLoading = false;
             if (error) {
               this.errorMessage = error.message;
             } else {
-              this.successMessage = 'OTP sent to your email. Please check your inbox.';
-              this.forgotPasswordState = 'otp';
-              this.forgotPasswordForm.get('otp')?.setValidators([Validators.required, Validators.minLength(6)]);
-              this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]);
-              this.forgotPasswordForm.get('otp')?.updateValueAndValidity();
-              this.forgotPasswordForm.get('newPassword')?.updateValueAndValidity();
+              this.successMessage = 'Password reset link sent! Please check your inbox and click the link.';
+              // We do NOT change state to otp or new_password here.
+              // They must click the link in their email.
             }
             this.cdr.detectChanges();
           },
           error: (err: any) => {
             this.isLoading = false;
-            this.errorMessage = err.message || 'Failed to send OTP.';
+            this.errorMessage = err.message || 'Failed to send reset link.';
             this.cdr.detectChanges();
           }
         });
@@ -179,45 +174,6 @@ export class Login {
       error: () => {
         this.isLoading = false;
         this.errorMessage = 'Failed to verify account. Please try again.';
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  verifyOTP(): void {
-    if (this.forgotPasswordForm.invalid) {
-      this.forgotPasswordForm.markAllAsTouched();
-      return;
-    }
-    this.isLoading = true;
-    this.errorMessage = null;
-    
-    const { email, otp, newPassword } = this.forgotPasswordForm.value;
-    
-    this.authService.verifyResetOTPAndSetPassword(email, otp, newPassword).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.successMessage = 'Password updated successfully! Redirecting...';
-        this.cdr.detectChanges();
-        // The service already updates the session if successful. 
-        // We can just rely on the auth listener or navigate manually.
-        setTimeout(() => {
-          this.cancelForgotPassword();
-          // Optionally, sign them in with the new password, or rely on Supabase session
-          this.authService.signInWithPassword(email, newPassword).subscribe({
-            next: (res) => {
-              if (res.user.role === 'admin') {
-                this.router.navigate(['/admin']);
-              } else {
-                this.router.navigate(['/order/device-select']);
-              }
-            }
-          });
-        }, 1500);
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        this.errorMessage = err.message || 'Invalid OTP or failed to update password.';
         this.cdr.detectChanges();
       }
     });

@@ -33,6 +33,11 @@ export class AuthService {
         return;
       }
       
+      // Do not process session into visual login state if we are in the middle of password recovery
+      if (typeof window !== 'undefined' && (window.location.search.includes('type=recovery') || window.location.hash.includes('type=recovery'))) {
+        return;
+      }
+      
       if (session) {
         const token = session.access_token;
         const currentToken = localStorage.getItem('jwt');
