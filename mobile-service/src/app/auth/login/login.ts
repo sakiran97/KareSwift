@@ -24,7 +24,8 @@ export class Login {
   // 'none': showing login form
   // 'email': showing email input for OTP
   // 'otp': showing OTP and new password inputs
-  forgotPasswordState: 'none' | 'email' | 'otp' = 'none';
+  // 'new_password_only': showing only new password input (accessed via recovery link)
+  forgotPasswordState: 'none' | 'email' | 'otp' | 'new_password_only' = 'none';
 
   constructor(
     private fb: FormBuilder,
@@ -43,12 +44,21 @@ export class Login {
       newPassword: ['']
     });
 
-    if (typeof window !== 'undefined' && (window.location.hash.includes('access_token') || window.location.search.includes('code='))) {
-      this.isRedirecting = true;
-      setTimeout(() => {
-        this.isRedirecting = false;
-        this.cdr.detectChanges();
-      }, 5000);
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hash = window.location.hash;
+      
+      if (urlParams.get('type') === 'recovery' || hash.includes('type=recovery')) {
+        this.forgotPasswordState = 'new_password_only';
+        this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]);
+        this.forgotPasswordForm.get('newPassword')?.updateValueAndValidity();
+      } else if (hash.includes('access_token') || window.location.search.includes('code=')) {
+        this.isRedirecting = true;
+        setTimeout(() => {
+          this.isRedirecting = false;
+          this.cdr.detectChanges();
+        }, 5000);
+      }
     }
 
     effect(() => {
@@ -134,24 +144,41 @@ export class Login {
     this.errorMessage = null;
     this.successMessage = null;
     
-    this.authService.requestPasswordResetOTP(emailCtrl?.value).subscribe({
-      next: ({ error }) => {
-        this.isLoading = false;
-        if (error) {
-          this.errorMessage = error.message;
-        } else {
-          this.successMessage = 'OTP sent to your email. Please check your inbox.';
-          this.forgotPasswordState = 'otp';
-          this.forgotPasswordForm.get('otp')?.setValidators([Validators.required, Validators.minLength(6)]);
-          this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]);
-          this.forgotPasswordForm.get('otp')?.updateValueAndValidity();
-          this.forgotPasswordForm.get('newPassword')?.updateValueAndValidity();
+    this.authService.checkEmail(emailCtrl?.value).subscribe({
+      next: (res) => {
+        if (!res.exists) {
+          this.isLoading = false;
+          this.errorMessage = 'No account found with this email address. Please sign up first.';
+          this.cdr.detectChanges();
+          return;
         }
-        this.cdr.detectChanges();
+        
+        // Email exists, request reset
+        this.authService.requestPasswordResetOTP(emailCtrl?.value).subscribe({
+          next: ({ error }) => {
+            this.isLoading = false;
+            if (error) {
+              this.errorMessage = error.message;
+            } else {
+              this.successMessage = 'OTP sent to your email. Please check your inbox.';
+              this.forgotPasswordState = 'otp';
+              this.forgotPasswordForm.get('otp')?.setValidators([Validators.required, Validators.minLength(6)]);
+              this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]);
+              this.forgotPasswordForm.get('otp')?.updateValueAndValidity();
+              this.forgotPasswordForm.get('newPassword')?.updateValueAndValidity();
+            }
+            this.cdr.detectChanges();
+          },
+          error: (err: any) => {
+            this.isLoading = false;
+            this.errorMessage = err.message || 'Failed to send OTP.';
+            this.cdr.detectChanges();
+          }
+        });
       },
-      error: (err: any) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMessage = err.message || 'Failed to send OTP.';
+        this.errorMessage = 'Failed to verify account. Please try again.';
         this.cdr.detectChanges();
       }
     });
@@ -191,6 +218,34 @@ export class Login {
       error: (err: any) => {
         this.isLoading = false;
         this.errorMessage = err.message || 'Invalid OTP or failed to update password.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  updatePassword(): void {
+    const newPasswordCtrl = this.forgotPasswordForm.get('newPassword');
+    if (newPasswordCtrl?.invalid) {
+      newPasswordCtrl.markAsTouched();
+      return;
+    }
+    
+    this.isLoading = true;
+    this.errorMessage = null;
+    
+    this.authService.updateUserPassword(newPasswordCtrl?.value).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.successMessage = 'Password updated successfully! Redirecting...';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.cancelForgotPassword();
+          this.router.navigate(['/order/device-select']);
+        }, 1500);
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        this.errorMessage = err.message || 'Failed to update password.';
         this.cdr.detectChanges();
       }
     });

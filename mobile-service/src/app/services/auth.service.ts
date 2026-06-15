@@ -26,6 +26,13 @@ export class AuthService {
 
   private listenToAuthChanges(): void {
     this.supabase.auth.onAuthStateChange((event, session) => {
+      console.log('[Auth] State Change:', event);
+      if (event === 'PASSWORD_RECOVERY') {
+        // User clicked recovery link. Redirect to login with recovery flag to set new password.
+        window.location.href = '/auth/login?type=recovery';
+        return;
+      }
+      
       if (session) {
         const token = session.access_token;
         const currentToken = localStorage.getItem('jwt');
@@ -199,6 +206,15 @@ export class AuthService {
             return data;
           })
         );
+      })
+    );
+  }
+
+  updateUserPassword(newPassword: string): Observable<any> {
+    return from(this.supabase.auth.updateUser({ password: newPassword })).pipe(
+      map(({ data, error }) => {
+        if (error) throw error;
+        return data;
       })
     );
   }

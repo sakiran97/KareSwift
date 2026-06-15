@@ -94,6 +94,7 @@
           <h2>Reset Password</h2>
           <p class="subtitle" *ngIf="forgotPasswordState === 'email'">Enter your email to receive an OTP</p>
           <p class="subtitle" *ngIf="forgotPasswordState === 'otp'">Enter the OTP and your new password</p>
+          <p class="subtitle" *ngIf="forgotPasswordState === 'new_password_only'">Set a new secure password</p>
         </div>
 
         <form [formGroup]="forgotPasswordForm" class="login-form">
@@ -131,6 +132,9 @@
                 <span class="focus-border"></span>
               </div>
             </div>
+          </ng-container>
+
+          <ng-container *ngIf="forgotPasswordState === 'otp' || forgotPasswordState === 'new_password_only'">
             <div class="form-group">
               <label for="fp-new-password">New Password</label>
               <div class="input-wrapper">
@@ -168,6 +172,17 @@
             (click)="verifyOTP()"
           >
             <span *ngIf="!isLoading">Verify & Reset</span>
+            <div *ngIf="isLoading" class="spinner"></div>
+          </button>
+
+          <button 
+            *ngIf="forgotPasswordState === 'new_password_only'" 
+            type="button" 
+            class="btn-submit" 
+            [disabled]="forgotPasswordForm.get('newPassword')?.invalid || isLoading" 
+            (click)="updatePassword()"
+          >
+            <span *ngIf="!isLoading">Update Password</span>
             <div *ngIf="isLoading" class="spinner"></div>
           </button>
 
