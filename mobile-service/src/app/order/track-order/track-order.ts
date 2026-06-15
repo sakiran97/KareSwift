@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, ParamMap, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { OrderService, OrderResponse } from '../../services/order.service';
 import { SseService, SseEvent } from '../../services/sse.service';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-track-order',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './track-order.html',
   styleUrl: './track-order.scss',
 })
