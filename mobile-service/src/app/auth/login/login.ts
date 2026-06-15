@@ -130,6 +130,12 @@ export class Login {
     this.forgotPasswordState = 'none';
     this.errorMessage = null;
     this.successMessage = null;
+    
+    // If we are currently in recovery mode, ensure we destroy the hidden Supabase session
+    if (typeof window !== 'undefined' && (window.location.search.includes('type=recovery') || window.location.hash.includes('type=recovery'))) {
+      this.authService.logout();
+      this.router.navigate(['/auth/login']); // Clean the URL
+    }
   }
 
   requestOTP(): void {
