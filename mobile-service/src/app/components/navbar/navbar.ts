@@ -157,6 +157,7 @@ export class Navbar implements OnInit, OnDestroy {
     localStorage.removeItem('activeOrderId');
     localStorage.removeItem('selectedDeviceCategory');
     this.closeMenu();
+    this.router.navigate(['/auth/login']);
   }
 
   ngOnDestroy() {

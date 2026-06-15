@@ -20,23 +20,23 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
+  let finalReq = req;
   if (token) {
-    const cloned = req.clone({
+    finalReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
       }
     });
-    return next(cloned).pipe(
-      tap({
-        error: (err: HttpErrorResponse) => {
-          if (err.status === 401) {
-            authService.logout();
-            router.navigate(['/auth/login']);
-          }
-        }
-      })
-    );
   }
 
-  return next(req);
+  return next(finalReq).pipe(
+    tap({
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          authService.logout();
+          router.navigate(['/auth/login']);
+        }
+      }
+    })
+  );
 };
