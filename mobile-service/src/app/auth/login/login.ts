@@ -33,12 +33,12 @@ export class Login {
     private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
+      password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]]
     });
 
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
       otp: [''],
       newPassword: ['']
     });
@@ -143,7 +143,7 @@ export class Login {
           this.successMessage = 'OTP sent to your email. Please check your inbox.';
           this.forgotPasswordState = 'otp';
           this.forgotPasswordForm.get('otp')?.setValidators([Validators.required, Validators.minLength(6)]);
-          this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.minLength(6)]);
+          this.forgotPasswordForm.get('newPassword')?.setValidators([Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]);
           this.forgotPasswordForm.get('otp')?.updateValueAndValidity();
           this.forgotPasswordForm.get('newPassword')?.updateValueAndValidity();
         }

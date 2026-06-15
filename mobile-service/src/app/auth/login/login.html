@@ -29,8 +29,8 @@
               <span class="focus-border"></span>
             </div>
             <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="validation-error">
-              Please enter a valid email address.
-            </div>
+            Please enter a valid, standard email address.
+          </div>
           </div>
 
           <div class="form-group" style="margin-bottom: 0.5rem;">
@@ -38,16 +38,16 @@
             <div class="input-wrapper">
               <input
                 id="password"
-                type="password"
-                formControlName="password"
-                placeholder="••••••••"
-                [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
-              />
-              <span class="focus-border"></span>
-            </div>
-            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="validation-error">
-              Password must be at least 6 characters.
-            </div>
+              type="password"
+              formControlName="password"
+              placeholder="Min 8 chars, uppercase, number, special"
+              [class.invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+            />
+            <span class="focus-border"></span>
+          </div>
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="validation-error">
+            Password must be 8+ chars and include an uppercase, lowercase, number, and special character.
+          </div>
           </div>
 
           <div style="text-align: right; margin-bottom: 1.5rem;">
@@ -113,7 +113,7 @@
               <span class="focus-border"></span>
             </div>
             <div *ngIf="forgotPasswordForm.get('email')?.touched && forgotPasswordForm.get('email')?.invalid" class="validation-error">
-              Please enter a valid email address.
+              Please enter a valid, standard email address.
             </div>
           </div>
 
@@ -138,10 +138,13 @@
                   id="fp-new-password"
                   type="password"
                   formControlName="newPassword"
-                  placeholder="••••••••"
+                  placeholder="Min 8 chars, uppercase, number, special"
                   [class.invalid]="forgotPasswordForm.get('newPassword')?.touched && forgotPasswordForm.get('newPassword')?.invalid"
                 />
                 <span class="focus-border"></span>
+              </div>
+              <div *ngIf="forgotPasswordForm.get('newPassword')?.touched && forgotPasswordForm.get('newPassword')?.invalid" class="validation-error">
+                Password must be 8+ chars and include an uppercase, lowercase, number, and special character.
               </div>
             </div>
           </ng-container>

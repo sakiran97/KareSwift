@@ -43,7 +43,7 @@
           <span class="focus-border"></span>
         </div>
         <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="validation-error">
-          Please enter a valid email address.
+          Please enter a valid, standard email address.
         </div>
       </div>
 
@@ -71,13 +71,13 @@
             id="password"
             type="password"
             formControlName="password"
-            placeholder="Min 6 characters"
+            placeholder="Min 8 chars, uppercase, number, special"
             [class.invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
           />
           <span class="focus-border"></span>
         </div>
         <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="validation-error">
-          Password must be at least 6 characters.
+          Password must be 8+ chars and include an uppercase, lowercase, number, and special character.
         </div>
       </div>
 
