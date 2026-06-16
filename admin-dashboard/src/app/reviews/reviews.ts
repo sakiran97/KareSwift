@@ -25,7 +25,7 @@ export class ReviewsComponent implements OnInit {
     this.error.set('');
     this.adminService.getReviews().subscribe({
       next: (res) => {
-        this.reviews.set(res || []);
+        this.reviews.set(Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []));
         this.loading.set(false);
       },
       error: (err) => {

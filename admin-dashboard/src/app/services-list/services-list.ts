@@ -41,7 +41,7 @@ export class ServicesListComponent implements OnInit {
     this.error.set('');
     this.adminService.getServiceCategories().subscribe({
       next: (res) => {
-        this.services.set(res || []);
+        this.services.set(Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []));
         this.loading.set(false);
       },
       error: (err) => {

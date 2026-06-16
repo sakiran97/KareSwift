@@ -43,7 +43,7 @@ export class SlotsComponent implements OnInit {
     this.error.set('');
     this.adminService.getSlots().subscribe({
       next: (res) => {
-        this.slots.set(res || []);
+        this.slots.set(Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []));
         this.loading.set(false);
       },
       error: (err) => {

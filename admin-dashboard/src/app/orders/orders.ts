@@ -118,12 +118,15 @@ export class OrdersComponent implements OnInit {
     this.adminService.getAllOrders(params).subscribe({
       next: (res: any) => {
         // API now returns { data, meta }
-        if (res && res.data) {
+        if (res && Array.isArray(res.data)) {
           this.orders.set(res.data);
-          this.totalPages.set(res.meta.totalPages);
+          this.totalPages.set(res.meta?.totalPages || 1);
+        } else if (Array.isArray(res)) {
+          this.orders.set(res);
+          this.totalPages.set(1);
         } else {
-          // Fallback if backend isn't updated yet
-          this.orders.set(res || []);
+          // Fallback if backend isn't updated yet or returns invalid format
+          this.orders.set([]);
           this.totalPages.set(1);
         }
         this.loading.set(false);
