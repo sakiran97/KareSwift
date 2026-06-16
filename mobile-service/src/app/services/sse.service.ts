@@ -2,7 +2,7 @@ import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 export interface SseEvent {
-  type: 'new-order' | 'order-update' | 'order-available' | 'order-accepted' | 'chat-message' | 'notification' | 'keepalive' | 'new-technician-pending' | 'completion-requested';
+  type: 'new-order' | 'order-update' | 'order-available' | 'order-accepted' | 'chat-message' | 'notification' | 'keepalive' | 'new-technician-pending' | 'completion-requested' | 'config-updated';
   data: any;
   timestamp: string;
   userId?: number;

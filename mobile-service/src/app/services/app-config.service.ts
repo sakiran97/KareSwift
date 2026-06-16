@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SseService, SseEvent } from './sse.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -34,7 +34,9 @@ export class AppConfigService {
   }
 
   private listenToConfigUpdates() {
-    this.sseService.onEvent('config-updated').subscribe((event: SseEvent) => {
+    this.sseService.connect().pipe(
+      filter(event => event.type === 'config-updated')
+    ).subscribe((event: SseEvent) => {
       const data = event.data;
       if (data && data.key && data.value) {
         this.config.update(current => ({

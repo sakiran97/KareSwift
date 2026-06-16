@@ -46,7 +46,7 @@ export class OrdersComponent implements OnInit {
   }
 
   loadConfigs() {
-    this.adminService.getConfigs().subscribe({
+    this.adminService.getConfig().subscribe({
       next: (configs: any[]) => {
         const upi = configs.find(c => c.key === 'upi_enabled');
         const cash = configs.find(c => c.key === 'cash_enabled');

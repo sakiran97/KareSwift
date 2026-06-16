@@ -4,7 +4,7 @@ import { Redis } from 'ioredis';
 import { randomUUID } from 'crypto';
 
 export interface SseEvent {
-  type: 'new-order' | 'order-update' | 'order-available' | 'order-accepted' | 'chat-message' | 'notification' | 'kyc-status-update' | 'new-technician-pending' | 'completion-requested';
+  type: 'new-order' | 'order-update' | 'order-available' | 'order-accepted' | 'chat-message' | 'notification' | 'kyc-status-update' | 'new-technician-pending' | 'completion-requested' | 'config-updated';
   data: any;
   timestamp: string;
   sourceServer?: string;
