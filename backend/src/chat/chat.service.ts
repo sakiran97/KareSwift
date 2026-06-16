@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { EventsService } from '../events/events.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class ChatService {
+  private readonly logger = new Logger(ChatService.name);
   constructor(
     private prisma: PrismaService,
     private eventsService: EventsService,
@@ -18,7 +19,7 @@ export class ChatService {
         orderBy: { createdAt: 'asc' }
       });
     } catch (e) {
-      console.error('Failed to get chat messages', e);
+      this.logger.error('Failed to get chat messages', e);
       return [];
     }
   }
@@ -52,7 +53,7 @@ export class ChatService {
             admin.id, 
             `New Message on ORD-${orderId}`, 
             `${customerName}: ${snippet}`, 
-            'chat', 
+            'CHAT_MESSAGE', 
             orderId
           );
         }
@@ -61,14 +62,14 @@ export class ChatService {
           order.userId, 
           `Support Replied`, 
           `Tech Support: ${snippet}`, 
-          'chat', 
+          'CHAT_MESSAGE', 
           orderId
         );
       }
 
       return chatMessage;
     } catch (e) {
-      console.error('Failed to send chat message', e);
+      this.logger.error('Failed to send chat message', e);
       throw e;
     }
   }

@@ -1,28 +1,37 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('jwt');
   const router = inject(Router);
+  const http = inject(HttpClient);
 
+  // Always set withCredentials for API calls to send HttpOnly cookies
   let cloned = req;
-  if (token && req.url.includes('/api')) {
+  if (req.url.includes('/api')) {
     cloned = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
+      withCredentials: true
     });
   }
   
   return next(cloned).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        localStorage.removeItem('jwt');
-        localStorage.removeItem('role');
-        router.navigate(['/login']);
+      // Prevent infinite loops if the refresh call itself fails
+      if (error.status === 401 && !req.url.includes('/auth/refresh') && !req.url.includes('/auth/session')) {
+        // Attempt silent refresh
+        return http.post('/api/auth/refresh', {}, { withCredentials: true }).pipe(
+          switchMap(() => {
+            // Retry original request
+            return next(cloned);
+          }),
+          catchError((refreshErr) => {
+            localStorage.removeItem('admin_user');
+            router.navigate(['/login']);
+            return throwError(() => refreshErr);
+          })
+        );
       }
       return throwError(() => error);
     })

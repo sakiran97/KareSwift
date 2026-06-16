@@ -24,21 +24,23 @@ services:
     restart: unless-stopped
     command: redis-server --appendonly yes
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
-    container_name: doorstep-elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: doorstep-backend
     ports:
-      - '9200:9200'
-      - '9300:9300'
-    volumes:
-      - es_data:/usr/share/elasticsearch/data
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgresql://admin:adminpassword@postgres:5432/doorstep_db?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=test_secret_for_local_dev
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
-  es_data:

@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Body, UseGuards, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Body, UseGuards, BadRequestException, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -24,8 +24,16 @@ export class AdminController {
    * GET /admin/orders — List all orders (admin overview)
    */
   @Get('orders')
-  async getAllOrders() {
-    return this.adminService.getAllOrders();
+  async getAllOrders(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+  ) {
+    const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
+    const limitNum = limit ? Math.min(Math.max(1, parseInt(limit, 10)), 100) : 20;
+    
+    return this.adminService.getAllOrders(pageNum, limitNum, search, status);
   }
 
   /**

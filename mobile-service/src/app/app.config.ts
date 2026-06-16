@@ -1,14 +1,23 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideStore } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
-import { appReducer } from './store/app.reducer';
-import { AppEffects } from './store/app.effects';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppConfigService } from './services/app-config.service';
+import * as Sentry from '@sentry/angular';
+import { environment } from '../environments/environment';
+
+Sentry.init({
+  dsn: environment.sentryDsn || '',
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 function initAppConfig(configService: AppConfigService) {
   return () => configService.loadConfig();
@@ -16,11 +25,15 @@ function initAppConfig(configService: AppConfigService) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: false,
+      }),
+    },
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideStore({ app: appReducer }),
-    provideEffects([AppEffects]),
     provideAnimationsAsync(),
     {
       provide: APP_INITIALIZER,

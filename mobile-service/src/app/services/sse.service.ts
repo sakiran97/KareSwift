@@ -20,22 +20,19 @@ export class SseService implements OnDestroy {
   constructor(private zone: NgZone) {}
 
   connect(): Observable<SseEvent> {
-    if (!this.shared$ || (!this.eventSource && localStorage.getItem('jwt'))) {
+    if (!this.shared$ || !this.eventSource) {
       this.establishConnection();
     }
     return this.shared$ || (this.shared$ = this.eventSubject.asObservable());
   }
 
-  private establishConnection() {
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-      return;
-    }
-
+  private establishConnection(retryCount = 0) {
     this.zone.runOutsideAngular(() => {
-      this.eventSource = new EventSource(`/api/sse/events?token=${encodeURIComponent(token)}`);
+      this.eventSource = new EventSource(`/api/sse/events`, { withCredentials: true });
 
       this.eventSource.onmessage = (event) => {
+        // Reset retry count on successful message reception
+        retryCount = 0;
         this.zone.run(() => {
           try {
             const parsed: SseEvent = JSON.parse(event.data);
@@ -46,7 +43,17 @@ export class SseService implements OnDestroy {
         });
       };
 
-      // EventSource auto-reconnects on transient errors; no action needed here
+      this.eventSource.onerror = (error) => {
+        this.eventSource?.close();
+        
+        // Exponential backoff
+        const timeout = Math.min(1000 * Math.pow(2, retryCount), 30000);
+        setTimeout(() => {
+          if (this.shared$) { // Only reconnect if still subscribed
+            this.establishConnection(retryCount + 1);
+          }
+        }, timeout);
+      };
     });
   }
 

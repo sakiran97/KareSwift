@@ -11,7 +11,6 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'auth', loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule) },
   { path: 'order', loadChildren: () => import('./order/order-module').then(m => m.OrderModule), canActivate: [AuthGuard] },
-  { path: 'admin', loadChildren: () => import('./admin/admin-module').then(m => m.AdminModule), canActivate: [RoleGuard] },
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
   { path: 'help', component: Help },

@@ -9,6 +9,27 @@
     </button>
   </div>
 
+  <div class="orders-filters glass-panel" style="margin-bottom: 20px; padding: 15px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+    <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 250px;">
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Search by ID, email, phone, name or address..." style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white;" />
+    </div>
+    <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+      <select [(ngModel)]="statusFilter" (change)="onFilterChange()" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white;">
+        <option value="">All Statuses</option>
+        <option value="BOOKED">Booked</option>
+        <option value="CONFIRMED">Confirmed</option>
+        <option value="CUSTOMER_CONTACTED">Customer Contacted</option>
+        <option value="DIAGNOSIS_COMPLETED">Diagnosis Completed</option>
+        <option value="VISIT_SCHEDULED">Visit Scheduled</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="PRICE_FINALIZED">Price Finalized</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+    </div>
+    <button class="btn-primary" (click)="onSearch()" style="padding: 10px 20px;">Search</button>
+  </div>
+
   <div class="orders-grid" *ngIf="!loading()">
     <div class="no-orders glass-panel" *ngIf="orders().length === 0">
       <p>No customer doorstep orders found in the system queue.</p>
@@ -39,6 +60,14 @@
             <a [href]="'https://www.google.com/maps/search/?api=1&query=' + order.latitude + ',' + order.longitude" target="_blank" class="call-link" style="color: #0ea5e9; font-weight: bold;">
               📍 View on Google Maps
             </a>
+            <iframe 
+              width="100%" 
+              height="200" 
+              frameborder="0" 
+              style="border:0; border-radius: 8px; margin-top: 10px;" 
+              [src]="getMapUrl(order.latitude, order.longitude)" 
+              allowfullscreen>
+            </iframe>
           </p>
           <p *ngIf="order.travelCharge !== undefined">
             <strong>Travel Charge:</strong> 
@@ -136,6 +165,12 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div class="pagination-controls glass-panel" *ngIf="!loading() && totalPages() > 1" style="margin-top: 20px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+    <button class="btn-secondary" [disabled]="currentPage() === 1" (click)="prevPage()">Previous</button>
+    <span style="color: white;">Page {{ currentPage() }} of {{ totalPages() }}</span>
+    <button class="btn-secondary" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Next</button>
   </div>
 
   <div class="loading-panel glass-panel" *ngIf="loading()">

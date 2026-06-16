@@ -1,4 +1,5 @@
-import { Controller, Sse, Query, UnauthorizedException } from '@nestjs/common';
+import { Controller, Sse, UnauthorizedException, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { merge, Observable, timer } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -12,16 +13,20 @@ export class EventsController {
   ) {}
 
   @Sse('events')
-  events(@Query('token') token?: string): Observable<MessageEvent> {
+  events(@Req() req: Request): Observable<MessageEvent> {
+    const token = req.cookies && req.cookies['access_token'];
+    
     if (!token) {
       throw new UnauthorizedException('Missing authentication token');
     }
 
     let user: { id: number; role: string };
     try {
-      const payload = this.jwtService.verify(token);
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-token-with-at-least-32-characters-long'
+      });
       user = { id: payload.sub, role: payload.role || 'customer' };
-    } catch {
+    } catch (e) {
       throw new UnauthorizedException('Invalid or expired token');
     }
 

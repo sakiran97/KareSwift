@@ -3,6 +3,7 @@ import { OrderService } from './order.service';
 import { SlotService } from '../slot/slot.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Order } from '../generated/prisma';
+import { CreateOrderDto, UpdateOrderStatusDto } from '../common/dto/order.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('orders')
@@ -27,24 +28,12 @@ export class OrderController {
   @Post()
   async create(
     @Req() req: any,
-    @Body() createOrderDto: { 
-      userId: number; 
-      deviceId: number; 
-      serviceCategoryId: number; 
-      estimatedTime?: number;
-      address?: string;
-      scheduledDate?: string;
-      scheduledSlot?: string;
-      notes?: string;
-      diagnosticNotes?: string;
-      diagnosticPhotos?: string[];
-      travelCharge?: number;
-      serviceAreaId?: number;
-      latitude?: number;
-      longitude?: number;
-    }
+    @Body() createOrderDto: CreateOrderDto
   ) {
-    const userId = req.user?.id ? Number(req.user.id) : createOrderDto.userId;
+    const userId = req.user?.id ? Number(req.user.id) : (createOrderDto.userId as number);
+    if (!userId) {
+      throw new BadRequestException('User ID is required');
+    }
     const order = await this.orderService.create({ ...createOrderDto, userId });
     return {
       orderId: String(order.id),
@@ -81,16 +70,20 @@ export class OrderController {
     return this.orderService.findById(parsedId);
   }
 
+  @Get(':id/timeline')
+  async getTimeline(@Param('id') id: string) {
+    const cleanId = id.startsWith('ORD-') ? id.replace('ORD-', '') : id;
+    const parsedId = Number(cleanId);
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('Invalid order ID format');
+    }
+    return this.orderService.getTimeline(parsedId);
+  }
+
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: string,
-    @Body('status') status: string,
-    @Body('partsUsed') partsUsed?: string,
-    @Body('laborNotes') laborNotes?: string,
-    @Body('finalAmount') finalAmount?: number,
-    @Body('paymentMethod') paymentMethod?: string,
-    @Body('repairNotes') repairNotes?: string,
-    @Body('otp') otp?: string,
+    @Body() updateOrderStatusDto: UpdateOrderStatusDto,
   ) {
     const cleanId = id.startsWith('ORD-') ? id.replace('ORD-', '') : id;
     const parsedId = Number(cleanId);
@@ -99,13 +92,13 @@ export class OrderController {
     }
     return this.orderService.updateStatus(
       parsedId,
-      status as any,
-      partsUsed,
-      laborNotes,
-      finalAmount,
-      paymentMethod,
-      repairNotes,
-      otp
+      updateOrderStatusDto.status as any,
+      updateOrderStatusDto.partsUsed,
+      updateOrderStatusDto.laborNotes,
+      updateOrderStatusDto.finalAmount,
+      updateOrderStatusDto.paymentMethod,
+      updateOrderStatusDto.repairNotes,
+      updateOrderStatusDto.otp
     );
   }
 }

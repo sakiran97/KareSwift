@@ -73,6 +73,11 @@ export type AppConfig = $Result.DefaultSelection<Prisma.$AppConfigPayload>
  * 
  */
 export type ChatMessage = $Result.DefaultSelection<Prisma.$ChatMessagePayload>
+/**
+ * Model OrderStatusHistory
+ * 
+ */
+export type OrderStatusHistory = $Result.DefaultSelection<Prisma.$OrderStatusHistoryPayload>
 
 /**
  * Enums
@@ -338,6 +343,16 @@ export class PrismaClient<
     * ```
     */
   get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.orderStatusHistory`: Exposes CRUD operations for the **OrderStatusHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderStatusHistories
+    * const orderStatusHistories = await prisma.orderStatusHistory.findMany()
+    * ```
+    */
+  get orderStatusHistory(): Prisma.OrderStatusHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -783,7 +798,8 @@ export namespace Prisma {
     ServiceArea: 'ServiceArea',
     Slot: 'Slot',
     AppConfig: 'AppConfig',
-    ChatMessage: 'ChatMessage'
+    ChatMessage: 'ChatMessage',
+    OrderStatusHistory: 'OrderStatusHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -799,7 +815,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "device" | "serviceCategory" | "order" | "review" | "notification" | "warranty" | "address" | "serviceArea" | "slot" | "appConfig" | "chatMessage"
+      modelProps: "user" | "device" | "serviceCategory" | "order" | "review" | "notification" | "warranty" | "address" | "serviceArea" | "slot" | "appConfig" | "chatMessage" | "orderStatusHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1691,6 +1707,80 @@ export namespace Prisma {
           }
         }
       }
+      OrderStatusHistory: {
+        payload: Prisma.$OrderStatusHistoryPayload<ExtArgs>
+        fields: Prisma.OrderStatusHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderStatusHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderStatusHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderStatusHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderStatusHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.OrderStatusHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.OrderStatusHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.OrderStatusHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderStatusHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderStatusHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          update: {
+            args: Prisma.OrderStatusHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderStatusHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderStatusHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderStatusHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderStatusHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderStatusHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderStatusHistory>
+          }
+          groupBy: {
+            args: Prisma.OrderStatusHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderStatusHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderStatusHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderStatusHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1811,6 +1901,7 @@ export namespace Prisma {
     slot?: SlotOmit
     appConfig?: AppConfigOmit
     chatMessage?: ChatMessageOmit
+    orderStatusHistory?: OrderStatusHistoryOmit
   }
 
   /* Types for Logging */
@@ -2004,11 +2095,13 @@ export namespace Prisma {
   export type OrderCountOutputType = {
     notifications: number
     chatMessages: number
+    statusHistory: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | OrderCountOutputTypeCountNotificationsArgs
     chatMessages?: boolean | OrderCountOutputTypeCountChatMessagesArgs
+    statusHistory?: boolean | OrderCountOutputTypeCountStatusHistoryArgs
   }
 
   // Custom InputTypes
@@ -2034,6 +2127,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountChatMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatMessageWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountStatusHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderStatusHistoryWhereInput
   }
 
 
@@ -2103,6 +2203,8 @@ export namespace Prisma {
     phone: string | null
     role: string | null
     createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
     averageRating: number | null
     totalReviews: number | null
   }
@@ -2114,6 +2216,8 @@ export namespace Prisma {
     phone: string | null
     role: string | null
     createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
     averageRating: number | null
     totalReviews: number | null
   }
@@ -2125,6 +2229,8 @@ export namespace Prisma {
     phone: number
     role: number
     createdAt: number
+    updatedAt: number
+    deletedAt: number
     averageRating: number
     totalReviews: number
     _all: number
@@ -2150,6 +2256,8 @@ export namespace Prisma {
     phone?: true
     role?: true
     createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     averageRating?: true
     totalReviews?: true
   }
@@ -2161,6 +2269,8 @@ export namespace Prisma {
     phone?: true
     role?: true
     createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     averageRating?: true
     totalReviews?: true
   }
@@ -2172,6 +2282,8 @@ export namespace Prisma {
     phone?: true
     role?: true
     createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     averageRating?: true
     totalReviews?: true
     _all?: true
@@ -2270,6 +2382,8 @@ export namespace Prisma {
     phone: string | null
     role: string
     createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     averageRating: number | null
     totalReviews: number | null
     _count: UserCountAggregateOutputType | null
@@ -2300,6 +2414,8 @@ export namespace Prisma {
     phone?: boolean
     role?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
     addresses?: boolean | User$addressesArgs<ExtArgs>
@@ -2315,6 +2431,8 @@ export namespace Prisma {
     phone?: boolean
     role?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2326,6 +2444,8 @@ export namespace Prisma {
     phone?: boolean
     role?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2337,11 +2457,13 @@ export namespace Prisma {
     phone?: boolean
     role?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     averageRating?: boolean
     totalReviews?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "role" | "createdAt" | "averageRating" | "totalReviews", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "role" | "createdAt" | "updatedAt" | "deletedAt" | "averageRating" | "totalReviews", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addresses?: boolean | User$addressesArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
@@ -2365,6 +2487,8 @@ export namespace Prisma {
       phone: string | null
       role: string
       createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
       averageRating: number | null
       totalReviews: number | null
     }, ExtArgs["result"]["user"]>
@@ -2799,6 +2923,8 @@ export namespace Prisma {
     readonly phone: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly averageRating: FieldRef<"User", 'Float'>
     readonly totalReviews: FieldRef<"User", 'Int'>
   }
@@ -3024,7 +3150,7 @@ export namespace Prisma {
     /**
      * The data needed to create a User.
      */
-    data?: XOR<UserCreateInput, UserUncheckedCreateInput>
+    data: XOR<UserCreateInput, UserUncheckedCreateInput>
   }
 
   /**
@@ -3308,18 +3434,27 @@ export namespace Prisma {
     id: number | null
     brand: string | null
     model: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type DeviceMaxAggregateOutputType = {
     id: number | null
     brand: string | null
     model: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type DeviceCountAggregateOutputType = {
     id: number
     brand: number
     model: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -3336,18 +3471,27 @@ export namespace Prisma {
     id?: true
     brand?: true
     model?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type DeviceMaxAggregateInputType = {
     id?: true
     brand?: true
     model?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type DeviceCountAggregateInputType = {
     id?: true
     brand?: true
     model?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -3441,6 +3585,9 @@ export namespace Prisma {
     id: number
     brand: string
     model: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     _count: DeviceCountAggregateOutputType | null
     _avg: DeviceAvgAggregateOutputType | null
     _sum: DeviceSumAggregateOutputType | null
@@ -3466,6 +3613,9 @@ export namespace Prisma {
     id?: boolean
     brand?: boolean
     model?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     orders?: boolean | Device$ordersArgs<ExtArgs>
     _count?: boolean | DeviceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
@@ -3474,21 +3624,30 @@ export namespace Prisma {
     id?: boolean
     brand?: boolean
     model?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["device"]>
 
   export type DeviceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     brand?: boolean
     model?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["device"]>
 
   export type DeviceSelectScalar = {
     id?: boolean
     brand?: boolean
     model?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "brand" | "model", ExtArgs["result"]["device"]>
+  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "brand" | "model" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["device"]>
   export type DeviceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Device$ordersArgs<ExtArgs>
     _count?: boolean | DeviceCountOutputTypeDefaultArgs<ExtArgs>
@@ -3505,6 +3664,9 @@ export namespace Prisma {
       id: number
       brand: string
       model: string
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["device"]>
     composites: {}
   }
@@ -3932,6 +4094,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Device", 'Int'>
     readonly brand: FieldRef<"Device", 'String'>
     readonly model: FieldRef<"Device", 'String'>
+    readonly createdAt: FieldRef<"Device", 'DateTime'>
+    readonly updatedAt: FieldRef<"Device", 'DateTime'>
+    readonly deletedAt: FieldRef<"Device", 'DateTime'>
   }
     
 
@@ -4392,6 +4557,9 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ServiceCategoryMaxAggregateOutputType = {
@@ -4399,6 +4567,9 @@ export namespace Prisma {
     name: string | null
     description: string | null
     isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ServiceCategoryCountAggregateOutputType = {
@@ -4406,6 +4577,9 @@ export namespace Prisma {
     name: number
     description: number
     isActive: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -4423,6 +4597,9 @@ export namespace Prisma {
     name?: true
     description?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type ServiceCategoryMaxAggregateInputType = {
@@ -4430,6 +4607,9 @@ export namespace Prisma {
     name?: true
     description?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type ServiceCategoryCountAggregateInputType = {
@@ -4437,6 +4617,9 @@ export namespace Prisma {
     name?: true
     description?: true
     isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -4531,6 +4714,9 @@ export namespace Prisma {
     name: string
     description: string | null
     isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     _count: ServiceCategoryCountAggregateOutputType | null
     _avg: ServiceCategoryAvgAggregateOutputType | null
     _sum: ServiceCategorySumAggregateOutputType | null
@@ -4557,6 +4743,9 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     orders?: boolean | ServiceCategory$ordersArgs<ExtArgs>
     _count?: boolean | ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceCategory"]>
@@ -4566,6 +4755,9 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["serviceCategory"]>
 
   export type ServiceCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4573,6 +4765,9 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["serviceCategory"]>
 
   export type ServiceCategorySelectScalar = {
@@ -4580,9 +4775,12 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive", ExtArgs["result"]["serviceCategory"]>
+  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceCategory"]>
   export type ServiceCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | ServiceCategory$ordersArgs<ExtArgs>
     _count?: boolean | ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -4600,6 +4798,9 @@ export namespace Prisma {
       name: string
       description: string | null
       isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["serviceCategory"]>
     composites: {}
   }
@@ -5028,6 +5229,9 @@ export namespace Prisma {
     readonly name: FieldRef<"ServiceCategory", 'String'>
     readonly description: FieldRef<"ServiceCategory", 'String'>
     readonly isActive: FieldRef<"ServiceCategory", 'Boolean'>
+    readonly createdAt: FieldRef<"ServiceCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"ServiceCategory", 'DateTime'>
+    readonly deletedAt: FieldRef<"ServiceCategory", 'DateTime'>
   }
     
 
@@ -5509,6 +5713,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
@@ -5537,6 +5742,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
@@ -5565,6 +5771,7 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     estimatedTime: number
     address: number
     scheduledDate: number
@@ -5622,6 +5829,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
@@ -5650,6 +5858,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
@@ -5678,6 +5887,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     estimatedTime?: true
     address?: true
     scheduledDate?: true
@@ -5794,6 +6004,7 @@ export namespace Prisma {
     status: $Enums.OrderStatus
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     estimatedTime: number | null
     address: string | null
     scheduledDate: string | null
@@ -5842,6 +6053,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
@@ -5863,6 +6075,7 @@ export namespace Prisma {
     longitude?: boolean
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
     chatMessages?: boolean | Order$chatMessagesArgs<ExtArgs>
+    statusHistory?: boolean | Order$statusHistoryArgs<ExtArgs>
     device?: boolean | DeviceDefaultArgs<ExtArgs>
     serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -5880,6 +6093,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
@@ -5913,6 +6127,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
@@ -5946,6 +6161,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     estimatedTime?: boolean
     address?: boolean
     scheduledDate?: boolean
@@ -5967,10 +6183,11 @@ export namespace Prisma {
     longitude?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge" | "latitude" | "longitude", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "deletedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge" | "latitude" | "longitude", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
     chatMessages?: boolean | Order$chatMessagesArgs<ExtArgs>
+    statusHistory?: boolean | Order$statusHistoryArgs<ExtArgs>
     device?: boolean | DeviceDefaultArgs<ExtArgs>
     serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -5997,6 +6214,7 @@ export namespace Prisma {
     objects: {
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       chatMessages: Prisma.$ChatMessagePayload<ExtArgs>[]
+      statusHistory: Prisma.$OrderStatusHistoryPayload<ExtArgs>[]
       device: Prisma.$DevicePayload<ExtArgs>
       serviceArea: Prisma.$ServiceAreaPayload<ExtArgs> | null
       serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
@@ -6012,6 +6230,7 @@ export namespace Prisma {
       status: $Enums.OrderStatus
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
       estimatedTime: number | null
       address: string | null
       scheduledDate: string | null
@@ -6427,6 +6646,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     notifications<T extends Order$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Order$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatMessages<T extends Order$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Order$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statusHistory<T extends Order$statusHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Order$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     device<T extends DeviceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DeviceDefaultArgs<ExtArgs>>): Prisma__DeviceClient<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     serviceArea<T extends Order$serviceAreaArgs<ExtArgs> = {}>(args?: Subset<T, Order$serviceAreaArgs<ExtArgs>>): Prisma__ServiceAreaClient<$Result.GetResult<Prisma.$ServiceAreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -6469,6 +6689,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
+    readonly deletedAt: FieldRef<"Order", 'DateTime'>
     readonly estimatedTime: FieldRef<"Order", 'Int'>
     readonly address: FieldRef<"Order", 'String'>
     readonly scheduledDate: FieldRef<"Order", 'String'>
@@ -6934,6 +7155,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatMessageScalarFieldEnum | ChatMessageScalarFieldEnum[]
+  }
+
+  /**
+   * Order.statusHistory
+   */
+  export type Order$statusHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    where?: OrderStatusHistoryWhereInput
+    orderBy?: OrderStatusHistoryOrderByWithRelationInput | OrderStatusHistoryOrderByWithRelationInput[]
+    cursor?: OrderStatusHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderStatusHistoryScalarFieldEnum | OrderStatusHistoryScalarFieldEnum[]
   }
 
   /**
@@ -11731,6 +11976,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ServiceAreaMaxAggregateOutputType = {
@@ -11741,6 +11987,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ServiceAreaCountAggregateOutputType = {
@@ -11751,6 +11998,7 @@ export namespace Prisma {
     isActive: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -11773,6 +12021,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ServiceAreaMaxAggregateInputType = {
@@ -11783,6 +12032,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type ServiceAreaCountAggregateInputType = {
@@ -11793,6 +12043,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -11890,6 +12141,7 @@ export namespace Prisma {
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: ServiceAreaCountAggregateOutputType | null
     _avg: ServiceAreaAvgAggregateOutputType | null
     _sum: ServiceAreaSumAggregateOutputType | null
@@ -11919,6 +12171,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     orders?: boolean | ServiceArea$ordersArgs<ExtArgs>
     _count?: boolean | ServiceAreaCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceArea"]>
@@ -11931,6 +12184,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["serviceArea"]>
 
   export type ServiceAreaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11941,6 +12195,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["serviceArea"]>
 
   export type ServiceAreaSelectScalar = {
@@ -11951,9 +12206,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type ServiceAreaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "travelCharge" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceArea"]>
+  export type ServiceAreaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "travelCharge" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceArea"]>
   export type ServiceAreaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | ServiceArea$ordersArgs<ExtArgs>
     _count?: boolean | ServiceAreaCountOutputTypeDefaultArgs<ExtArgs>
@@ -11974,6 +12230,7 @@ export namespace Prisma {
       isActive: boolean
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["serviceArea"]>
     composites: {}
   }
@@ -12405,6 +12662,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"ServiceArea", 'Boolean'>
     readonly createdAt: FieldRef<"ServiceArea", 'DateTime'>
     readonly updatedAt: FieldRef<"ServiceArea", 'DateTime'>
+    readonly deletedAt: FieldRef<"ServiceArea", 'DateTime'>
   }
     
 
@@ -12871,6 +13129,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type SlotMaxAggregateOutputType = {
@@ -12882,6 +13141,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type SlotCountAggregateOutputType = {
@@ -12893,6 +13153,7 @@ export namespace Prisma {
     isActive: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -12916,6 +13177,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type SlotMaxAggregateInputType = {
@@ -12927,6 +13189,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type SlotCountAggregateInputType = {
@@ -12938,6 +13201,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -13036,6 +13300,7 @@ export namespace Prisma {
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: SlotCountAggregateOutputType | null
     _avg: SlotAvgAggregateOutputType | null
     _sum: SlotSumAggregateOutputType | null
@@ -13066,6 +13331,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["slot"]>
 
   export type SlotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13077,6 +13343,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["slot"]>
 
   export type SlotSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13088,6 +13355,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["slot"]>
 
   export type SlotSelectScalar = {
@@ -13099,9 +13367,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type SlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "startTime" | "endTime" | "maxBookings" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["slot"]>
+  export type SlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "startTime" | "endTime" | "maxBookings" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["slot"]>
 
   export type $SlotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Slot"
@@ -13115,6 +13384,7 @@ export namespace Prisma {
       isActive: boolean
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["slot"]>
     composites: {}
   }
@@ -13546,6 +13816,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"Slot", 'Boolean'>
     readonly createdAt: FieldRef<"Slot", 'DateTime'>
     readonly updatedAt: FieldRef<"Slot", 'DateTime'>
+    readonly deletedAt: FieldRef<"Slot", 'DateTime'>
   }
     
 
@@ -16066,6 +16337,1107 @@ export namespace Prisma {
 
 
   /**
+   * Model OrderStatusHistory
+   */
+
+  export type AggregateOrderStatusHistory = {
+    _count: OrderStatusHistoryCountAggregateOutputType | null
+    _avg: OrderStatusHistoryAvgAggregateOutputType | null
+    _sum: OrderStatusHistorySumAggregateOutputType | null
+    _min: OrderStatusHistoryMinAggregateOutputType | null
+    _max: OrderStatusHistoryMaxAggregateOutputType | null
+  }
+
+  export type OrderStatusHistoryAvgAggregateOutputType = {
+    id: number | null
+    orderId: number | null
+  }
+
+  export type OrderStatusHistorySumAggregateOutputType = {
+    id: number | null
+    orderId: number | null
+  }
+
+  export type OrderStatusHistoryMinAggregateOutputType = {
+    id: number | null
+    orderId: number | null
+    status: $Enums.OrderStatus | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type OrderStatusHistoryMaxAggregateOutputType = {
+    id: number | null
+    orderId: number | null
+    status: $Enums.OrderStatus | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type OrderStatusHistoryCountAggregateOutputType = {
+    id: number
+    orderId: number
+    status: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type OrderStatusHistoryAvgAggregateInputType = {
+    id?: true
+    orderId?: true
+  }
+
+  export type OrderStatusHistorySumAggregateInputType = {
+    id?: true
+    orderId?: true
+  }
+
+  export type OrderStatusHistoryMinAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type OrderStatusHistoryMaxAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type OrderStatusHistoryCountAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type OrderStatusHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderStatusHistory to aggregate.
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusHistories to fetch.
+     */
+    orderBy?: OrderStatusHistoryOrderByWithRelationInput | OrderStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderStatusHistories
+    **/
+    _count?: true | OrderStatusHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderStatusHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderStatusHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderStatusHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderStatusHistoryMaxAggregateInputType
+  }
+
+  export type GetOrderStatusHistoryAggregateType<T extends OrderStatusHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderStatusHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderStatusHistory[P]>
+      : GetScalarType<T[P], AggregateOrderStatusHistory[P]>
+  }
+
+
+
+
+  export type OrderStatusHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderStatusHistoryWhereInput
+    orderBy?: OrderStatusHistoryOrderByWithAggregationInput | OrderStatusHistoryOrderByWithAggregationInput[]
+    by: OrderStatusHistoryScalarFieldEnum[] | OrderStatusHistoryScalarFieldEnum
+    having?: OrderStatusHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderStatusHistoryCountAggregateInputType | true
+    _avg?: OrderStatusHistoryAvgAggregateInputType
+    _sum?: OrderStatusHistorySumAggregateInputType
+    _min?: OrderStatusHistoryMinAggregateInputType
+    _max?: OrderStatusHistoryMaxAggregateInputType
+  }
+
+  export type OrderStatusHistoryGroupByOutputType = {
+    id: number
+    orderId: number
+    status: $Enums.OrderStatus
+    notes: string | null
+    createdAt: Date
+    _count: OrderStatusHistoryCountAggregateOutputType | null
+    _avg: OrderStatusHistoryAvgAggregateOutputType | null
+    _sum: OrderStatusHistorySumAggregateOutputType | null
+    _min: OrderStatusHistoryMinAggregateOutputType | null
+    _max: OrderStatusHistoryMaxAggregateOutputType | null
+  }
+
+  type GetOrderStatusHistoryGroupByPayload<T extends OrderStatusHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderStatusHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderStatusHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderStatusHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderStatusHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderStatusHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusHistory"]>
+
+  export type OrderStatusHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusHistory"]>
+
+  export type OrderStatusHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusHistory"]>
+
+  export type OrderStatusHistorySelectScalar = {
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type OrderStatusHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "status" | "notes" | "createdAt", ExtArgs["result"]["orderStatusHistory"]>
+  export type OrderStatusHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderStatusHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderStatusHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderStatusHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderStatusHistory"
+    objects: {
+      order: Prisma.$OrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      orderId: number
+      status: $Enums.OrderStatus
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["orderStatusHistory"]>
+    composites: {}
+  }
+
+  type OrderStatusHistoryGetPayload<S extends boolean | null | undefined | OrderStatusHistoryDefaultArgs> = $Result.GetResult<Prisma.$OrderStatusHistoryPayload, S>
+
+  type OrderStatusHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderStatusHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderStatusHistoryCountAggregateInputType | true
+    }
+
+  export interface OrderStatusHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderStatusHistory'], meta: { name: 'OrderStatusHistory' } }
+    /**
+     * Find zero or one OrderStatusHistory that matches the filter.
+     * @param {OrderStatusHistoryFindUniqueArgs} args - Arguments to find a OrderStatusHistory
+     * @example
+     * // Get one OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderStatusHistoryFindUniqueArgs>(args: SelectSubset<T, OrderStatusHistoryFindUniqueArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderStatusHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderStatusHistoryFindUniqueOrThrowArgs} args - Arguments to find a OrderStatusHistory
+     * @example
+     * // Get one OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderStatusHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderStatusHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderStatusHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryFindFirstArgs} args - Arguments to find a OrderStatusHistory
+     * @example
+     * // Get one OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderStatusHistoryFindFirstArgs>(args?: SelectSubset<T, OrderStatusHistoryFindFirstArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderStatusHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryFindFirstOrThrowArgs} args - Arguments to find a OrderStatusHistory
+     * @example
+     * // Get one OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderStatusHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderStatusHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderStatusHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderStatusHistories
+     * const orderStatusHistories = await prisma.orderStatusHistory.findMany()
+     * 
+     * // Get first 10 OrderStatusHistories
+     * const orderStatusHistories = await prisma.orderStatusHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderStatusHistoryWithIdOnly = await prisma.orderStatusHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderStatusHistoryFindManyArgs>(args?: SelectSubset<T, OrderStatusHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderStatusHistory.
+     * @param {OrderStatusHistoryCreateArgs} args - Arguments to create a OrderStatusHistory.
+     * @example
+     * // Create one OrderStatusHistory
+     * const OrderStatusHistory = await prisma.orderStatusHistory.create({
+     *   data: {
+     *     // ... data to create a OrderStatusHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderStatusHistoryCreateArgs>(args: SelectSubset<T, OrderStatusHistoryCreateArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderStatusHistories.
+     * @param {OrderStatusHistoryCreateManyArgs} args - Arguments to create many OrderStatusHistories.
+     * @example
+     * // Create many OrderStatusHistories
+     * const orderStatusHistory = await prisma.orderStatusHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderStatusHistoryCreateManyArgs>(args?: SelectSubset<T, OrderStatusHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderStatusHistories and returns the data saved in the database.
+     * @param {OrderStatusHistoryCreateManyAndReturnArgs} args - Arguments to create many OrderStatusHistories.
+     * @example
+     * // Create many OrderStatusHistories
+     * const orderStatusHistory = await prisma.orderStatusHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderStatusHistories and only return the `id`
+     * const orderStatusHistoryWithIdOnly = await prisma.orderStatusHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderStatusHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderStatusHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderStatusHistory.
+     * @param {OrderStatusHistoryDeleteArgs} args - Arguments to delete one OrderStatusHistory.
+     * @example
+     * // Delete one OrderStatusHistory
+     * const OrderStatusHistory = await prisma.orderStatusHistory.delete({
+     *   where: {
+     *     // ... filter to delete one OrderStatusHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderStatusHistoryDeleteArgs>(args: SelectSubset<T, OrderStatusHistoryDeleteArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderStatusHistory.
+     * @param {OrderStatusHistoryUpdateArgs} args - Arguments to update one OrderStatusHistory.
+     * @example
+     * // Update one OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderStatusHistoryUpdateArgs>(args: SelectSubset<T, OrderStatusHistoryUpdateArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderStatusHistories.
+     * @param {OrderStatusHistoryDeleteManyArgs} args - Arguments to filter OrderStatusHistories to delete.
+     * @example
+     * // Delete a few OrderStatusHistories
+     * const { count } = await prisma.orderStatusHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderStatusHistoryDeleteManyArgs>(args?: SelectSubset<T, OrderStatusHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderStatusHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderStatusHistories
+     * const orderStatusHistory = await prisma.orderStatusHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderStatusHistoryUpdateManyArgs>(args: SelectSubset<T, OrderStatusHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderStatusHistories and returns the data updated in the database.
+     * @param {OrderStatusHistoryUpdateManyAndReturnArgs} args - Arguments to update many OrderStatusHistories.
+     * @example
+     * // Update many OrderStatusHistories
+     * const orderStatusHistory = await prisma.orderStatusHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderStatusHistories and only return the `id`
+     * const orderStatusHistoryWithIdOnly = await prisma.orderStatusHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderStatusHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderStatusHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderStatusHistory.
+     * @param {OrderStatusHistoryUpsertArgs} args - Arguments to update or create a OrderStatusHistory.
+     * @example
+     * // Update or create a OrderStatusHistory
+     * const orderStatusHistory = await prisma.orderStatusHistory.upsert({
+     *   create: {
+     *     // ... data to create a OrderStatusHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderStatusHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderStatusHistoryUpsertArgs>(args: SelectSubset<T, OrderStatusHistoryUpsertArgs<ExtArgs>>): Prisma__OrderStatusHistoryClient<$Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderStatusHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryCountArgs} args - Arguments to filter OrderStatusHistories to count.
+     * @example
+     * // Count the number of OrderStatusHistories
+     * const count = await prisma.orderStatusHistory.count({
+     *   where: {
+     *     // ... the filter for the OrderStatusHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderStatusHistoryCountArgs>(
+      args?: Subset<T, OrderStatusHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderStatusHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderStatusHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderStatusHistoryAggregateArgs>(args: Subset<T, OrderStatusHistoryAggregateArgs>): Prisma.PrismaPromise<GetOrderStatusHistoryAggregateType<T>>
+
+    /**
+     * Group by OrderStatusHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderStatusHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderStatusHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: OrderStatusHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderStatusHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderStatusHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderStatusHistory model
+   */
+  readonly fields: OrderStatusHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderStatusHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderStatusHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderStatusHistory model
+   */
+  interface OrderStatusHistoryFieldRefs {
+    readonly id: FieldRef<"OrderStatusHistory", 'Int'>
+    readonly orderId: FieldRef<"OrderStatusHistory", 'Int'>
+    readonly status: FieldRef<"OrderStatusHistory", 'OrderStatus'>
+    readonly notes: FieldRef<"OrderStatusHistory", 'String'>
+    readonly createdAt: FieldRef<"OrderStatusHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderStatusHistory findUnique
+   */
+  export type OrderStatusHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusHistory to fetch.
+     */
+    where: OrderStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusHistory findUniqueOrThrow
+   */
+  export type OrderStatusHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusHistory to fetch.
+     */
+    where: OrderStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusHistory findFirst
+   */
+  export type OrderStatusHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusHistory to fetch.
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusHistories to fetch.
+     */
+    orderBy?: OrderStatusHistoryOrderByWithRelationInput | OrderStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderStatusHistories.
+     */
+    cursor?: OrderStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatusHistories.
+     */
+    distinct?: OrderStatusHistoryScalarFieldEnum | OrderStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusHistory findFirstOrThrow
+   */
+  export type OrderStatusHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusHistory to fetch.
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusHistories to fetch.
+     */
+    orderBy?: OrderStatusHistoryOrderByWithRelationInput | OrderStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderStatusHistories.
+     */
+    cursor?: OrderStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatusHistories.
+     */
+    distinct?: OrderStatusHistoryScalarFieldEnum | OrderStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusHistory findMany
+   */
+  export type OrderStatusHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusHistories to fetch.
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusHistories to fetch.
+     */
+    orderBy?: OrderStatusHistoryOrderByWithRelationInput | OrderStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderStatusHistories.
+     */
+    cursor?: OrderStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatusHistories.
+     */
+    distinct?: OrderStatusHistoryScalarFieldEnum | OrderStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusHistory create
+   */
+  export type OrderStatusHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderStatusHistory.
+     */
+    data: XOR<OrderStatusHistoryCreateInput, OrderStatusHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * OrderStatusHistory createMany
+   */
+  export type OrderStatusHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderStatusHistories.
+     */
+    data: OrderStatusHistoryCreateManyInput | OrderStatusHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderStatusHistory createManyAndReturn
+   */
+  export type OrderStatusHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderStatusHistories.
+     */
+    data: OrderStatusHistoryCreateManyInput | OrderStatusHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderStatusHistory update
+   */
+  export type OrderStatusHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderStatusHistory.
+     */
+    data: XOR<OrderStatusHistoryUpdateInput, OrderStatusHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which OrderStatusHistory to update.
+     */
+    where: OrderStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusHistory updateMany
+   */
+  export type OrderStatusHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderStatusHistories.
+     */
+    data: XOR<OrderStatusHistoryUpdateManyMutationInput, OrderStatusHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderStatusHistories to update
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * Limit how many OrderStatusHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderStatusHistory updateManyAndReturn
+   */
+  export type OrderStatusHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderStatusHistories.
+     */
+    data: XOR<OrderStatusHistoryUpdateManyMutationInput, OrderStatusHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderStatusHistories to update
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * Limit how many OrderStatusHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderStatusHistory upsert
+   */
+  export type OrderStatusHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderStatusHistory to update in case it exists.
+     */
+    where: OrderStatusHistoryWhereUniqueInput
+    /**
+     * In case the OrderStatusHistory found by the `where` argument doesn't exist, create a new OrderStatusHistory with this data.
+     */
+    create: XOR<OrderStatusHistoryCreateInput, OrderStatusHistoryUncheckedCreateInput>
+    /**
+     * In case the OrderStatusHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderStatusHistoryUpdateInput, OrderStatusHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderStatusHistory delete
+   */
+  export type OrderStatusHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which OrderStatusHistory to delete.
+     */
+    where: OrderStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusHistory deleteMany
+   */
+  export type OrderStatusHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderStatusHistories to delete
+     */
+    where?: OrderStatusHistoryWhereInput
+    /**
+     * Limit how many OrderStatusHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderStatusHistory without action
+   */
+  export type OrderStatusHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusHistory
+     */
+    select?: OrderStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusHistory
+     */
+    omit?: OrderStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16086,6 +17458,8 @@ export namespace Prisma {
     phone: 'phone',
     role: 'role',
     createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt',
     averageRating: 'averageRating',
     totalReviews: 'totalReviews'
   };
@@ -16096,7 +17470,10 @@ export namespace Prisma {
   export const DeviceScalarFieldEnum: {
     id: 'id',
     brand: 'brand',
-    model: 'model'
+    model: 'model',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
@@ -16106,7 +17483,10 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    isActive: 'isActive'
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
@@ -16120,6 +17500,7 @@ export namespace Prisma {
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt',
     estimatedTime: 'estimatedTime',
     address: 'address',
     scheduledDate: 'scheduledDate',
@@ -16213,7 +17594,8 @@ export namespace Prisma {
     travelCharge: 'travelCharge',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ServiceAreaScalarFieldEnum = (typeof ServiceAreaScalarFieldEnum)[keyof typeof ServiceAreaScalarFieldEnum]
@@ -16227,7 +17609,8 @@ export namespace Prisma {
     maxBookings: 'maxBookings',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type SlotScalarFieldEnum = (typeof SlotScalarFieldEnum)[keyof typeof SlotScalarFieldEnum]
@@ -16254,6 +17637,17 @@ export namespace Prisma {
   };
 
   export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+  export const OrderStatusHistoryScalarFieldEnum: {
+    id: 'id',
+    orderId: 'orderId',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type OrderStatusHistoryScalarFieldEnum = (typeof OrderStatusHistoryScalarFieldEnum)[keyof typeof OrderStatusHistoryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -16389,6 +17783,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     averageRating?: FloatNullableFilter<"User"> | number | null
     totalReviews?: IntNullableFilter<"User"> | number | null
     addresses?: AddressListRelationFilter
@@ -16403,6 +17799,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     averageRating?: SortOrderInput | SortOrder
     totalReviews?: SortOrderInput | SortOrder
     addresses?: AddressOrderByRelationAggregateInput
@@ -16420,6 +17818,8 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     averageRating?: FloatNullableFilter<"User"> | number | null
     totalReviews?: IntNullableFilter<"User"> | number | null
     addresses?: AddressListRelationFilter
@@ -16434,6 +17834,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     averageRating?: SortOrderInput | SortOrder
     totalReviews?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -16453,6 +17855,8 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     averageRating?: FloatNullableWithAggregatesFilter<"User"> | number | null
     totalReviews?: IntNullableWithAggregatesFilter<"User"> | number | null
   }
@@ -16464,6 +17868,9 @@ export namespace Prisma {
     id?: IntFilter<"Device"> | number
     brand?: StringFilter<"Device"> | string
     model?: StringFilter<"Device"> | string
+    createdAt?: DateTimeFilter<"Device"> | Date | string
+    updatedAt?: DateTimeFilter<"Device"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Device"> | Date | string | null
     orders?: OrderListRelationFilter
   }
 
@@ -16471,6 +17878,9 @@ export namespace Prisma {
     id?: SortOrder
     brand?: SortOrder
     model?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     orders?: OrderOrderByRelationAggregateInput
   }
 
@@ -16481,6 +17891,9 @@ export namespace Prisma {
     NOT?: DeviceWhereInput | DeviceWhereInput[]
     brand?: StringFilter<"Device"> | string
     model?: StringFilter<"Device"> | string
+    createdAt?: DateTimeFilter<"Device"> | Date | string
+    updatedAt?: DateTimeFilter<"Device"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Device"> | Date | string | null
     orders?: OrderListRelationFilter
   }, "id">
 
@@ -16488,6 +17901,9 @@ export namespace Prisma {
     id?: SortOrder
     brand?: SortOrder
     model?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: DeviceCountOrderByAggregateInput
     _avg?: DeviceAvgOrderByAggregateInput
     _max?: DeviceMaxOrderByAggregateInput
@@ -16502,6 +17918,9 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Device"> | number
     brand?: StringWithAggregatesFilter<"Device"> | string
     model?: StringWithAggregatesFilter<"Device"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Device"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Device"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Device"> | Date | string | null
   }
 
   export type ServiceCategoryWhereInput = {
@@ -16512,6 +17931,9 @@ export namespace Prisma {
     name?: StringFilter<"ServiceCategory"> | string
     description?: StringNullableFilter<"ServiceCategory"> | string | null
     isActive?: BoolFilter<"ServiceCategory"> | boolean
+    createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ServiceCategory"> | Date | string | null
     orders?: OrderListRelationFilter
   }
 
@@ -16520,6 +17942,9 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     orders?: OrderOrderByRelationAggregateInput
   }
 
@@ -16531,6 +17956,9 @@ export namespace Prisma {
     NOT?: ServiceCategoryWhereInput | ServiceCategoryWhereInput[]
     description?: StringNullableFilter<"ServiceCategory"> | string | null
     isActive?: BoolFilter<"ServiceCategory"> | boolean
+    createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ServiceCategory"> | Date | string | null
     orders?: OrderListRelationFilter
   }, "id" | "name">
 
@@ -16539,6 +17967,9 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ServiceCategoryCountOrderByAggregateInput
     _avg?: ServiceCategoryAvgOrderByAggregateInput
     _max?: ServiceCategoryMaxOrderByAggregateInput
@@ -16554,6 +17985,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ServiceCategory"> | string
     description?: StringNullableWithAggregatesFilter<"ServiceCategory"> | string | null
     isActive?: BoolWithAggregatesFilter<"ServiceCategory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ServiceCategory"> | Date | string | null
   }
 
   export type OrderWhereInput = {
@@ -16567,6 +18001,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableFilter<"Order"> | number | null
     address?: StringNullableFilter<"Order"> | string | null
     scheduledDate?: StringNullableFilter<"Order"> | string | null
@@ -16588,6 +18023,7 @@ export namespace Prisma {
     longitude?: FloatNullableFilter<"Order"> | number | null
     notifications?: NotificationListRelationFilter
     chatMessages?: ChatMessageListRelationFilter
+    statusHistory?: OrderStatusHistoryListRelationFilter
     device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
     serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
@@ -16604,6 +18040,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     estimatedTime?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     scheduledDate?: SortOrderInput | SortOrder
@@ -16625,6 +18062,7 @@ export namespace Prisma {
     longitude?: SortOrderInput | SortOrder
     notifications?: NotificationOrderByRelationAggregateInput
     chatMessages?: ChatMessageOrderByRelationAggregateInput
+    statusHistory?: OrderStatusHistoryOrderByRelationAggregateInput
     device?: DeviceOrderByWithRelationInput
     serviceArea?: ServiceAreaOrderByWithRelationInput
     serviceCategory?: ServiceCategoryOrderByWithRelationInput
@@ -16644,6 +18082,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableFilter<"Order"> | number | null
     address?: StringNullableFilter<"Order"> | string | null
     scheduledDate?: StringNullableFilter<"Order"> | string | null
@@ -16665,6 +18104,7 @@ export namespace Prisma {
     longitude?: FloatNullableFilter<"Order"> | number | null
     notifications?: NotificationListRelationFilter
     chatMessages?: ChatMessageListRelationFilter
+    statusHistory?: OrderStatusHistoryListRelationFilter
     device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
     serviceArea?: XOR<ServiceAreaNullableScalarRelationFilter, ServiceAreaWhereInput> | null
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
@@ -16681,6 +18121,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     estimatedTime?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     scheduledDate?: SortOrderInput | SortOrder
@@ -16718,6 +18159,7 @@ export namespace Prisma {
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableWithAggregatesFilter<"Order"> | number | null
     address?: StringNullableWithAggregatesFilter<"Order"> | string | null
     scheduledDate?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -17071,6 +18513,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeFilter<"ServiceArea"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceArea"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ServiceArea"> | Date | string | null
     orders?: OrderListRelationFilter
   }
 
@@ -17082,6 +18525,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     orders?: OrderOrderByRelationAggregateInput
   }
 
@@ -17096,6 +18540,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeFilter<"ServiceArea"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceArea"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ServiceArea"> | Date | string | null
     orders?: OrderListRelationFilter
   }, "id">
 
@@ -17107,6 +18552,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ServiceAreaCountOrderByAggregateInput
     _avg?: ServiceAreaAvgOrderByAggregateInput
     _max?: ServiceAreaMaxOrderByAggregateInput
@@ -17125,6 +18571,7 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ServiceArea"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ServiceArea"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ServiceArea"> | Date | string | null
   }
 
   export type SlotWhereInput = {
@@ -17139,6 +18586,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Slot"> | boolean
     createdAt?: DateTimeFilter<"Slot"> | Date | string
     updatedAt?: DateTimeFilter<"Slot"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Slot"> | Date | string | null
   }
 
   export type SlotOrderByWithRelationInput = {
@@ -17150,6 +18598,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
   }
 
   export type SlotWhereUniqueInput = Prisma.AtLeast<{
@@ -17164,6 +18613,7 @@ export namespace Prisma {
     isActive?: BoolFilter<"Slot"> | boolean
     createdAt?: DateTimeFilter<"Slot"> | Date | string
     updatedAt?: DateTimeFilter<"Slot"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Slot"> | Date | string | null
   }, "id" | "name">
 
   export type SlotOrderByWithAggregationInput = {
@@ -17175,6 +18625,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: SlotCountOrderByAggregateInput
     _avg?: SlotAvgOrderByAggregateInput
     _max?: SlotMaxOrderByAggregateInput
@@ -17194,6 +18645,7 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"Slot"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Slot"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Slot"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Slot"> | Date | string | null
   }
 
   export type AppConfigWhereInput = {
@@ -17312,12 +18764,71 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
   }
 
+  export type OrderStatusHistoryWhereInput = {
+    AND?: OrderStatusHistoryWhereInput | OrderStatusHistoryWhereInput[]
+    OR?: OrderStatusHistoryWhereInput[]
+    NOT?: OrderStatusHistoryWhereInput | OrderStatusHistoryWhereInput[]
+    id?: IntFilter<"OrderStatusHistory"> | number
+    orderId?: IntFilter<"OrderStatusHistory"> | number
+    status?: EnumOrderStatusFilter<"OrderStatusHistory"> | $Enums.OrderStatus
+    notes?: StringNullableFilter<"OrderStatusHistory"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusHistory"> | Date | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }
+
+  export type OrderStatusHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    order?: OrderOrderByWithRelationInput
+  }
+
+  export type OrderStatusHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: OrderStatusHistoryWhereInput | OrderStatusHistoryWhereInput[]
+    OR?: OrderStatusHistoryWhereInput[]
+    NOT?: OrderStatusHistoryWhereInput | OrderStatusHistoryWhereInput[]
+    orderId?: IntFilter<"OrderStatusHistory"> | number
+    status?: EnumOrderStatusFilter<"OrderStatusHistory"> | $Enums.OrderStatus
+    notes?: StringNullableFilter<"OrderStatusHistory"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusHistory"> | Date | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }, "id">
+
+  export type OrderStatusHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: OrderStatusHistoryCountOrderByAggregateInput
+    _avg?: OrderStatusHistoryAvgOrderByAggregateInput
+    _max?: OrderStatusHistoryMaxOrderByAggregateInput
+    _min?: OrderStatusHistoryMinOrderByAggregateInput
+    _sum?: OrderStatusHistorySumOrderByAggregateInput
+  }
+
+  export type OrderStatusHistoryScalarWhereWithAggregatesInput = {
+    AND?: OrderStatusHistoryScalarWhereWithAggregatesInput | OrderStatusHistoryScalarWhereWithAggregatesInput[]
+    OR?: OrderStatusHistoryScalarWhereWithAggregatesInput[]
+    NOT?: OrderStatusHistoryScalarWhereWithAggregatesInput | OrderStatusHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"OrderStatusHistory"> | number
+    orderId?: IntWithAggregatesFilter<"OrderStatusHistory"> | number
+    status?: EnumOrderStatusWithAggregatesFilter<"OrderStatusHistory"> | $Enums.OrderStatus
+    notes?: StringNullableWithAggregatesFilter<"OrderStatusHistory"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"OrderStatusHistory"> | Date | string
+  }
+
   export type UserCreateInput = {
     email?: string | null
     name?: string | null
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -17332,6 +18843,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -17345,6 +18858,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -17359,6 +18874,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -17373,6 +18890,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
   }
@@ -17383,6 +18902,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -17394,6 +18915,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -17401,6 +18924,9 @@ export namespace Prisma {
   export type DeviceCreateInput = {
     brand: string
     model: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderCreateNestedManyWithoutDeviceInput
   }
 
@@ -17408,12 +18934,18 @@ export namespace Prisma {
     id?: number
     brand: string
     model: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutDeviceInput
   }
 
   export type DeviceUpdateInput = {
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutDeviceNestedInput
   }
 
@@ -17421,6 +18953,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutDeviceNestedInput
   }
 
@@ -17428,23 +18963,35 @@ export namespace Prisma {
     id?: number
     brand: string
     model: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type DeviceUpdateManyMutationInput = {
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DeviceUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceCategoryCreateInput = {
     name: string
     description?: string | null
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderCreateNestedManyWithoutServiceCategoryInput
   }
 
@@ -17453,6 +19000,9 @@ export namespace Prisma {
     name: string
     description?: string | null
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutServiceCategoryInput
   }
 
@@ -17460,6 +19010,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutServiceCategoryNestedInput
   }
 
@@ -17468,6 +19021,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutServiceCategoryNestedInput
   }
 
@@ -17476,12 +19032,18 @@ export namespace Prisma {
     name: string
     description?: string | null
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceCategoryUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceCategoryUncheckedUpdateManyInput = {
@@ -17489,12 +19051,16 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type OrderCreateInput = {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -17515,6 +19081,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -17531,6 +19098,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -17552,6 +19120,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -17560,6 +19129,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17580,6 +19150,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -17596,6 +19167,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17617,6 +19189,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -17629,6 +19202,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -17654,6 +19228,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17682,6 +19257,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18043,6 +19619,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderCreateNestedManyWithoutServiceAreaInput
   }
 
@@ -18054,6 +19631,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     orders?: OrderUncheckedCreateNestedManyWithoutServiceAreaInput
   }
 
@@ -18064,6 +19642,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUpdateManyWithoutServiceAreaNestedInput
   }
 
@@ -18075,6 +19654,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     orders?: OrderUncheckedUpdateManyWithoutServiceAreaNestedInput
   }
 
@@ -18086,6 +19666,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceAreaUpdateManyMutationInput = {
@@ -18095,6 +19676,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceAreaUncheckedUpdateManyInput = {
@@ -18105,6 +19687,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SlotCreateInput = {
@@ -18115,6 +19698,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type SlotUncheckedCreateInput = {
@@ -18126,6 +19710,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type SlotUpdateInput = {
@@ -18136,6 +19721,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SlotUncheckedUpdateInput = {
@@ -18147,6 +19733,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SlotCreateManyInput = {
@@ -18158,6 +19745,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type SlotUpdateManyMutationInput = {
@@ -18168,6 +19756,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SlotUncheckedUpdateManyInput = {
@@ -18179,6 +19768,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AppConfigCreateInput = {
@@ -18293,6 +19883,58 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OrderStatusHistoryCreateInput = {
+    status: $Enums.OrderStatus
+    notes?: string | null
+    createdAt?: Date | string
+    order: OrderCreateNestedOneWithoutStatusHistoryInput
+  }
+
+  export type OrderStatusHistoryUncheckedCreateInput = {
+    id?: number
+    orderId: number
+    status: $Enums.OrderStatus
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusHistoryUpdateInput = {
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneRequiredWithoutStatusHistoryNestedInput
+  }
+
+  export type OrderStatusHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusHistoryCreateManyInput = {
+    id?: number
+    orderId: number
+    status: $Enums.OrderStatus
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusHistoryUpdateManyMutationInput = {
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    orderId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -18343,6 +19985,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -18409,6 +20062,8 @@ export namespace Prisma {
     phone?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
   }
@@ -18426,6 +20081,8 @@ export namespace Prisma {
     phone?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
   }
@@ -18437,6 +20094,8 @@ export namespace Prisma {
     phone?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
     averageRating?: SortOrder
     totalReviews?: SortOrder
   }
@@ -18513,6 +20172,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -18549,6 +20222,9 @@ export namespace Prisma {
     id?: SortOrder
     brand?: SortOrder
     model?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type DeviceAvgOrderByAggregateInput = {
@@ -18559,12 +20235,18 @@ export namespace Prisma {
     id?: SortOrder
     brand?: SortOrder
     model?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type DeviceMinOrderByAggregateInput = {
     id?: SortOrder
     brand?: SortOrder
     model?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type DeviceSumOrderByAggregateInput = {
@@ -18581,6 +20263,9 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceCategoryAvgOrderByAggregateInput = {
@@ -18592,6 +20277,9 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceCategoryMinOrderByAggregateInput = {
@@ -18599,6 +20287,9 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceCategorySumOrderByAggregateInput = {
@@ -18618,17 +20309,6 @@ export namespace Prisma {
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -18654,6 +20334,12 @@ export namespace Prisma {
     every?: ChatMessageWhereInput
     some?: ChatMessageWhereInput
     none?: ChatMessageWhereInput
+  }
+
+  export type OrderStatusHistoryListRelationFilter = {
+    every?: OrderStatusHistoryWhereInput
+    some?: OrderStatusHistoryWhereInput
+    none?: OrderStatusHistoryWhereInput
   }
 
   export type DeviceScalarRelationFilter = {
@@ -18690,6 +20376,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type OrderStatusHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -18698,6 +20388,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
@@ -18740,6 +20431,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
@@ -18768,6 +20460,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
     estimatedTime?: SortOrder
     address?: SortOrder
     scheduledDate?: SortOrder
@@ -18809,20 +20502,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19072,6 +20751,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceAreaAvgOrderByAggregateInput = {
@@ -19087,6 +20767,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceAreaMinOrderByAggregateInput = {
@@ -19097,6 +20778,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ServiceAreaSumOrderByAggregateInput = {
@@ -19129,6 +20811,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SlotAvgOrderByAggregateInput = {
@@ -19145,6 +20828,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SlotMinOrderByAggregateInput = {
@@ -19156,6 +20840,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type SlotSumOrderByAggregateInput = {
@@ -19232,6 +20917,40 @@ export namespace Prisma {
     orderId?: SortOrder
   }
 
+  export type OrderStatusHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OrderStatusHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+  }
+
+  export type OrderStatusHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OrderStatusHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OrderStatusHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+  }
+
   export type AddressCreateNestedManyWithoutUserInput = {
     create?: XOR<AddressCreateWithoutUserInput, AddressUncheckedCreateWithoutUserInput> | AddressCreateWithoutUserInput[] | AddressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
@@ -19284,6 +21003,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -19500,6 +21223,13 @@ export namespace Prisma {
     connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
   }
 
+  export type OrderStatusHistoryCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput> | OrderStatusHistoryCreateWithoutOrderInput[] | OrderStatusHistoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusHistoryCreateOrConnectWithoutOrderInput | OrderStatusHistoryCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderStatusHistoryCreateManyOrderInputEnvelope
+    connect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+  }
+
   export type DeviceCreateNestedOneWithoutOrdersInput = {
     create?: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: DeviceCreateOrConnectWithoutOrdersInput
@@ -19550,6 +21280,13 @@ export namespace Prisma {
     connect?: ChatMessageWhereUniqueInput | ChatMessageWhereUniqueInput[]
   }
 
+  export type OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput> | OrderStatusHistoryCreateWithoutOrderInput[] | OrderStatusHistoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusHistoryCreateOrConnectWithoutOrderInput | OrderStatusHistoryCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderStatusHistoryCreateManyOrderInputEnvelope
+    connect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+  }
+
   export type ReviewUncheckedCreateNestedOneWithoutOrderInput = {
     create?: XOR<ReviewCreateWithoutOrderInput, ReviewUncheckedCreateWithoutOrderInput>
     connectOrCreate?: ReviewCreateOrConnectWithoutOrderInput
@@ -19564,10 +21301,6 @@ export namespace Prisma {
 
   export type EnumOrderStatusFieldUpdateOperationsInput = {
     set?: $Enums.OrderStatus
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type OrderUpdatediagnosticPhotosInput = {
@@ -19609,6 +21342,20 @@ export namespace Prisma {
     update?: ChatMessageUpdateWithWhereUniqueWithoutOrderInput | ChatMessageUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: ChatMessageUpdateManyWithWhereWithoutOrderInput | ChatMessageUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
+  }
+
+  export type OrderStatusHistoryUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput> | OrderStatusHistoryCreateWithoutOrderInput[] | OrderStatusHistoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusHistoryCreateOrConnectWithoutOrderInput | OrderStatusHistoryCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderStatusHistoryUpsertWithWhereUniqueWithoutOrderInput | OrderStatusHistoryUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderStatusHistoryCreateManyOrderInputEnvelope
+    set?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    disconnect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    delete?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    connect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    update?: OrderStatusHistoryUpdateWithWhereUniqueWithoutOrderInput | OrderStatusHistoryUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderStatusHistoryUpdateManyWithWhereWithoutOrderInput | OrderStatusHistoryUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderStatusHistoryScalarWhereInput | OrderStatusHistoryScalarWhereInput[]
   }
 
   export type DeviceUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -19691,6 +21438,20 @@ export namespace Prisma {
     update?: ChatMessageUpdateWithWhereUniqueWithoutOrderInput | ChatMessageUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: ChatMessageUpdateManyWithWhereWithoutOrderInput | ChatMessageUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: ChatMessageScalarWhereInput | ChatMessageScalarWhereInput[]
+  }
+
+  export type OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput> | OrderStatusHistoryCreateWithoutOrderInput[] | OrderStatusHistoryUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusHistoryCreateOrConnectWithoutOrderInput | OrderStatusHistoryCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderStatusHistoryUpsertWithWhereUniqueWithoutOrderInput | OrderStatusHistoryUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderStatusHistoryCreateManyOrderInputEnvelope
+    set?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    disconnect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    delete?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    connect?: OrderStatusHistoryWhereUniqueInput | OrderStatusHistoryWhereUniqueInput[]
+    update?: OrderStatusHistoryUpdateWithWhereUniqueWithoutOrderInput | OrderStatusHistoryUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderStatusHistoryUpdateManyWithWhereWithoutOrderInput | OrderStatusHistoryUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderStatusHistoryScalarWhereInput | OrderStatusHistoryScalarWhereInput[]
   }
 
   export type ReviewUncheckedUpdateOneWithoutOrderNestedInput = {
@@ -19858,6 +21619,20 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutChatMessagesInput, OrderUpdateWithoutChatMessagesInput>, OrderUncheckedUpdateWithoutChatMessagesInput>
   }
 
+  export type OrderCreateNestedOneWithoutStatusHistoryInput = {
+    create?: XOR<OrderCreateWithoutStatusHistoryInput, OrderUncheckedCreateWithoutStatusHistoryInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStatusHistoryInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type OrderUpdateOneRequiredWithoutStatusHistoryNestedInput = {
+    create?: XOR<OrderCreateWithoutStatusHistoryInput, OrderUncheckedCreateWithoutStatusHistoryInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStatusHistoryInput
+    upsert?: OrderUpsertWithoutStatusHistoryInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutStatusHistoryInput, OrderUpdateWithoutStatusHistoryInput>, OrderUncheckedUpdateWithoutStatusHistoryInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -19906,6 +21681,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -20005,6 +21791,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -20057,17 +21857,6 @@ export namespace Prisma {
     not?: NestedEnumOrderStatusFilter<$PrismaModel> | $Enums.OrderStatus
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -20087,20 +21876,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumOrderStatusFilter<$PrismaModel>
     _max?: NestedEnumOrderStatusFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -20220,6 +21995,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20240,6 +22016,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -20254,6 +22031,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20275,6 +22053,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -20382,6 +22161,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     estimatedTime?: IntNullableFilter<"Order"> | number | null
     address?: StringNullableFilter<"Order"> | string | null
     scheduledDate?: StringNullableFilter<"Order"> | string | null
@@ -20407,6 +22187,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20427,6 +22208,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -20441,6 +22223,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20462,6 +22245,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -20496,6 +22280,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20516,6 +22301,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -20530,6 +22316,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -20551,6 +22338,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -20635,15 +22423,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrderStatusHistoryCreateWithoutOrderInput = {
+    status: $Enums.OrderStatus
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusHistoryUncheckedCreateWithoutOrderInput = {
+    id?: number
+    status: $Enums.OrderStatus
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusHistoryCreateOrConnectWithoutOrderInput = {
+    where: OrderStatusHistoryWhereUniqueInput
+    create: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderStatusHistoryCreateManyOrderInputEnvelope = {
+    data: OrderStatusHistoryCreateManyOrderInput | OrderStatusHistoryCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DeviceCreateWithoutOrdersInput = {
     brand: string
     model: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type DeviceUncheckedCreateWithoutOrdersInput = {
     id?: number
     brand: string
     model: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type DeviceCreateOrConnectWithoutOrdersInput = {
@@ -20658,6 +22475,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceAreaUncheckedCreateWithoutOrdersInput = {
@@ -20668,6 +22486,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceAreaCreateOrConnectWithoutOrdersInput = {
@@ -20679,6 +22498,9 @@ export namespace Prisma {
     name: string
     description?: string | null
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceCategoryUncheckedCreateWithoutOrdersInput = {
@@ -20686,6 +22508,9 @@ export namespace Prisma {
     name: string
     description?: string | null
     isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ServiceCategoryCreateOrConnectWithoutOrdersInput = {
@@ -20699,6 +22524,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -20712,6 +22539,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -20815,6 +22644,33 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ChatMessage"> | Date | string
   }
 
+  export type OrderStatusHistoryUpsertWithWhereUniqueWithoutOrderInput = {
+    where: OrderStatusHistoryWhereUniqueInput
+    update: XOR<OrderStatusHistoryUpdateWithoutOrderInput, OrderStatusHistoryUncheckedUpdateWithoutOrderInput>
+    create: XOR<OrderStatusHistoryCreateWithoutOrderInput, OrderStatusHistoryUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderStatusHistoryUpdateWithWhereUniqueWithoutOrderInput = {
+    where: OrderStatusHistoryWhereUniqueInput
+    data: XOR<OrderStatusHistoryUpdateWithoutOrderInput, OrderStatusHistoryUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type OrderStatusHistoryUpdateManyWithWhereWithoutOrderInput = {
+    where: OrderStatusHistoryScalarWhereInput
+    data: XOR<OrderStatusHistoryUpdateManyMutationInput, OrderStatusHistoryUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type OrderStatusHistoryScalarWhereInput = {
+    AND?: OrderStatusHistoryScalarWhereInput | OrderStatusHistoryScalarWhereInput[]
+    OR?: OrderStatusHistoryScalarWhereInput[]
+    NOT?: OrderStatusHistoryScalarWhereInput | OrderStatusHistoryScalarWhereInput[]
+    id?: IntFilter<"OrderStatusHistory"> | number
+    orderId?: IntFilter<"OrderStatusHistory"> | number
+    status?: EnumOrderStatusFilter<"OrderStatusHistory"> | $Enums.OrderStatus
+    notes?: StringNullableFilter<"OrderStatusHistory"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusHistory"> | Date | string
+  }
+
   export type DeviceUpsertWithoutOrdersInput = {
     update: XOR<DeviceUpdateWithoutOrdersInput, DeviceUncheckedUpdateWithoutOrdersInput>
     create: XOR<DeviceCreateWithoutOrdersInput, DeviceUncheckedCreateWithoutOrdersInput>
@@ -20829,12 +22685,18 @@ export namespace Prisma {
   export type DeviceUpdateWithoutOrdersInput = {
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DeviceUncheckedUpdateWithoutOrdersInput = {
     id?: IntFieldUpdateOperationsInput | number
     brand?: StringFieldUpdateOperationsInput | string
     model?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceAreaUpsertWithoutOrdersInput = {
@@ -20855,6 +22717,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceAreaUncheckedUpdateWithoutOrdersInput = {
@@ -20865,6 +22728,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceCategoryUpsertWithoutOrdersInput = {
@@ -20882,6 +22746,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ServiceCategoryUncheckedUpdateWithoutOrdersInput = {
@@ -20889,6 +22756,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUpsertWithoutOrdersInput = {
@@ -20908,6 +22778,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -20921,6 +22793,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -20991,6 +22865,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21011,6 +22886,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -21026,6 +22902,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21047,6 +22924,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -21070,6 +22948,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21090,6 +22969,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -21105,6 +22985,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21126,6 +23007,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -21133,6 +23015,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21152,6 +23035,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -21168,6 +23052,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21188,6 +23073,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -21203,6 +23089,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressCreateNestedManyWithoutUserInput
@@ -21216,6 +23104,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
@@ -21242,6 +23132,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21261,6 +23152,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -21277,6 +23169,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21297,6 +23190,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -21318,6 +23212,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUpdateManyWithoutUserNestedInput
@@ -21331,6 +23227,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
@@ -21341,6 +23239,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21361,6 +23260,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -21376,6 +23276,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21397,6 +23298,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
   }
 
@@ -21420,6 +23322,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21440,6 +23343,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -21455,6 +23359,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21476,6 +23381,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
   }
 
@@ -21485,6 +23391,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -21498,6 +23406,8 @@ export namespace Prisma {
     phone?: string | null
     role?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     averageRating?: number | null
     totalReviews?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -21526,6 +23436,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -21539,6 +23451,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     averageRating?: NullableFloatFieldUpdateOperationsInput | number | null
     totalReviews?: NullableIntFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -21549,6 +23463,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21569,6 +23484,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
     user: UserCreateNestedOneWithoutOrdersInput
@@ -21584,6 +23500,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21604,6 +23521,7 @@ export namespace Prisma {
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -21638,6 +23556,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21657,6 +23576,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
     serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
@@ -21673,6 +23593,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21693,6 +23614,7 @@ export namespace Prisma {
     latitude?: number | null
     longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    statusHistory?: OrderStatusHistoryUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
   }
@@ -21717,6 +23639,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21736,6 +23659,7 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -21752,6 +23676,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21772,6 +23697,157 @@ export namespace Prisma {
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
+    review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
+    warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type OrderCreateWithoutStatusHistoryInput = {
+    status?: $Enums.OrderStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    estimatedTime?: number | null
+    address?: string | null
+    scheduledDate?: string | null
+    scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
+    diagnosticNotes?: string | null
+    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
+    finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
+    paymentMethod?: string | null
+    repairNotes?: string | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
+    notifications?: NotificationCreateNestedManyWithoutOrderInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
+    device: DeviceCreateNestedOneWithoutOrdersInput
+    serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutOrdersInput
+    user: UserCreateNestedOneWithoutOrdersInput
+    review?: ReviewCreateNestedOneWithoutOrderInput
+    warranty?: WarrantyCreateNestedOneWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutStatusHistoryInput = {
+    id?: number
+    userId: number
+    deviceId: number
+    serviceCategoryId: number
+    status?: $Enums.OrderStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    estimatedTime?: number | null
+    address?: string | null
+    scheduledDate?: string | null
+    scheduledSlot?: string | null
+    amountConfirmedAt?: Date | string | null
+    completedAt?: Date | string | null
+    completionOtp?: string | null
+    completionVerifiedAt?: Date | string | null
+    diagnosticNotes?: string | null
+    diagnosticPhotos?: OrderCreatediagnosticPhotosInput | string[]
+    finalAmount?: Decimal | DecimalJsLike | number | string | null
+    laborNotes?: string | null
+    partsUsed?: string | null
+    paymentMethod?: string | null
+    repairNotes?: string | null
+    serviceAreaId?: number | null
+    travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
+    notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
+    review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
+    warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutStatusHistoryInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutStatusHistoryInput, OrderUncheckedCreateWithoutStatusHistoryInput>
+  }
+
+  export type OrderUpsertWithoutStatusHistoryInput = {
+    update: XOR<OrderUpdateWithoutStatusHistoryInput, OrderUncheckedUpdateWithoutStatusHistoryInput>
+    create: XOR<OrderCreateWithoutStatusHistoryInput, OrderUncheckedCreateWithoutStatusHistoryInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutStatusHistoryInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutStatusHistoryInput, OrderUncheckedUpdateWithoutStatusHistoryInput>
+  }
+
+  export type OrderUpdateWithoutStatusHistoryInput = {
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
+    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUpdateManyWithoutOrderNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
+    serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    review?: ReviewUpdateOneWithoutOrderNestedInput
+    warranty?: WarrantyUpdateOneWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutStatusHistoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    deviceId?: IntFieldUpdateOperationsInput | number
+    serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledSlot?: NullableStringFieldUpdateOperationsInput | string | null
+    amountConfirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completionOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    completionVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    diagnosticNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    diagnosticPhotos?: OrderUpdatediagnosticPhotosInput | string[]
+    finalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    laborNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    partsUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
+    travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -21809,6 +23885,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -21910,6 +23987,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21930,6 +24008,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
@@ -21944,6 +24023,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21965,6 +24045,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -21976,6 +24057,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22004,6 +24086,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -22029,6 +24112,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22049,6 +24133,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -22063,6 +24148,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22084,6 +24170,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -22095,6 +24182,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22123,6 +24211,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -22148,6 +24237,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22168,6 +24258,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -22182,6 +24273,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22203,6 +24295,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -22214,6 +24307,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22250,6 +24344,13 @@ export namespace Prisma {
     sender: string
     message: string
     isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusHistoryCreateManyOrderInput = {
+    id?: number
+    status: $Enums.OrderStatus
+    notes?: string | null
     createdAt?: Date | string
   }
 
@@ -22305,6 +24406,26 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OrderStatusHistoryUpdateWithoutOrderInput = {
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusHistoryUncheckedUpdateWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusHistoryUncheckedUpdateManyWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderCreateManyServiceAreaInput = {
     id?: number
     userId: number
@@ -22313,6 +24434,7 @@ export namespace Prisma {
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     estimatedTime?: number | null
     address?: string | null
     scheduledDate?: string | null
@@ -22337,6 +24459,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22357,6 +24480,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutOrdersNestedInput
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -22372,6 +24496,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22392,6 +24517,7 @@ export namespace Prisma {
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
+    statusHistory?: OrderStatusHistoryUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
   }
@@ -22404,6 +24530,7 @@ export namespace Prisma {
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estimatedTime?: NullableIntFieldUpdateOperationsInput | number | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     scheduledDate?: NullableStringFieldUpdateOperationsInput | string | null

@@ -3,16 +3,15 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HealthController } from './health.controller';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { EventsModule } from './events/events.module';
-import { EmailModule } from './email/email.module';
 import { PrismaModule } from './prisma.module';
 import { NotificationModule } from './notification/notification.module';
 import { WarrantyModule } from './warranty/warranty.module';
 import { AppConfigModule } from './config/config.module';
 import { AdminModule } from './admin/admin.module';
-import { AiModule } from './ai/ai.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -23,6 +22,7 @@ import { ServiceAreaModule } from './service-area/service-area.module';
 import { SlotModule } from './slot/slot.module';
 import { ReviewModule } from './review/review.module';
 import { ChatModule } from './chat/chat.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -42,19 +42,18 @@ import { ChatModule } from './chat/chat.module';
     AuthModule,
     OrderModule,
     EventsModule,
-    EmailModule,
     NotificationModule,
     WarrantyModule,
     AppConfigModule,
     AdminModule,
-    AiModule,
     AddressModule,
     ServiceAreaModule,
     SlotModule,
     ReviewModule,
     ChatModule,
+    StorageModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [
     AppService,
     {

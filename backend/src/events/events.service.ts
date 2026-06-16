@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { Redis } from 'ioredis';
 import { randomUUID } from 'crypto';
@@ -12,6 +12,7 @@ export interface SseEvent {
 
 @Injectable()
 export class EventsService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(EventsService.name);
   private eventSubject = new Subject<SseEvent>();
   private publisher: Redis;
   private subscriber: Redis;
@@ -23,7 +24,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
       port: parseInt(process.env.REDIS_PORT || '6379'),
       retryStrategy: (times: number) => {
         if (times > 3) {
-          console.warn('[Redis] Connection failed. Using local in-memory events only.');
+          this.logger.warn('[Redis] Connection failed. Using local in-memory events only.');
           return null; // Stop retrying to prevent crashing
         }
         return Math.min(times * 100, 2000);
@@ -41,7 +42,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     this.subscriber.subscribe('sse-events', (err) => {
       if (err) {
-        console.error('Failed to subscribe to Redis sse-events channel. Local events will still work.');
+        this.logger.error('Failed to subscribe to Redis sse-events channel. Local events will still work.', err);
       }
     });
 
@@ -54,7 +55,7 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
             this.eventSubject.next(event);
           }
         } catch (e) {
-          console.error('Failed to parse SSE event from Redis:', e);
+          this.logger.error('Failed to parse SSE event from Redis:', e);
         }
       }
     });
@@ -81,5 +82,22 @@ export class EventsService implements OnModuleInit, OnModuleDestroy {
 
   get events$() {
     return this.eventSubject.asObservable();
+  }
+
+  getRedisStatus(): string {
+    return this.publisher.status;
+  }
+
+  async getCache(key: string): Promise<string | null> {
+    if (this.publisher.status === 'ready') {
+      return await this.publisher.get(key);
+    }
+    return null;
+  }
+
+  async setCache(key: string, value: string, ttlSeconds: number): Promise<void> {
+    if (this.publisher.status === 'ready') {
+      await this.publisher.setex(key, ttlSeconds, value);
+    }
   }
 }

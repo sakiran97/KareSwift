@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminService } from '../services/admin.service';
 import { SseService, SseEvent } from '../services/sse.service';
 import { Subscription } from 'rxjs';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-orders',
@@ -17,6 +18,13 @@ export class OrdersComponent implements OnInit {
   orders = signal<any[]>([]);
   loading = signal(true);
   error = signal('');
+  
+  // Pagination & Filters
+  currentPage = signal(1);
+  pageSize = signal(20);
+  totalPages = signal(1);
+  searchQuery = signal('');
+  statusFilter = signal('');
   
   // Payment Options Config
   upiEnabled = true;
@@ -52,7 +60,7 @@ export class OrdersComponent implements OnInit {
   
   private sseSub?: Subscription;
 
-  constructor(private adminService: AdminService, private sse: SseService) {}
+  constructor(private adminService: AdminService, private sse: SseService, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.loadConfigs();
@@ -98,9 +106,26 @@ export class OrdersComponent implements OnInit {
   loadOrders() {
     this.loading.set(true);
     this.error.set('');
-    this.adminService.getAllOrders().subscribe({
-      next: (res: any[]) => {
-        this.orders.set(res || []);
+    
+    // Pass query params to service
+    const params = {
+      page: this.currentPage(),
+      limit: this.pageSize(),
+      search: this.searchQuery(),
+      status: this.statusFilter()
+    };
+    
+    this.adminService.getAllOrders(params).subscribe({
+      next: (res: any) => {
+        // API now returns { data, meta }
+        if (res && res.data) {
+          this.orders.set(res.data);
+          this.totalPages.set(res.meta.totalPages);
+        } else {
+          // Fallback if backend isn't updated yet
+          this.orders.set(res || []);
+          this.totalPages.set(1);
+        }
         this.loading.set(false);
       },
       error: (err) => {
@@ -108,6 +133,30 @@ export class OrdersComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  onSearch() {
+    this.currentPage.set(1);
+    this.loadOrders();
+  }
+
+  onFilterChange() {
+    this.currentPage.set(1);
+    this.loadOrders();
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+      this.loadOrders();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+      this.loadOrders();
+    }
   }
 
   updateStatus(orderId: number, nextStatus: string) {
@@ -308,5 +357,10 @@ export class OrdersComponent implements OnInit {
     if (s === 'DIAGNOSIS_COMPLETED') return 'VISIT_SCHEDULED';
     if (s === 'VISIT_SCHEDULED') return 'IN_PROGRESS';
     return '';
+  }
+
+  getMapUrl(lat: number, lng: number): SafeResourceUrl {
+    const url = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -25,11 +25,11 @@ export class AuthService {
     if (typeof window !== 'undefined') {
       if (window.location.search.includes('type=recovery') || window.location.hash.includes('type=recovery')) {
         // If they are on the password recovery screen, destroy any lingering session
-        localStorage.removeItem('jwt');
         localStorage.removeItem('user');
         this.isLoggedIn.set(false);
       } else {
-        this.isLoggedIn.set(localStorage.getItem('jwt') !== null);
+        const user = this.getCurrentUser();
+        this.isLoggedIn.set(!!user);
       }
     }
     
@@ -52,14 +52,10 @@ export class AuthService {
       
       if (session) {
         const token = session.access_token;
-        const currentToken = localStorage.getItem('jwt');
-        if (currentToken !== token) {
-          localStorage.setItem('jwt', token);
-        }
         localStorage.removeItem('user');
-        this.http.get<any>(`${this.apiUrl}/profile`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }).subscribe({
+        
+        // Establish backend session with cookies
+        this.http.post<any>(`${this.apiUrl}/session`, { supabaseToken: token }, { withCredentials: true }).subscribe({
           next: (profile: any) => {
             const user = {
               id: profile.id,
@@ -114,10 +110,9 @@ export class AuthService {
             const token = session?.access_token;
 
             if (token) {
-              return this.http.get<any>(`${this.apiUrl}/profile`, {
-                headers: { Authorization: `Bearer ${token}` }
-              }).pipe(
-                map((profile: any) => {
+              return this.http.post<any>(`${this.apiUrl}/session`, { supabaseToken: token }, { withCredentials: true }).pipe(
+                map((res: any) => {
+                  const profile = res.user;
                   const loginRes: LoginResponse = {
                     access_token: token,
                     user: {
@@ -163,10 +158,9 @@ export class AuthService {
         const token = session.access_token;
         const user = session.user;
 
-        return this.http.get<any>(`${this.apiUrl}/profile`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }).pipe(
-          map((profile: any) => {
+        return this.http.post<any>(`${this.apiUrl}/session`, { supabaseToken: token }, { withCredentials: true }).pipe(
+          map((res: any) => {
+            const profile = res.user;
             const loginRes: LoginResponse = {
               access_token: token,
               user: {
@@ -239,7 +233,6 @@ export class AuthService {
   // ─── Helpers ──────────────────────────────────────────────────────
 
   private persistLogin(res: LoginResponse): LoginResponse {
-    localStorage.setItem('jwt', res.access_token);
     localStorage.setItem('user', JSON.stringify(res.user));
     this.isLoggedIn.set(true);
     return res;
@@ -254,12 +247,15 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('jwt');
+    return null; // Not using local token anymore
   }
 
   logout(): void {
     this.supabase.auth.signOut();
-    localStorage.removeItem('jwt');
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
+      next: () => {},
+      error: () => {}
+    });
     localStorage.removeItem('user');
     this.isLoggedIn.set(false);
   }

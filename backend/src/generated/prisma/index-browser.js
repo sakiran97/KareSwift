@@ -127,6 +127,8 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   role: 'role',
   createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   averageRating: 'averageRating',
   totalReviews: 'totalReviews'
 };
@@ -134,14 +136,20 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.DeviceScalarFieldEnum = {
   id: 'id',
   brand: 'brand',
-  model: 'model'
+  model: 'model',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ServiceCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -152,6 +160,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
   estimatedTime: 'estimatedTime',
   address: 'address',
   scheduledDate: 'scheduledDate',
@@ -230,7 +239,8 @@ exports.Prisma.ServiceAreaScalarFieldEnum = {
   travelCharge: 'travelCharge',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.SlotScalarFieldEnum = {
@@ -241,7 +251,8 @@ exports.Prisma.SlotScalarFieldEnum = {
   maxBookings: 'maxBookings',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.AppConfigScalarFieldEnum = {
@@ -258,6 +269,14 @@ exports.Prisma.ChatMessageScalarFieldEnum = {
   sender: 'sender',
   message: 'message',
   isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OrderStatusHistoryScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  status: 'status',
+  notes: 'notes',
   createdAt: 'createdAt'
 };
 
@@ -299,7 +318,8 @@ exports.Prisma.ModelName = {
   ServiceArea: 'ServiceArea',
   Slot: 'Slot',
   AppConfig: 'AppConfig',
-  ChatMessage: 'ChatMessage'
+  ChatMessage: 'ChatMessage',
+  OrderStatusHistory: 'OrderStatusHistory'
 };
 
 /**

@@ -16,9 +16,7 @@ export interface LoginResponse {
   user: AdminUser;
 }
 
-const SUPABASE_URL = 'https://apqtqdnjgrusomauvuqc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwcXRxZG5qZ3J1c29tYXV2dXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDgxODcsImV4cCI6MjA5NjgyNDE4N30.oQV2Af4esBBR--SO1eEWYbZD5-vIlbblHRhbiqa5aKw';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +29,7 @@ export class AdminService {
   private cache: { [key: string]: any } = {};
 
   constructor(private http: HttpClient) {
-    this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
     this.loadPersistedUser();
   }
 
@@ -65,15 +63,14 @@ export class AdminService {
 
         const token = session.access_token;
 
-        // Fetch user from our backend to verify admin role
-        return this.http.get<any>('/api/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        }).pipe(
-          map(profile => {
+        // Establish backend session with cookies
+        return this.http.post<any>('/api/auth/session', { supabaseToken: token }, { withCredentials: true }).pipe(
+          map(res => {
+            const profile = res.user;
             if (profile.role !== 'admin') {
               throw new Error('Access denied: User is not an admin');
             }
-            const res: LoginResponse = {
+            const loginRes: LoginResponse = {
               access_token: token,
               user: {
                 id: profile.id,
@@ -82,10 +79,9 @@ export class AdminService {
                 role: profile.role
               }
             };
-            localStorage.setItem('jwt', res.access_token);
-            localStorage.setItem('admin_user', JSON.stringify(res.user));
-            this.userSubject.next(res.user);
-            return res;
+            localStorage.setItem('admin_user', JSON.stringify(loginRes.user));
+            this.userSubject.next(loginRes.user);
+            return loginRes;
           })
         );
       })
@@ -94,13 +90,17 @@ export class AdminService {
 
   logout() {
     this.supabase.auth.signOut();
-    localStorage.removeItem('jwt');
+    this.http.post('/api/auth/logout', {}, { withCredentials: true }).subscribe({
+      next: () => {},
+      error: () => {}
+    });
     localStorage.removeItem('admin_user');
     this.userSubject.next(null);
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('jwt') && this.userSubject.value?.role === 'admin';
+    // If we have an admin user in subject, we assume logged in (cookie handles actual auth)
+    return !!this.userSubject.value && this.userSubject.value.role === 'admin';
   }
 
   getCurrentUser(): AdminUser | null {
@@ -114,8 +114,20 @@ export class AdminService {
   }
 
   // Orders Operations
-  getAllOrders(): Observable<any[]> {
-    const req = this.http.get<any[]>('/api/admin/orders').pipe(tap(res => this.cache['orders'] = res));
+  getAllOrders(params?: { page?: number; limit?: number; search?: string; status?: string }): Observable<any> {
+    let url = '/api/admin/orders';
+    if (params) {
+      const queryParams = new URLSearchParams();
+      if (params.page) queryParams.append('page', params.page.toString());
+      if (params.limit) queryParams.append('limit', params.limit.toString());
+      if (params.search) queryParams.append('search', params.search);
+      if (params.status) queryParams.append('status', params.status);
+      const queryString = queryParams.toString();
+      if (queryString) {
+        url += `?${queryString}`;
+      }
+    }
+    const req = this.http.get<any>(url).pipe(tap(res => this.cache['orders'] = res));
     return this.cache['orders'] ? concat(of(this.cache['orders']), req) : req;
   }
 

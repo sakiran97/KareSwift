@@ -2,23 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from '../prisma.service';
-import { passportJwtSecret } from 'jwks-rsa';
-import * as jwt from 'jsonwebtoken';
+import { Request } from 'express';
 
-const jwksProvider = passportJwtSecret({
-  cache: true,
-  rateLimit: true,
-  jwksRequestsPerMinute: 5,
-  jwksUri: 'https://apqtqdnjgrusomauvuqc.supabase.co/auth/v1/.well-known/jwks.json',
-});
+const cookieExtractor = (req: Request) => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['access_token'];
+  }
+  return token;
+};
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private prisma: PrismaService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        cookieExtractor,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       ignoreExpiration: false,
-      secretOrKeyProvider: jwksProvider,
+      secretOrKey: process.env.SUPABASE_JWT_SECRET || 'super-secret-jwt-token-with-at-least-32-characters-long',
     });
   }
 

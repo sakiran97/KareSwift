@@ -8,10 +8,18 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @Get()
-  async findAll(@Req() req: any, @Query('unread') unread?: string) {
+  async findAll(
+    @Req() req: any, 
+    @Query('unread') unread?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
+  ) {
     const userId = Number(req.user.id);
     const onlyUnread = unread === 'true';
-    return this.notificationService.findByUser(userId, onlyUnread);
+    const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
+    const limitNum = limit ? Math.min(Math.max(1, parseInt(limit, 10)), 100) : 20;
+    
+    return this.notificationService.findByUser(userId, onlyUnread, pageNum, limitNum);
   }
 
   @Get('count')

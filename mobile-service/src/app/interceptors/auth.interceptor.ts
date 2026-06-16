@@ -1,7 +1,8 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { tap, catchError, switchMap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 const PUBLIC_AUTH_PATHS = [
@@ -10,34 +11,39 @@ const PUBLIC_AUTH_PATHS = [
 ];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('jwt');
   const router = inject(Router);
   const authService = inject(AuthService);
+  const http = inject(HttpClient);
 
-  // Don't attach token to public auth endpoints or external APIs like nominatim
-  const isPublicAuth = PUBLIC_AUTH_PATHS.some(p => req.url.includes(p));
-  const isExternalApi = req.url.startsWith('http');
-  if (isPublicAuth || isExternalApi) {
+  // Don't attach cookies to external APIs like nominatim
+  const isExternalApi = req.url.startsWith('http') && !req.url.includes('/api');
+  if (isExternalApi) {
     return next(req);
   }
 
-  let finalReq = req;
-  if (token) {
-    finalReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
+  // Always set withCredentials for API calls to send HttpOnly cookies
+  const finalReq = req.clone({
+    withCredentials: true
+  });
 
   return next(finalReq).pipe(
-    tap({
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 401) {
-          authService.logout();
-          router.navigate(['/auth/login']);
-        }
+    catchError((error: HttpErrorResponse) => {
+      // Prevent infinite loops if the refresh call itself fails
+      if (error.status === 401 && !req.url.includes('/auth/refresh') && !req.url.includes('/auth/session')) {
+        // Attempt silent refresh
+        return http.post('/api/auth/refresh', {}, { withCredentials: true }).pipe(
+          switchMap(() => {
+            // Retry original request
+            return next(finalReq);
+          }),
+          catchError((refreshErr) => {
+            authService.logout();
+            router.navigate(['/auth/login']);
+            return throwError(() => refreshErr);
+          })
+        );
       }
+      return throwError(() => error);
     })
   );
 };

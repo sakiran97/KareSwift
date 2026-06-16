@@ -71,6 +71,39 @@
     </div>
   </div>
 
+  <div class="analytics-section glass-panel" *ngIf="!loading() && stats()" style="margin-top: 20px; padding: 20px;">
+    <h3 style="margin-bottom: 15px;">Order Analytics</h3>
+    <div class="bars-container" style="display: flex; flex-direction: column; gap: 15px;">
+      <div class="bar-group">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+          <span>Active Orders</span>
+          <span>{{ stats()?.activeOrders }}</span>
+        </div>
+        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; height: 10px;">
+          <div style="height: 100%; background: #0ea5e9; border-radius: 4px;" [style.width.%]="(stats()?.activeOrders || 0) / (stats()?.totalOrders || 1) * 100"></div>
+        </div>
+      </div>
+      <div class="bar-group">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+          <span>Completed Orders</span>
+          <span>{{ stats()?.completedOrders }}</span>
+        </div>
+        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; height: 10px;">
+          <div style="height: 100%; background: #10b981; border-radius: 4px;" [style.width.%]="(stats()?.completedOrders || 0) / (stats()?.totalOrders || 1) * 100"></div>
+        </div>
+      </div>
+      <div class="bar-group">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+          <span>Cancelled Orders</span>
+          <span>{{ stats()?.cancelledOrders }}</span>
+        </div>
+        <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; height: 10px;">
+          <div style="height: 100%; background: #ef4444; border-radius: 4px;" [style.width.%]="(stats()?.cancelledOrders || 0) / (stats()?.totalOrders || 1) * 100"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="loading-container glass-panel" *ngIf="loading()">
     <span class="spinner"></span>
     <p>Retrieving platform stats...</p>
