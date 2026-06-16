@@ -149,7 +149,7 @@ export class Login {
     this.successMessage = null;
     
     this.authService.checkEmail(emailCtrl?.value).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (!res.exists) {
           this.isLoading = false;
           this.errorMessage = 'No account found with this email address. Please sign up first.';
@@ -159,7 +159,7 @@ export class Login {
         
         // Email exists, request reset link
         this.authService.requestPasswordResetOTP(emailCtrl?.value).subscribe({
-          next: ({ error }) => {
+          next: ({ error }: any) => {
             this.isLoading = false;
             if (error) {
               this.errorMessage = error.message;

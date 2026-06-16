@@ -360,7 +360,7 @@ export class CreateOrder implements OnInit {
         
         // Use Nominatim free reverse geocoding API
         this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`).subscribe({
-          next: (res) => {
+          next: (res: any) => {
             this.isDetectingLocation = false;
             if (res && res.address) {
               const addr = res.address;

@@ -37,7 +37,7 @@ export class LocationModal {
         const lng = position.coords.longitude;
         
         this.locationService.reverseGeocode(lat, lng).subscribe({
-          next: (address) => {
+          next: (address: string) => {
             this.locationService.setLocation({ address, lat, lng });
             this.isDetecting.set(false);
             this.closeModal();
@@ -64,7 +64,7 @@ export class LocationModal {
 
     this.isSearching.set(true);
     this.locationService.searchLocation(this.searchQuery).subscribe({
-      next: (results) => {
+      next: (results: any[]) => {
         this.searchResults.set(results);
         this.isSearching.set(false);
       },

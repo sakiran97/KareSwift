@@ -22,9 +22,9 @@ export class AppConfigService {
           console.warn('Failed to load app config:', err);
           return of([]);
         })
-      ).subscribe((configs) => {
+      ).subscribe((configs: any[]) => {
         const configMap: Record<string, string> = {};
-        configs.forEach(c => {
+        configs.forEach((c: any) => {
           configMap[c.key] = c.value;
         });
         this.config.set(configMap);
@@ -35,7 +35,7 @@ export class AppConfigService {
 
   private listenToConfigUpdates() {
     this.sseService.connect().pipe(
-      filter(event => event.type === 'config-updated')
+      filter((event: any) => event.type === 'config-updated')
     ).subscribe((event: SseEvent) => {
       const data = event.data;
       if (data && data.key && data.value) {

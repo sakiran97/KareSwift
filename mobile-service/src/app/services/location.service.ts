@@ -46,7 +46,7 @@ export class LocationService {
   reverseGeocode(lat: number, lng: number): Observable<string> {
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
     return this.http.get<any>(url).pipe(
-      map(res => {
+      map((res: any) => {
         if (res && res.address) {
           const addr = res.address;
           const components = [

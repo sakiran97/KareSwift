@@ -47,7 +47,7 @@ export class App implements OnInit, OnDestroy {
     // Listen to global notifications
     this.sseService.connect().pipe(
       filter((e: SseEvent) => e.type === 'notification')
-    ).subscribe(event => {
+    ).subscribe((event: any) => {
       if (event.data && event.data.title && event.data.body) {
         this.toastService.show(`${event.data.title}: ${event.data.body}`, 'info', 6000);
       }

@@ -193,12 +193,12 @@ export class TrackOrder implements OnInit, OnDestroy {
   fetchChatHistory(): void {
     const cleanId = this.orderId.replace('ORD-', '');
     this.http.get<any[]>(`/api/chat/order/${cleanId}`).subscribe({
-      next: (msgs) => {
+      next: (msgs: any) => {
         this.chatMessages = msgs || [];
         this.cdr.detectChanges();
         if (this.chatOpen) this.scrollToBottom();
       },
-      error: (err) => console.error('Failed to load chat', err)
+      error: (err: any) => console.error('Failed to load chat', err)
     });
   }
 
@@ -210,7 +210,7 @@ export class TrackOrder implements OnInit, OnDestroy {
     this.newMessage = ''; // clear instantly
     
     this.http.post<any>(`/api/chat/order/${cleanId}`, { message: msg, sender: 'customer' }).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         // SSE will push it, but we can optimistically add it if SSE takes time
         const exists = this.chatMessages.find(m => m.id === res.id);
         if (!exists) {
@@ -219,7 +219,7 @@ export class TrackOrder implements OnInit, OnDestroy {
           this.scrollToBottom();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to send message', err);
         // revert logic or show error
       }

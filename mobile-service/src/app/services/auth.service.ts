@@ -60,7 +60,7 @@ export class AuthService {
         this.http.get<any>(`${this.apiUrl}/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         }).subscribe({
-          next: (profile) => {
+          next: (profile: any) => {
             const user = {
               id: profile.id,
               email: profile.email,
