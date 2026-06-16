@@ -25,6 +25,7 @@ export class CreateOrder implements OnInit {
   addressError: string | null = null;
   addressSuccess: string | null = null;
   bookingDisabled = false;
+  isDetectingLocation = false;
 
   // Catalog data
   brands = ['Apple', 'Samsung', 'OnePlus', 'Vivo', 'Oppo', 'Xiaomi', 'Realme', 'Other'];
@@ -341,6 +342,56 @@ export class CreateOrder implements OnInit {
     });
   }
 
+  autoDetectLocation(): void {
+    if (!navigator.geolocation) {
+      this.addressError = 'Geolocation is not supported by your browser.';
+      return;
+    }
+
+    this.isDetectingLocation = true;
+    this.addressError = null;
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        
+        // Use Nominatim free reverse geocoding API
+        this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`).subscribe({
+          next: (res) => {
+            this.isDetectingLocation = false;
+            if (res && res.address) {
+              const addr = res.address;
+              this.addressForm.patchValue({
+                street: addr.road || addr.street || '',
+                area: addr.suburb || addr.neighbourhood || addr.village || '',
+                city: addr.city || addr.town || addr.county || '',
+                state: addr.state || '',
+                pincode: addr.postcode || ''
+              });
+              this.addressSuccess = 'Location detected! Please review and fill any missing details.';
+              setTimeout(() => this.addressSuccess = null, 5000);
+              this.cdr.detectChanges();
+            } else {
+              this.addressError = 'Could not determine address from coordinates.';
+            }
+          },
+          error: () => {
+            this.isDetectingLocation = false;
+            this.addressError = 'Failed to fetch address details. Please enter manually.';
+            this.cdr.detectChanges();
+          }
+        });
+      },
+      (error) => {
+        this.isDetectingLocation = false;
+        this.addressError = 'Location access denied or failed. Please enter address manually.';
+        this.cdr.detectChanges();
+      },
+      { timeout: 10000 }
+    );
+  }
+
   nextStep(): void {
     if (this.currentStep === 1 && !this.orderForm.value.brand) return;
     if (this.currentStep === 2 && !this.orderForm.value.model) return;
@@ -359,7 +410,7 @@ export class CreateOrder implements OnInit {
 
     this.errorMessage = null;
     this.currentStep++;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     this.cdr.detectChanges();
   }
 
@@ -367,7 +418,7 @@ export class CreateOrder implements OnInit {
     if (this.currentStep > 1) {
       this.currentStep--;
       this.errorMessage = null;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'auto' });
       this.cdr.detectChanges();
     }
   }
@@ -407,6 +458,7 @@ export class CreateOrder implements OnInit {
       serviceCategoryId: Number(serviceCategoryId),
       notes: `${brand} ${finalModel} - ${description}`,
       address: this.getSelectedAddressText(),
+      mobileNumber: selectedAddress?.mobileNumber || '',
       scheduledDate,
       scheduledSlot,
       travelCharge: this.travelCharge,

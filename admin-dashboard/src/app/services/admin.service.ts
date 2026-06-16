@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, from } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, from, concat, of } from 'rxjs';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export interface AdminUser {
@@ -26,6 +26,9 @@ export class AdminService {
   private userSubject = new BehaviorSubject<AdminUser | null>(null);
   public currentUser$ = this.userSubject.asObservable();
   private supabase: SupabaseClient;
+  
+  // Data Cache
+  private cache: { [key: string]: any } = {};
 
   constructor(private http: HttpClient) {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -106,12 +109,14 @@ export class AdminService {
 
   // Dashboard Stats
   getStats(): Observable<any> {
-    return this.http.get<any>('/api/admin/dashboard/stats');
+    const req = this.http.get<any>('/api/admin/dashboard/stats').pipe(tap(res => this.cache['stats'] = res));
+    return this.cache['stats'] ? concat(of(this.cache['stats']), req) : req;
   }
 
   // Orders Operations
   getAllOrders(): Observable<any[]> {
-    return this.http.get<any[]>('/api/admin/orders');
+    const req = this.http.get<any[]>('/api/admin/orders').pipe(tap(res => this.cache['orders'] = res));
+    return this.cache['orders'] ? concat(of(this.cache['orders']), req) : req;
   }
 
   updateOrderStatus(
@@ -200,5 +205,14 @@ export class AdminService {
 
   updateConfig(key: string, value: string): Observable<any> {
     return this.http.patch<any>(`/api/config/${key}`, { value });
+  }
+
+  // Chat Operations
+  getChatMessages(orderId: number): Observable<any[]> {
+    return this.http.get<any[]>(`/api/chat/order/${orderId}`);
+  }
+
+  sendChatMessage(orderId: number, message: string): Observable<any> {
+    return this.http.post<any>(`/api/chat/order/${orderId}`, { message });
   }
 }

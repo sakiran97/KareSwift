@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { OrderService, OrderResponse } from '../../services/order.service';
 import { SseService, SseEvent } from '../../services/sse.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '../../services/app-config.service';
@@ -10,7 +11,7 @@ import { AppConfigService } from '../../services/app-config.service';
 @Component({
   selector: 'app-track-order',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './track-order.html',
   styleUrl: './track-order.scss',
 })
@@ -18,6 +19,7 @@ export class TrackOrder implements OnInit, OnDestroy {
   orderId = '';
   isCancelled = false;
   currentStepIndex = 0;
+  isLoading = true;
   
   // Status Steps for KareSwift Operator Model
   statusSteps = [
@@ -38,6 +40,11 @@ export class TrackOrder implements OnInit, OnDestroy {
   repairNotes: string | null = null;
   travelCharge = 0;
   
+  // Chat state
+  chatMessages: any[] = [];
+  newMessage = '';
+  chatOpen = false;
+  
   pollInterval: any;
   private sseSub?: Subscription;
 
@@ -55,6 +62,7 @@ export class TrackOrder implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.orderId = params.get('id') || '';
       this.fetchOrderDetails();
+      this.fetchChatHistory();
       this.setupRealtimeTracking();
       this.startPolling();
     });
@@ -108,10 +116,13 @@ export class TrackOrder implements OnInit, OnDestroy {
           this.currentStepIndex = step;
         }
         this.updateOrderData(res);
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Failed to fetch order details', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -131,6 +142,18 @@ export class TrackOrder implements OnInit, OnDestroy {
             }
             this.updateOrderData(event.data);
             this.cdr.detectChanges();
+          }
+        } else if (event.type === 'chat-message') {
+          const orderId = String(event.data.orderId || '');
+          const cleanId = this.orderId.replace('ORD-', '');
+          if (orderId === this.orderId || orderId === cleanId) {
+            // Check if message already exists
+            const exists = this.chatMessages.find(m => m.id === event.data.id);
+            if (!exists) {
+              this.chatMessages.push(event.data);
+              this.cdr.detectChanges();
+              this.scrollToBottom();
+            }
           }
         }
       },
@@ -157,5 +180,56 @@ export class TrackOrder implements OnInit, OnDestroy {
 
   navigateToFeedback(): void {
     this.router.navigate([`/order/feedback/${this.orderId}`]);
+  }
+
+  // Chat methods
+  toggleChat(): void {
+    this.chatOpen = !this.chatOpen;
+    if (this.chatOpen) {
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
+  }
+
+  fetchChatHistory(): void {
+    const cleanId = this.orderId.replace('ORD-', '');
+    this.http.get<any[]>(`/api/chat/order/${cleanId}`).subscribe({
+      next: (msgs) => {
+        this.chatMessages = msgs || [];
+        this.cdr.detectChanges();
+        if (this.chatOpen) this.scrollToBottom();
+      },
+      error: (err) => console.error('Failed to load chat', err)
+    });
+  }
+
+  sendMessage(): void {
+    if (!this.newMessage.trim()) return;
+    
+    const cleanId = this.orderId.replace('ORD-', '');
+    const msg = this.newMessage;
+    this.newMessage = ''; // clear instantly
+    
+    this.http.post<any>(`/api/chat/order/${cleanId}`, { message: msg }).subscribe({
+      next: (res) => {
+        // SSE will push it, but we can optimistically add it if SSE takes time
+        const exists = this.chatMessages.find(m => m.id === res.id);
+        if (!exists) {
+          this.chatMessages.push(res);
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+        }
+      },
+      error: (err) => {
+        console.error('Failed to send message', err);
+        // revert logic or show error
+      }
+    });
+  }
+
+  scrollToBottom(): void {
+    const el = document.getElementById('chat-messages-container');
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }
 }

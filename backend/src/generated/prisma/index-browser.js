@@ -250,6 +250,15 @@ exports.Prisma.AppConfigScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  sender: 'sender',
+  message: 'message',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -287,7 +296,8 @@ exports.Prisma.ModelName = {
   Address: 'Address',
   ServiceArea: 'ServiceArea',
   Slot: 'Slot',
-  AppConfig: 'AppConfig'
+  AppConfig: 'AppConfig',
+  ChatMessage: 'ChatMessage'
 };
 
 /**

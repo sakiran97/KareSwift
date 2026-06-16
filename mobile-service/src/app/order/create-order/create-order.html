@@ -207,6 +207,11 @@
             <h3>Add New Address</h3>
             <div *ngIf="addressError" class="error-banner">{{ addressError }}</div>
             <div *ngIf="addressSuccess" class="success-banner">{{ addressSuccess }}</div>
+            
+            <button type="button" class="btn-secondary" (click)="autoDetectLocation()" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; width: 100%; justify-content: center; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">
+              <span *ngIf="!isDetectingLocation">📍 Auto-Detect Current Location</span>
+              <span *ngIf="isDetectingLocation">Locating... Please wait</span>
+            </button>
 
             <div [formGroup]="addressForm" class="address-grid-inputs">
               <div class="form-group">

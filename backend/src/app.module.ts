@@ -22,6 +22,7 @@ import { AddressModule } from './address/address.module';
 import { ServiceAreaModule } from './service-area/service-area.module';
 import { SlotModule } from './slot/slot.module';
 import { ReviewModule } from './review/review.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ReviewModule } from './review/review.module';
     ServiceAreaModule,
     SlotModule,
     ReviewModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [

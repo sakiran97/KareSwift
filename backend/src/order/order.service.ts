@@ -32,8 +32,9 @@ export class OrderService {
     diagnosticPhotos?: string[];
     travelCharge?: number;
     serviceAreaId?: number;
+    mobileNumber?: string;
   }): Promise<any> {
-    const { userId, deviceId, serviceCategoryId, estimatedTime, address, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId } = data;
+    const { userId, deviceId, serviceCategoryId, estimatedTime, address, mobileNumber, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId } = data;
     
     if (!this.useMock) {
       try {
@@ -59,6 +60,15 @@ export class OrderService {
           },
         });
 
+        // Update user's phone number if it's missing but provided in the payload
+        if (mobileNumber && !order.user?.phone) {
+          await this.prisma.user.update({
+            where: { id: userId },
+            data: { phone: mobileNumber }
+          });
+          order.user.phone = mobileNumber;
+        }
+
         await this.createNotification(
           userId,
           'Order Booked Successfully',
@@ -67,7 +77,7 @@ export class OrderService {
           order.id
         );
 
-        this.eventsService.emit('order-update', order);
+        this.eventsService.emit('new-order', order);
         return order;
       } catch (err: any) {
         if (err.code === 'ECONNREFUSED' || err.message?.includes('conn') || err.message?.includes('refused')) {

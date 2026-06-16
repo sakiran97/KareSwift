@@ -94,5 +94,15 @@
     <div class="content-body">
       <router-outlet></router-outlet>
     </div>
+
+    <!-- Toast Notification -->
+    <div *ngIf="newOrderAlert" class="toast-notification animate-fade-up glass-panel" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; padding: 15px 20px; border-left: 4px solid #10b981; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px;">
+      <div style="font-size: 24px;">🔔</div>
+      <div>
+        <h4 style="margin: 0 0 5px 0; color: #fff;">New Order Booked!</h4>
+        <p style="margin: 0; font-size: 0.9rem; color: #ccc;">{{ newOrderAlert?.device?.brand }} {{ newOrderAlert?.device?.model }} - {{ newOrderAlert?.serviceCategory?.name }}</p>
+      </div>
+      <button (click)="dismissAlert()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-left: auto;">×</button>
+    </div>
   </main>
 </div>

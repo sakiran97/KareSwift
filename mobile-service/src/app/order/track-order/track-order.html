@@ -1,4 +1,11 @@
 <div class="track-container animate-fade-up">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-panel glass-panel" style="text-align: center; padding: 40px;">
+    <div class="spinner" style="margin: 0 auto 15px auto;"></div>
+    <p>Fetching latest tracking details...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
   <!-- Cancel Banner -->
   <div *ngIf="isCancelled" class="alert alert-danger glass animate-fade">
     <span class="icon">🚫</span>
@@ -40,8 +47,17 @@
     <div class="qr-code-display-container" *ngIf="paymentMethod?.toLowerCase() === 'qr'">
       <p>Scan this QR code to pay the finalized amount of <strong>₹{{ finalAmount }}</strong>:</p>
       <div class="qr-code-image-wrapper">
-        <img [src]="config.get('qr_image_url', 'assets/qr-code-placeholder.png')" alt="Payment QR Code" />
+        <img [src]="config.get('qr_image_url') || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=KareSwiftPayment'" alt="Payment QR Code" />
       </div>
+    </div>
+
+    <!-- UPI Details display if payment method is UPI -->
+    <div class="upi-display-container" *ngIf="paymentMethod?.toLowerCase() === 'upi'" style="margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center;">
+      <p style="margin-bottom: 10px;">Pay directly to our official UPI ID:</p>
+      <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.2); padding: 10px 20px; border-radius: 6px; font-family: monospace; font-size: 1.2rem; border: 1px solid rgba(255,255,255,0.1);">
+        <strong>{{ config.get('upi_id') || 'kareswift@ybl' }}</strong>
+      </div>
+      <p style="margin-top: 10px; font-size: 0.9rem; color: #aaa;">Ensure the name matches KareSwift before proceeding.</p>
     </div>
 
     <!-- OTP Display -->
@@ -118,6 +134,57 @@
             <span class="val">{{ repairNotes }}</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  </ng-container>
+
+  <!-- Floating Chat Widget -->
+  <div class="chat-widget" [class.chat-open]="chatOpen">
+    <!-- Chat Header / Button -->
+    <div class="chat-header glass-panel" (click)="toggleChat()">
+      <div class="chat-title">
+        <span class="icon">💬</span>
+        <strong>Tech Support Chat</strong>
+      </div>
+      <div class="chat-toggle">
+        <span *ngIf="!chatOpen">▲</span>
+        <span *ngIf="chatOpen">▼</span>
+      </div>
+    </div>
+
+    <!-- Chat Body -->
+    <div class="chat-body" *ngIf="chatOpen">
+      <div class="chat-messages" id="chat-messages-container">
+        <div *ngIf="chatMessages.length === 0" class="chat-empty">
+          <p>No messages yet. Send a message to your assigned technician.</p>
+        </div>
+        <div 
+          *ngFor="let msg of chatMessages" 
+          class="chat-message" 
+          [class.customer]="msg.sender === 'customer'"
+          [class.admin]="msg.sender === 'admin'"
+        >
+          <div class="msg-bubble">
+            {{ msg.message }}
+          </div>
+          <div class="msg-time">
+            {{ msg.createdAt | date:'shortTime' }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-input-area">
+        <input 
+          type="text" 
+          [(ngModel)]="newMessage" 
+          (keyup.enter)="sendMessage()" 
+          placeholder="Type a message..." 
+          class="chat-input"
+        />
+        <button class="chat-send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+          ➤
+        </button>
       </div>
     </div>
   </div>

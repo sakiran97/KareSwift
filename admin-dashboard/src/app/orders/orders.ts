@@ -2,6 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../services/admin.service';
+import { SseService, SseEvent } from '../services/sse.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
@@ -38,11 +40,39 @@ export class OrdersComponent implements OnInit {
   cancelOrderId = signal<number | null>(null);
   cancelReason = '';
 
-  constructor(private adminService: AdminService) {}
+  // Chat Modal State
+  showChatModal = signal(false);
+  chatOrderId = signal<number | null>(null);
+  chatMessages = signal<any[]>([]);
+  chatInput = '';
+  private sseSub?: Subscription;
+
+  constructor(private adminService: AdminService, private sse: SseService) {}
 
   ngOnInit() {
     this.loadConfigs();
     this.loadOrders();
+    
+    // Listen for new chat messages
+    this.sseSub = this.sse.connect().subscribe({
+      next: (event: SseEvent) => {
+        if (event.type === 'chat-message') {
+          const cid = this.chatOrderId();
+          if (cid && event.data.orderId === cid) {
+            const msgs = this.chatMessages();
+            const exists = msgs.find(m => m.id === event.data.id);
+            if (!exists) {
+              this.chatMessages.set([...msgs, event.data]);
+              setTimeout(() => this.scrollToBottom(), 100);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.sseSub?.unsubscribe();
   }
 
   loadConfigs() {
@@ -181,6 +211,53 @@ export class OrdersComponent implements OnInit {
         alert(err.error?.message || 'Failed to cancel order.');
       }
     });
+  }
+
+  // Chat Modal
+  openChatModal(orderId: number) {
+    this.chatOrderId.set(orderId);
+    this.showChatModal.set(true);
+    this.chatMessages.set([]);
+    
+    this.adminService.getChatMessages(orderId).subscribe({
+      next: (msgs) => {
+        this.chatMessages.set(msgs || []);
+        setTimeout(() => this.scrollToBottom(), 100);
+      },
+      error: () => alert('Failed to load chat history')
+    });
+  }
+
+  closeChatModal() {
+    this.showChatModal.set(false);
+    this.chatOrderId.set(null);
+  }
+
+  sendChatMessage() {
+    const id = this.chatOrderId();
+    if (!id || !this.chatInput.trim()) return;
+
+    const msg = this.chatInput;
+    this.chatInput = ''; // clear instantly
+    
+    this.adminService.sendChatMessage(id, msg).subscribe({
+      next: (res) => {
+        const msgs = this.chatMessages();
+        const exists = msgs.find(m => m.id === res.id);
+        if (!exists) {
+          this.chatMessages.set([...msgs, res]);
+          setTimeout(() => this.scrollToBottom(), 100);
+        }
+      },
+      error: () => alert('Failed to send message')
+    });
+  }
+
+  scrollToBottom() {
+    const el = document.getElementById('admin-chat-messages');
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }
 
   getStatusBadgeClass(status: string): string {

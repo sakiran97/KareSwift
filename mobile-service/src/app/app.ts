@@ -5,6 +5,9 @@ import { Footer } from './components/footer/footer';
 import { ToastContainer } from './components/toast/toast-container';
 import { AiAssistantComponent } from './shared/ai-assistant/ai-assistant';
 import { AuthService } from './services/auth.service';
+import { ToastService } from './services/toast.service';
+import { SseService, SseEvent } from './services/sse.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +22,8 @@ export class App implements OnInit, OnDestroy {
   private readonly INACTIVITY_TIME = 15 * 60 * 1000; // 15 minutes
   
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+  private sseService = inject(SseService);
   private router = inject(Router);
   private ngZone = inject(NgZone);
 
@@ -32,6 +37,15 @@ export class App implements OnInit, OnDestroy {
       });
     });
     this.resetTimeout();
+
+    // Listen to global notifications
+    this.sseService.connect().pipe(
+      filter((e: SseEvent) => e.type === 'notification')
+    ).subscribe(event => {
+      if (event.data && event.data.title && event.data.body) {
+        this.toastService.show(`${event.data.title}: ${event.data.body}`, 'info', 6000);
+      }
+    });
   }
 
   ngOnDestroy() {

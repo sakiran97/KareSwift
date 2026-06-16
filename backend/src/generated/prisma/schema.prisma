@@ -62,6 +62,7 @@ model Order {
   serviceAreaId        Int?
   travelCharge         Decimal?        @db.Decimal(10, 2)
   notifications        Notification[]
+  chatMessages         ChatMessage[]
   device               Device          @relation(fields: [deviceId], references: [id])
   serviceArea          ServiceArea?    @relation(fields: [serviceAreaId], references: [id])
   serviceCategory      ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
@@ -165,4 +166,14 @@ enum OrderStatus {
   PRICE_FINALIZED
   COMPLETED
   CANCELLED
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  sender    String // 'customer' or 'admin'
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
