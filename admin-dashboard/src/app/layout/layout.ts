@@ -113,6 +113,25 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  handleNotificationClick(note: any) {
+    if (!note.isRead) {
+      this.http.patch(`/api/notifications/${note.id}/read`, {}).subscribe({
+        next: () => {
+          note.isRead = true;
+          this.unreadNotificationsCount = Math.max(0, this.unreadNotificationsCount - 1);
+          this.cdr.detectChanges();
+        }
+      });
+    }
+
+    this.isNotificationOpen = false;
+    this.cdr.detectChanges();
+
+    if (note.orderId) {
+      this.router.navigate(['/admin/orders']);
+    }
+  }
+
   dismissAlert() {
     this.newOrderAlert = null;
   }

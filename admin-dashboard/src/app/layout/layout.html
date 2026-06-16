@@ -130,7 +130,7 @@
           <p>All caught up! No notifications yet.</p>
         </div>
 
-        <div class="notification-item" *ngFor="let note of notifications" [class.unread]="!note.isRead">
+        <div class="notification-item" *ngFor="let note of notifications" [class.unread]="!note.isRead" (click)="handleNotificationClick(note)">
           <div class="note-header">
             <span class="note-title">{{ note.title }}</span>
             <span class="note-time">{{ note.createdAt | date:'short' }}</span>
