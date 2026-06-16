@@ -1,6 +1,8 @@
 @use "./styles/variables" as *;
 @use "./styles/mixins" as *;
 
+@import 'leaflet/dist/leaflet.css';
+
 * {
   box-sizing: border-box;
   margin: 0;

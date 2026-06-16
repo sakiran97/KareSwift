@@ -1,0 +1,46 @@
+<div class="modal-backdrop">
+  <div class="modal-content animate-fade-up">
+    
+    <div class="modal-header">
+      <h3>Select Location on Map</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      
+      <div class="map-controls">
+        <button class="btn-detect" (click)="detectCurrentLocation()" [disabled]="isLocating">
+          📍 {{ isLocating ? 'Detecting...' : 'Detect Current Location' }}
+        </button>
+        <span class="hint-text">Or drag the pin to your exact location</span>
+      </div>
+
+      <div class="error-banner" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="map-container">
+        <!-- The leaflet map will render inside this div -->
+        <div #mapElement class="leaflet-map"></div>
+        
+        <div class="fetching-overlay" *ngIf="isFetchingAddress">
+          <span class="spinner"></span> Fetching address...
+        </div>
+      </div>
+
+      <div class="selected-address-card" *ngIf="currentSelection">
+        <h4>Selected Address</h4>
+        <p>{{ currentSelection.fullAddress }}</p>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn-primary" (click)="confirmSelection()" [disabled]="!currentSelection || isFetchingAddress">
+        Confirm Location
+      </button>
+    </div>
+
+  </div>
+</div>
