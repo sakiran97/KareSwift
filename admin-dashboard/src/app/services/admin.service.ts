@@ -213,6 +213,6 @@ export class AdminService {
   }
 
   sendChatMessage(orderId: number, message: string): Observable<any> {
-    return this.http.post<any>(`/api/chat/order/${orderId}`, { message });
+    return this.http.post<any>(`/api/chat/order/${orderId}`, { message, sender: 'admin' });
   }
 }

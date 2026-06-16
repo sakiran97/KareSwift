@@ -55,9 +55,47 @@
   }
 
   .brand-name {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 800;
+    color: var(--color-primary);
     letter-spacing: -0.5px;
+  }
+}
+
+.location-selector {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .loc-title {
+    margin-bottom: 2px;
+  }
+
+  .loc-address {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #666);
+    
+    .truncate-text {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .chevron {
+      font-size: 0.7rem;
+    }
   }
 }
 

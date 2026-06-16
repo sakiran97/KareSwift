@@ -6,12 +6,14 @@ import { ToastContainer } from './components/toast/toast-container';
 import { AiAssistantComponent } from './shared/ai-assistant/ai-assistant';
 import { AuthService } from './services/auth.service';
 import { ToastService } from './services/toast.service';
+import { LocationService } from './services/location.service';
+import { LocationModal } from './shared/location-modal/location-modal';
 import { SseService, SseEvent } from './services/sse.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer, ToastContainer, AiAssistantComponent],
+  imports: [RouterOutlet, Navbar, Footer, ToastContainer, AiAssistantComponent, LocationModal, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -24,6 +26,9 @@ export class App implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private sseService = inject(SseService);
+  public locationService = inject(LocationService);
+  
+  showLocationModal = false;
   private router = inject(Router);
   private ngZone = inject(NgZone);
 
@@ -46,6 +51,13 @@ export class App implements OnInit, OnDestroy {
         this.toastService.show(`${event.data.title}: ${event.data.body}`, 'info', 6000);
       }
     });
+
+    // Auto popup location modal if no location is set
+    setTimeout(() => {
+      if (!this.locationService.currentLocation()) {
+        this.showLocationModal = true;
+      }
+    }, 1000);
   }
 
   ngOnDestroy() {

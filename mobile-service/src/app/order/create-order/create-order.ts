@@ -5,6 +5,7 @@ import { OrderService, OrderResponse } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '../../services/app-config.service';
+import { LocationService } from '../../services/location.service';
 
 @Component({
   selector: 'app-create-order',
@@ -77,7 +78,8 @@ export class CreateOrder implements OnInit {
     private router: Router,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    public config: AppConfigService
+    public config: AppConfigService,
+    private locationService: LocationService
   ) {
     this.orderForm = this.fb.group({
       brand: ['', Validators.required],
@@ -463,7 +465,9 @@ export class CreateOrder implements OnInit {
       scheduledSlot,
       travelCharge: this.travelCharge,
       serviceAreaId: this.serviceAreaId,
-      diagnosticPhotos: this.uploadedImages
+      diagnosticPhotos: this.uploadedImages,
+      latitude: this.locationService.currentLocation()?.lat || null,
+      longitude: this.locationService.currentLocation()?.lng || null
     };
 
     this.orderService.createOrder('1', payload).subscribe({

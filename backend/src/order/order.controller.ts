@@ -40,6 +40,8 @@ export class OrderController {
       diagnosticPhotos?: string[];
       travelCharge?: number;
       serviceAreaId?: number;
+      latitude?: number;
+      longitude?: number;
     }
   ) {
     const userId = req.user?.id ? Number(req.user.id) : createOrderDto.userId;

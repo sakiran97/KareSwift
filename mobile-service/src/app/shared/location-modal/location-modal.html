@@ -1,0 +1,56 @@
+<div class="modal-backdrop">
+  <div class="modal-content animate-fade-up">
+    
+    <div class="modal-header">
+      <div class="header-titles">
+        <h3>Change Location</h3>
+      </div>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="actions-row">
+        <button class="btn-detect" (click)="detectLocation()" [disabled]="isDetecting()">
+          <span class="icon">📍</span>
+          {{ isDetecting() ? 'Detecting...' : 'Detect my location' }}
+        </button>
+        
+        <div class="divider">
+          <span>OR</span>
+        </div>
+        
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            (ngModelChange)="onSearchChange()"
+            placeholder="Search delivery location" 
+            class="search-input"
+          />
+        </div>
+      </div>
+
+      <div class="search-results" *ngIf="searchQuery.length > 0">
+        <div class="loading-state" *ngIf="isSearching()">
+          Searching...
+        </div>
+        
+        <div class="result-list" *ngIf="!isSearching() && searchResults().length > 0">
+          <div class="result-item" *ngFor="let result of searchResults()" (click)="selectLocation(result)">
+            <div class="result-icon">📍</div>
+            <div class="result-details">
+              <h4>{{ result.display_name.split(',')[0] }}</h4>
+              <p>{{ result.display_name }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="!isSearching() && searchResults().length === 0 && searchQuery.length >= 3">
+          No locations found for "{{ searchQuery }}"
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

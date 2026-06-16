@@ -168,7 +168,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   repairNotes: 'repairNotes',
   serviceAreaId: 'serviceAreaId',
-  travelCharge: 'travelCharge'
+  travelCharge: 'travelCharge',
+  latitude: 'latitude',
+  longitude: 'longitude'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {

@@ -5484,6 +5484,8 @@ export namespace Prisma {
     finalAmount: Decimal | null
     serviceAreaId: number | null
     travelCharge: Decimal | null
+    latitude: number | null
+    longitude: number | null
   }
 
   export type OrderSumAggregateOutputType = {
@@ -5495,6 +5497,8 @@ export namespace Prisma {
     finalAmount: Decimal | null
     serviceAreaId: number | null
     travelCharge: Decimal | null
+    latitude: number | null
+    longitude: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -5521,6 +5525,8 @@ export namespace Prisma {
     repairNotes: string | null
     serviceAreaId: number | null
     travelCharge: Decimal | null
+    latitude: number | null
+    longitude: number | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -5547,6 +5553,8 @@ export namespace Prisma {
     repairNotes: string | null
     serviceAreaId: number | null
     travelCharge: Decimal | null
+    latitude: number | null
+    longitude: number | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -5574,6 +5582,8 @@ export namespace Prisma {
     repairNotes: number
     serviceAreaId: number
     travelCharge: number
+    latitude: number
+    longitude: number
     _all: number
   }
 
@@ -5587,6 +5597,8 @@ export namespace Prisma {
     finalAmount?: true
     serviceAreaId?: true
     travelCharge?: true
+    latitude?: true
+    longitude?: true
   }
 
   export type OrderSumAggregateInputType = {
@@ -5598,6 +5610,8 @@ export namespace Prisma {
     finalAmount?: true
     serviceAreaId?: true
     travelCharge?: true
+    latitude?: true
+    longitude?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -5624,6 +5638,8 @@ export namespace Prisma {
     repairNotes?: true
     serviceAreaId?: true
     travelCharge?: true
+    latitude?: true
+    longitude?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -5650,6 +5666,8 @@ export namespace Prisma {
     repairNotes?: true
     serviceAreaId?: true
     travelCharge?: true
+    latitude?: true
+    longitude?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -5677,6 +5695,8 @@ export namespace Prisma {
     repairNotes?: true
     serviceAreaId?: true
     travelCharge?: true
+    latitude?: true
+    longitude?: true
     _all?: true
   }
 
@@ -5791,6 +5811,8 @@ export namespace Prisma {
     repairNotes: string | null
     serviceAreaId: number | null
     travelCharge: Decimal | null
+    latitude: number | null
+    longitude: number | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -5837,6 +5859,8 @@ export namespace Prisma {
     repairNotes?: boolean
     serviceAreaId?: boolean
     travelCharge?: boolean
+    latitude?: boolean
+    longitude?: boolean
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
     chatMessages?: boolean | Order$chatMessagesArgs<ExtArgs>
     device?: boolean | DeviceDefaultArgs<ExtArgs>
@@ -5873,6 +5897,8 @@ export namespace Prisma {
     repairNotes?: boolean
     serviceAreaId?: boolean
     travelCharge?: boolean
+    latitude?: boolean
+    longitude?: boolean
     device?: boolean | DeviceDefaultArgs<ExtArgs>
     serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -5904,6 +5930,8 @@ export namespace Prisma {
     repairNotes?: boolean
     serviceAreaId?: boolean
     travelCharge?: boolean
+    latitude?: boolean
+    longitude?: boolean
     device?: boolean | DeviceDefaultArgs<ExtArgs>
     serviceArea?: boolean | Order$serviceAreaArgs<ExtArgs>
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
@@ -5935,9 +5963,11 @@ export namespace Prisma {
     repairNotes?: boolean
     serviceAreaId?: boolean
     travelCharge?: boolean
+    latitude?: boolean
+    longitude?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge" | "latitude" | "longitude", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
     chatMessages?: boolean | Order$chatMessagesArgs<ExtArgs>
@@ -5999,6 +6029,8 @@ export namespace Prisma {
       repairNotes: string | null
       serviceAreaId: number | null
       travelCharge: Prisma.Decimal | null
+      latitude: number | null
+      longitude: number | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -6454,6 +6486,8 @@ export namespace Prisma {
     readonly repairNotes: FieldRef<"Order", 'String'>
     readonly serviceAreaId: FieldRef<"Order", 'Int'>
     readonly travelCharge: FieldRef<"Order", 'Decimal'>
+    readonly latitude: FieldRef<"Order", 'Float'>
+    readonly longitude: FieldRef<"Order", 'Float'>
   }
     
 
@@ -16102,7 +16136,9 @@ export namespace Prisma {
     paymentMethod: 'paymentMethod',
     repairNotes: 'repairNotes',
     serviceAreaId: 'serviceAreaId',
-    travelCharge: 'travelCharge'
+    travelCharge: 'travelCharge',
+    latitude: 'latitude',
+    longitude: 'longitude'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -16548,6 +16584,8 @@ export namespace Prisma {
     repairNotes?: StringNullableFilter<"Order"> | string | null
     serviceAreaId?: IntNullableFilter<"Order"> | number | null
     travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    latitude?: FloatNullableFilter<"Order"> | number | null
+    longitude?: FloatNullableFilter<"Order"> | number | null
     notifications?: NotificationListRelationFilter
     chatMessages?: ChatMessageListRelationFilter
     device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
@@ -16583,6 +16621,8 @@ export namespace Prisma {
     repairNotes?: SortOrderInput | SortOrder
     serviceAreaId?: SortOrderInput | SortOrder
     travelCharge?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     notifications?: NotificationOrderByRelationAggregateInput
     chatMessages?: ChatMessageOrderByRelationAggregateInput
     device?: DeviceOrderByWithRelationInput
@@ -16621,6 +16661,8 @@ export namespace Prisma {
     repairNotes?: StringNullableFilter<"Order"> | string | null
     serviceAreaId?: IntNullableFilter<"Order"> | number | null
     travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    latitude?: FloatNullableFilter<"Order"> | number | null
+    longitude?: FloatNullableFilter<"Order"> | number | null
     notifications?: NotificationListRelationFilter
     chatMessages?: ChatMessageListRelationFilter
     device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
@@ -16656,6 +16698,8 @@ export namespace Prisma {
     repairNotes?: SortOrderInput | SortOrder
     serviceAreaId?: SortOrderInput | SortOrder
     travelCharge?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -16691,6 +16735,8 @@ export namespace Prisma {
     repairNotes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     serviceAreaId?: IntNullableWithAggregatesFilter<"Order"> | number | null
     travelCharge?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"Order"> | number | null
   }
 
   export type ReviewWhereInput = {
@@ -17465,6 +17511,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -17500,6 +17548,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -17526,6 +17576,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -17561,6 +17613,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -17592,6 +17646,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -17614,6 +17670,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -17641,6 +17699,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type ReviewCreateInput = {
@@ -18655,6 +18715,8 @@ export namespace Prisma {
     repairNotes?: SortOrder
     serviceAreaId?: SortOrder
     travelCharge?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -18666,6 +18728,8 @@ export namespace Prisma {
     finalAmount?: SortOrder
     serviceAreaId?: SortOrder
     travelCharge?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -18692,6 +18756,8 @@ export namespace Prisma {
     repairNotes?: SortOrder
     serviceAreaId?: SortOrder
     travelCharge?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -18718,6 +18784,8 @@ export namespace Prisma {
     repairNotes?: SortOrder
     serviceAreaId?: SortOrder
     travelCharge?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -18729,6 +18797,8 @@ export namespace Prisma {
     finalAmount?: SortOrder
     serviceAreaId?: SortOrder
     travelCharge?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -20166,6 +20236,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -20199,6 +20271,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -20325,6 +20399,8 @@ export namespace Prisma {
     repairNotes?: StringNullableFilter<"Order"> | string | null
     serviceAreaId?: IntNullableFilter<"Order"> | number | null
     travelCharge?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    latitude?: FloatNullableFilter<"Order"> | number | null
+    longitude?: FloatNullableFilter<"Order"> | number | null
   }
 
   export type OrderCreateWithoutDeviceInput = {
@@ -20347,6 +20423,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
@@ -20380,6 +20458,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -20432,6 +20512,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -20465,6 +20547,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -20923,6 +21007,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -20957,6 +21043,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
@@ -20998,6 +21086,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -21032,6 +21122,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
@@ -21057,6 +21149,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
@@ -21091,6 +21185,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
@@ -21162,6 +21258,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
@@ -21196,6 +21294,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
@@ -21257,6 +21357,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -21291,6 +21393,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -21332,6 +21436,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -21366,6 +21472,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -21457,6 +21565,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
@@ -21490,6 +21600,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
@@ -21542,6 +21654,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationCreateNestedManyWithoutOrderInput
     device: DeviceCreateNestedOneWithoutOrdersInput
     serviceArea?: ServiceAreaCreateNestedOneWithoutOrdersInput
@@ -21576,6 +21690,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
     notifications?: NotificationUncheckedCreateNestedManyWithoutOrderInput
     review?: ReviewUncheckedCreateNestedOneWithoutOrderInput
     warranty?: WarrantyUncheckedCreateNestedOneWithoutOrderInput
@@ -21617,6 +21733,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
@@ -21651,6 +21769,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
     warranty?: WarrantyUncheckedUpdateOneWithoutOrderNestedInput
@@ -21706,6 +21826,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -21804,6 +21926,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -21837,6 +21961,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -21867,6 +21993,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type OrderCreateManyDeviceInput = {
@@ -21893,6 +22021,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
   }
 
   export type OrderUpdateWithoutDeviceInput = {
@@ -21915,6 +22045,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     serviceArea?: ServiceAreaUpdateOneWithoutOrdersNestedInput
@@ -21948,6 +22080,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -21978,6 +22112,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type OrderCreateManyServiceCategoryInput = {
@@ -22004,6 +22140,8 @@ export namespace Prisma {
     repairNotes?: string | null
     serviceAreaId?: number | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
   }
 
   export type OrderUpdateWithoutServiceCategoryInput = {
@@ -22026,6 +22164,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -22059,6 +22199,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -22089,6 +22231,8 @@ export namespace Prisma {
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAreaId?: NullableIntFieldUpdateOperationsInput | number | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type NotificationCreateManyOrderInput = {
@@ -22185,6 +22329,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     repairNotes?: string | null
     travelCharge?: Decimal | DecimalJsLike | number | string | null
+    latitude?: number | null
+    longitude?: number | null
   }
 
   export type OrderUpdateWithoutServiceAreaInput = {
@@ -22207,6 +22353,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutOrderNestedInput
     device?: DeviceUpdateOneRequiredWithoutOrdersNestedInput
@@ -22240,6 +22388,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     notifications?: NotificationUncheckedUpdateManyWithoutOrderNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutOrderNestedInput
     review?: ReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -22270,6 +22420,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     repairNotes?: NullableStringFieldUpdateOperationsInput | string | null
     travelCharge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
 

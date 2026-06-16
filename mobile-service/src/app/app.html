@@ -1,7 +1,12 @@
 <app-toast-container></app-toast-container>
-<app-navbar></app-navbar>
+<app-navbar (openLocation)="showLocationModal = true"></app-navbar>
 <main class="main">
   <router-outlet></router-outlet>
 </main>
 <app-ai-assistant></app-ai-assistant>
 <app-footer></app-footer>
+
+<app-location-modal 
+  *ngIf="showLocationModal" 
+  (close)="showLocationModal = false">
+</app-location-modal>

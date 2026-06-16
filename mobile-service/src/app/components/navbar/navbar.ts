@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject, Output, EventEmitter } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { SseService, SseEvent } from '../../services/sse.service';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
+import { LocationService } from '../../services/location.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,6 +23,10 @@ export class Navbar implements OnInit, OnDestroy {
   isNotificationOpen = false;
   notifications: any[] = [];
   unreadNotificationsCount = 0;
+
+  @Output() openLocation = new EventEmitter<void>();
+
+  public locationService = inject(LocationService);
 
   private sseSub?: Subscription;
 
@@ -162,5 +167,9 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sseSub?.unsubscribe();
+  }
+
+  triggerLocationModal() {
+    this.openLocation.emit();
   }
 }

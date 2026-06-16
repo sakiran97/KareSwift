@@ -209,7 +209,7 @@ export class TrackOrder implements OnInit, OnDestroy {
     const msg = this.newMessage;
     this.newMessage = ''; // clear instantly
     
-    this.http.post<any>(`/api/chat/order/${cleanId}`, { message: msg }).subscribe({
+    this.http.post<any>(`/api/chat/order/${cleanId}`, { message: msg, sender: 'customer' }).subscribe({
       next: (res) => {
         // SSE will push it, but we can optimistically add it if SSE takes time
         const exists = this.chatMessages.find(m => m.id === res.id);

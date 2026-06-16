@@ -33,8 +33,10 @@ export class OrderService {
     travelCharge?: number;
     serviceAreaId?: number;
     mobileNumber?: string;
+    latitude?: number;
+    longitude?: number;
   }): Promise<any> {
-    const { userId, deviceId, serviceCategoryId, estimatedTime, address, mobileNumber, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId } = data;
+    const { userId, deviceId, serviceCategoryId, estimatedTime, address, mobileNumber, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId, latitude, longitude } = data;
     
     if (!this.useMock) {
       try {
@@ -52,6 +54,8 @@ export class OrderService {
             status: 'BOOKED',
             travelCharge: travelCharge !== undefined ? travelCharge : 0,
             serviceAreaId: serviceAreaId || null,
+            latitude: latitude || null,
+            longitude: longitude || null,
           },
           include: {
             device: true,
@@ -108,6 +112,8 @@ export class OrderService {
       diagnosticPhotos: diagnosticPhotos || [],
       travelCharge: travelCharge || 0,
       serviceAreaId: serviceAreaId || null,
+      latitude: latitude || null,
+      longitude: longitude || null,
       device: { brand: 'Apple', model: 'iPhone 15' },
       serviceCategory: { name: 'Screen Replacement' },
       user: { name: 'Customer', phone: '1234567890' }

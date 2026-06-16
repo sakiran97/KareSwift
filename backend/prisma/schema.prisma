@@ -61,6 +61,8 @@ model Order {
   repairNotes          String?
   serviceAreaId        Int?
   travelCharge         Decimal?        @db.Decimal(10, 2)
+  latitude             Float?
+  longitude            Float?
   notifications        Notification[]
   chatMessages         ChatMessage[]
   device               Device          @relation(fields: [deviceId], references: [id])

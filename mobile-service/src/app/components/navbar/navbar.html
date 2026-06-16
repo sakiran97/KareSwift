@@ -8,6 +8,17 @@
       <span class="brand-name">KareSwift</span>
     </a>
 
+    <!-- Location Selector (Blinkit Style) -->
+    <div class="location-selector" (click)="triggerLocationModal()">
+      <div class="loc-title">
+        <strong style="font-size: 1rem; color: var(--text-primary); font-weight: 800;">Doorstep Repair</strong>
+      </div>
+      <div class="loc-address">
+        <span class="truncate-text">{{ locationService.currentLocation()?.address || 'Select Location' }}</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+
     <!-- Desktop Navigation -->
     <nav class="desktop-nav">
       <!-- Customer Links (Logged In) -->
