@@ -14,9 +14,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  // Don't attach token to public auth endpoints (login, register, OTP)
+  // Don't attach token to public auth endpoints or external APIs like nominatim
   const isPublicAuth = PUBLIC_AUTH_PATHS.some(p => req.url.includes(p));
-  if (isPublicAuth) {
+  const isExternalApi = req.url.startsWith('http');
+  if (isPublicAuth || isExternalApi) {
     return next(req);
   }
 

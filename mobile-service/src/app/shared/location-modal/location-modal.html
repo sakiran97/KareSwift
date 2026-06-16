@@ -14,6 +14,9 @@
           <span class="icon">📍</span>
           {{ isDetecting() ? 'Detecting...' : 'Detect my location' }}
         </button>
+        <button class="btn-detect" (click)="openMapSelector()" style="background: rgba(14, 165, 233, 0.1); border-color: rgba(14, 165, 233, 0.3); color: #0ea5e9;">
+          <span class="icon">🗺️</span> Select on Map
+        </button>
         
         <div class="divider">
           <span>OR</span>
@@ -54,3 +57,10 @@
     </div>
   </div>
 </div>
+
+<!-- Map Selector Modal Overlay -->
+<app-map-selector 
+  *ngIf="showMapModal" 
+  (selectionConfirmed)="handleMapSelection($event)"
+  (close)="showMapModal = false">
+</app-map-selector>

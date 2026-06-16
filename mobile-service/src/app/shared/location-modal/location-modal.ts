@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocationService } from '../../services/location.service';
 
+import { MapSelector, MapSelection } from '../map-selector/map-selector';
+
 @Component({
   selector: 'app-location-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MapSelector],
   templateUrl: './location-modal.html',
   styleUrls: ['./location-modal.scss']
 })
@@ -17,6 +19,7 @@ export class LocationModal {
   searchResults = signal<any[]>([]);
   isDetecting = signal(false);
   isSearching = signal(false);
+  showMapModal = false;
 
   constructor(private locationService: LocationService) {}
 
@@ -86,6 +89,20 @@ export class LocationModal {
     }
 
     this.locationService.setLocation({ address: cleanAddress, lat, lng });
+    this.closeModal();
+  }
+
+  openMapSelector() {
+    this.showMapModal = true;
+  }
+
+  handleMapSelection(selection: MapSelection) {
+    this.showMapModal = false;
+    this.locationService.setLocation({ 
+      address: selection.fullAddress || `${selection.street}, ${selection.area}`, 
+      lat: selection.lat, 
+      lng: selection.lng 
+    });
     this.closeModal();
   }
 }
