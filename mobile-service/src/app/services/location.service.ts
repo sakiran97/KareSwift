@@ -44,7 +44,7 @@ export class LocationService {
 
   // Reverse geocoding using Nominatim
   reverseGeocode(lat: number, lng: number): Observable<string> {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&email=admin@kareswift.com`;
     return this.http.get<any>(url).pipe(
       map((res: any) => {
         if (res && res.address) {
@@ -65,7 +65,7 @@ export class LocationService {
   // Search locations
   searchLocation(query: string): Observable<any[]> {
     if (!query.trim()) return of([]);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=in`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=in&email=admin@kareswift.com`;
     return this.http.get<any[]>(url).pipe(
       catchError(() => of([]))
     );

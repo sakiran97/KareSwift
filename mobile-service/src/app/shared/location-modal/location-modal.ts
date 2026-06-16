@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LocationService } from '../../services/location.service';
 
 import { MapSelector, MapSelection } from '../map-selector/map-selector';
@@ -12,7 +14,7 @@ import { MapSelector, MapSelection } from '../map-selector/map-selector';
   templateUrl: './location-modal.html',
   styleUrls: ['./location-modal.scss']
 })
-export class LocationModal {
+export class LocationModal implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
   searchQuery = '';
@@ -21,7 +23,25 @@ export class LocationModal {
   isSearching = signal(false);
   showMapModal = false;
 
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
+
   constructor(private locationService: LocationService) {}
+
+  ngOnInit() {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      this.executeSearch(query);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
 
   closeModal() {
     this.close.emit();
@@ -64,9 +84,12 @@ export class LocationModal {
       this.searchResults.set([]);
       return;
     }
-
     this.isSearching.set(true);
-    this.locationService.searchLocation(this.searchQuery).subscribe({
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  private executeSearch(query: string) {
+    this.locationService.searchLocation(query).subscribe({
       next: (results: any[]) => {
         this.searchResults.set(results);
         this.isSearching.set(false);
