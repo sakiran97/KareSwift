@@ -42,7 +42,7 @@ export class ServiceAreasComponent implements OnInit {
     this.loading.set(true);
     this.error.set('');
     this.adminService.getServiceAreas().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.areas.set(Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []));
         this.loading.set(false);
       },
