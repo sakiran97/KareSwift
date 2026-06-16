@@ -1,4 +1,5 @@
 import { Component, signal, OnInit, OnDestroy, NgZone, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
