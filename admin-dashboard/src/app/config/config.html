@@ -72,7 +72,7 @@
                 class="form-control-text font-mono" 
                 [(ngModel)]="item.pendingValue">
               <div class="qr-preview" *ngIf="item.pendingValue">
-                <img [src]="item.pendingValue" alt="QR Preview" (error)="qrImg.src='assets/qr-code-placeholder.png'" #qrImg>
+                <img [src]="item.pendingValue" alt="QR Preview" (error)="qrImg.style.display='none'" (load)="qrImg.style.display='block'" #qrImg>
               </div>
             </div>
 
