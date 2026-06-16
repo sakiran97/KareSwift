@@ -10,8 +10,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean | UrlTree {
     const user = this.auth.getCurrentUser();
-    const token = this.auth.getToken();
-    if (!user || !token) {
+    if (!user) {
       return this.router.createUrlTree(['/auth/login']);
     }
     return true;
