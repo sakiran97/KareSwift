@@ -6,12 +6,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '../../services/app-config.service';
 import { LocationService } from '../../services/location.service';
-import { MapSelector, MapSelection } from '../../shared/map-selector/map-selector';
 
 @Component({
   selector: 'app-create-order',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MapSelector],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './create-order.html',
   styleUrl: './create-order.scss',
 })
@@ -40,7 +39,6 @@ export class CreateOrder implements OnInit {
   // Custom brand/model state
   isCustomModel = false;
   showNewAddressForm = false;
-  showMapSelectorModal = false;
 
   // Selected address availability state
   isServiceAvailable = false;
@@ -394,24 +392,6 @@ export class CreateOrder implements OnInit {
       },
       { timeout: 10000 }
     );
-  }
-
-  openMapSelector(): void {
-    this.showMapSelectorModal = true;
-  }
-
-  handleMapSelection(selection: MapSelection): void {
-    this.showMapSelectorModal = false;
-    this.addressForm.patchValue({
-      street: selection.street,
-      area: selection.area,
-      city: selection.city,
-      state: selection.state,
-      pincode: selection.pincode
-    });
-    this.addressSuccess = 'Address auto-filled from map selection! Please review and add House Number.';
-    setTimeout(() => this.addressSuccess = null, 5000);
-    this.cdr.detectChanges();
   }
 
   nextStep(): void {

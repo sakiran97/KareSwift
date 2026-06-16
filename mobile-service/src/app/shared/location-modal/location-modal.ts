@@ -5,12 +5,10 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LocationService } from '../../services/location.service';
 
-import { MapSelector, MapSelection } from '../map-selector/map-selector';
-
 @Component({
   selector: 'app-location-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, MapSelector],
+  imports: [CommonModule, FormsModule],
   templateUrl: './location-modal.html',
   styleUrls: ['./location-modal.scss']
 })
@@ -21,7 +19,6 @@ export class LocationModal implements OnInit, OnDestroy {
   searchResults = signal<any[]>([]);
   isDetecting = signal(false);
   isSearching = signal(false);
-  showMapModal = false;
 
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
@@ -29,10 +26,10 @@ export class LocationModal implements OnInit, OnDestroy {
   constructor(private locationService: LocationService) {}
 
   ngOnInit() {
-    this.searchSubscription = this.searchSubject.pipe(
+    this.searchSubscription = this.searchSubject.asObservable().pipe(
       debounceTime(800),
       distinctUntilChanged()
-    ).subscribe(query => {
+    ).subscribe((query: string) => {
       this.executeSearch(query);
     });
   }
@@ -112,20 +109,6 @@ export class LocationModal implements OnInit, OnDestroy {
     }
 
     this.locationService.setLocation({ address: cleanAddress, lat, lng });
-    this.closeModal();
-  }
-
-  openMapSelector() {
-    this.showMapModal = true;
-  }
-
-  handleMapSelection(selection: MapSelection) {
-    this.showMapModal = false;
-    this.locationService.setLocation({ 
-      address: selection.fullAddress || `${selection.street}, ${selection.area}`, 
-      lat: selection.lat, 
-      lng: selection.lng 
-    });
     this.closeModal();
   }
 }

@@ -208,16 +208,10 @@
             <div *ngIf="addressError" class="error-banner">{{ addressError }}</div>
             <div *ngIf="addressSuccess" class="success-banner">{{ addressSuccess }}</div>
             
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-              <button type="button" class="btn-secondary" (click)="autoDetectLocation()" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">
-                <span *ngIf="!isDetectingLocation">📍 Auto-Detect</span>
-                <span *ngIf="isDetectingLocation">Locating...</span>
-              </button>
-              
-              <button type="button" class="btn-secondary" (click)="openMapSelector()" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(14, 165, 233, 0.1); border-color: rgba(14, 165, 233, 0.3); color: #0ea5e9;">
-                <span>🗺️ Select on Map</span>
-              </button>
-            </div>
+            <button type="button" class="btn-secondary" (click)="autoDetectLocation()" style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; width: 100%; justify-content: center; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981;">
+              <span *ngIf="!isDetectingLocation">📍 Auto-Detect Current Location</span>
+              <span *ngIf="isDetectingLocation">Locating... Please wait</span>
+            </button>
 
             <div [formGroup]="addressForm" class="address-grid-inputs">
               <div class="form-group">
@@ -428,10 +422,3 @@
     </div>
   </div>
 </div>
-
-<!-- Map Selector Modal -->
-<app-map-selector 
-  *ngIf="showMapSelectorModal" 
-  (selectionConfirmed)="handleMapSelection($event)"
-  (close)="showMapSelectorModal = false">
-</app-map-selector>
