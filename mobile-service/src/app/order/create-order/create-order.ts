@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { OrderService, OrderResponse } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from '../../services/app-config.service';
 
 @Component({
   selector: 'app-create-order',
@@ -23,6 +24,7 @@ export class CreateOrder implements OnInit {
   successMessage: string | null = null;
   addressError: string | null = null;
   addressSuccess: string | null = null;
+  bookingDisabled = false;
 
   // Catalog data
   brands = ['Apple', 'Samsung', 'OnePlus', 'Vivo', 'Oppo', 'Xiaomi', 'Realme', 'Other'];
@@ -73,7 +75,8 @@ export class CreateOrder implements OnInit {
     private orderService: OrderService,
     private router: Router,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public config: AppConfigService
   ) {
     this.orderForm = this.fb.group({
       brand: ['', Validators.required],
@@ -102,11 +105,21 @@ export class CreateOrder implements OnInit {
   }
 
   ngOnInit(): void {
-    // Set minDate to current date to block past dates
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
+    if (!this.config.getBoolean('booking_enabled', true)) {
+      this.bookingDisabled = true;
+      return;
+    }
+
+    const allowSameDay = this.config.getBoolean('same_day_booking', true);
+    
+    // Set minDate
+    const minD = new Date();
+    if (!allowSameDay) {
+      minD.setDate(minD.getDate() + 1);
+    }
+    const yyyy = minD.getFullYear();
+    const mm = String(minD.getMonth() + 1).padStart(2, '0');
+    const dd = String(minD.getDate()).padStart(2, '0');
     this.minDate = `${yyyy}-${mm}-${dd}`;
 
     // Set default date to tomorrow

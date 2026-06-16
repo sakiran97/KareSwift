@@ -35,7 +35,14 @@
     </div>
   </div>
 
-  <div class="grid-layout">
+  <div class="grid-layout" *ngIf="bookingDisabled">
+    <div class="form-card glass-card" style="text-align: center; padding: 40px;">
+      <h2>Bookings Temporarily Disabled</h2>
+      <p style="margin-top: 15px; color: var(--text-secondary);">We are currently not accepting new bookings. Please try again later.</p>
+    </div>
+  </div>
+
+  <div class="grid-layout" *ngIf="!bookingDisabled">
     <div class="form-card glass-card">
       
       <!-- Global Error Banner -->

@@ -10,10 +10,8 @@ export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
   /**
-   * GET /config — List all config entries (admin only)
+   * GET /config — List all config entries
    */
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Get()
   async findAll() {
     return this.configService.findAll();

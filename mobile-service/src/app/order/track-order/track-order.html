@@ -40,7 +40,7 @@
     <div class="qr-code-display-container" *ngIf="paymentMethod?.toLowerCase() === 'qr'">
       <p>Scan this QR code to pay the finalized amount of <strong>₹{{ finalAmount }}</strong>:</p>
       <div class="qr-code-image-wrapper">
-        <img src="assets/qr-code-placeholder.png" alt="Payment QR Code" />
+        <img [src]="config.get('qr_image_url', 'assets/qr-code-placeholder.png')" alt="Payment QR Code" />
       </div>
     </div>
 

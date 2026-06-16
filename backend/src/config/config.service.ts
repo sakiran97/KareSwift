@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { EventsService } from '../events/events.service';
 
 @Injectable()
 export class ConfigService {
@@ -16,7 +17,7 @@ export class ConfigService {
     review_mandatory: { value: 'false', description: 'Require reviews after successful repair completion' },
   };
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private eventsService: EventsService) {}
 
   /**
    * Get a single config value by key. Returns the value string, or the default if not found.
@@ -105,6 +106,7 @@ export class ConfigService {
           },
           select: { key: true, value: true, description: true },
         });
+        this.eventsService.emit('config-updated', updated);
         return updated;
       } catch (err: any) {
         if (this.isDbOffline(err)) {
@@ -117,7 +119,9 @@ export class ConfigService {
 
     if (!this.mockConfig[key]) throw new NotFoundException(`Config key '${key}' not found`);
     this.mockConfig[key].value = value;
-    return { key, value, description: this.mockConfig[key].description || null };
+    const updated = { key, value, description: this.mockConfig[key].description || null };
+    this.eventsService.emit('config-updated', updated);
+    return updated;
   }
 
   private isDbOffline(err: any): boolean {

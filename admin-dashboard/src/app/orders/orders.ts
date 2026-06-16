@@ -15,6 +15,11 @@ export class OrdersComponent implements OnInit {
   orders = signal<any[]>([]);
   loading = signal(true);
   error = signal('');
+  
+  // Payment Options Config
+  upiEnabled = true;
+  cashEnabled = true;
+  qrEnabled = true;
 
   // Finalize Price Modal State
   showFinalizeModal = signal(false);
@@ -36,7 +41,23 @@ export class OrdersComponent implements OnInit {
   constructor(private adminService: AdminService) {}
 
   ngOnInit() {
+    this.loadConfigs();
     this.loadOrders();
+  }
+
+  loadConfigs() {
+    this.adminService.getConfigs().subscribe({
+      next: (configs: any[]) => {
+        const upi = configs.find(c => c.key === 'upi_enabled');
+        const cash = configs.find(c => c.key === 'cash_enabled');
+        const qr = configs.find(c => c.key === 'qr_enabled');
+        
+        if (upi) this.upiEnabled = upi.value === 'true';
+        if (cash) this.cashEnabled = cash.value === 'true';
+        if (qr) this.qrEnabled = qr.value === 'true';
+      },
+      error: () => {}
+    });
   }
 
   loadOrders() {
@@ -69,7 +90,13 @@ export class OrdersComponent implements OnInit {
   openFinalizeModal(orderId: number) {
     this.finalizeOrderId.set(orderId);
     this.finalAmount = 0;
-    this.paymentMethod = 'upi';
+    
+    // Default to first enabled method
+    if (this.upiEnabled) this.paymentMethod = 'upi';
+    else if (this.cashEnabled) this.paymentMethod = 'cash';
+    else if (this.qrEnabled) this.paymentMethod = 'qr';
+    else this.paymentMethod = 'other';
+    
     this.repairNotes = '';
     this.showFinalizeModal.set(true);
   }

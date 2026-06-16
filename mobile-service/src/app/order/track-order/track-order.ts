@@ -5,6 +5,7 @@ import { SseService, SseEvent } from '../../services/sse.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from '../../services/app-config.service';
 
 @Component({
   selector: 'app-track-order',
@@ -46,7 +47,8 @@ export class TrackOrder implements OnInit, OnDestroy {
     private orderService: OrderService,
     private sse: SseService,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public config: AppConfigService
   ) {}
 
   ngOnInit(): void {

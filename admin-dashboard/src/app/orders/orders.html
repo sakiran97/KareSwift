@@ -131,9 +131,10 @@
         <div class="form-group">
           <label>Payment Method</label>
           <select [(ngModel)]="paymentMethod">
-            <option value="upi">UPI</option>
-            <option value="cash">Cash</option>
-            <option value="qr">QR Code (Static Image)</option>
+            <option *ngIf="upiEnabled" value="upi">UPI</option>
+            <option *ngIf="cashEnabled" value="cash">Cash</option>
+            <option *ngIf="qrEnabled" value="qr">QR Code (Static Image)</option>
+            <option *ngIf="!upiEnabled && !cashEnabled && !qrEnabled" value="other">Other</option>
           </select>
         </div>
         <div class="form-group">
