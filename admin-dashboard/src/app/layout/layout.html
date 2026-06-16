@@ -85,9 +85,17 @@
       <div class="page-title">
         <h1>Administrative Dashboard</h1>
       </div>
-      <div class="system-status">
-        <span class="status-indicator online"></span>
-        <span class="status-label">System Active</span>
+      <div class="system-status" style="display: flex; align-items: center; gap: 16px;">
+        <button class="bell-btn" (click)="toggleNotifications()" title="Notifications" style="background: none; border: none; color: #fff; cursor: pointer; position: relative;">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
+            <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
+          </svg>
+          <span class="bell-badge" *ngIf="unreadNotificationsCount > 0" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">{{ unreadNotificationsCount }}</span>
+        </button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="status-indicator online"></span>
+          <span class="status-label">System Active</span>
+        </div>
       </div>
     </header>
 
@@ -104,5 +112,41 @@
       </div>
       <button (click)="dismissAlert()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; margin-left: auto;">×</button>
     </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" [class.open]="isNotificationOpen">
+      <header class="panel-header">
+        <h3>Notifications</h3>
+        <div class="panel-actions">
+          <button class="mark-all-read clear-all" (click)="clearAllNotifications($event)" *ngIf="notifications.length > 0">Clear All</button>
+          <button class="mark-all-read" (click)="markAllNotificationsRead()" *ngIf="unreadNotificationsCount > 0">Mark all read</button>
+          <button class="close-panel-btn" (click)="toggleNotifications()">×</button>
+        </div>
+      </header>
+
+      <div class="panel-body">
+        <div class="no-notifications" *ngIf="notifications.length === 0">
+          <div class="bell-icon-empty">🔔</div>
+          <p>All caught up! No notifications yet.</p>
+        </div>
+
+        <div class="notification-item" *ngFor="let note of notifications" [class.unread]="!note.isRead">
+          <div class="note-header">
+            <span class="note-title">{{ note.title }}</span>
+            <span class="note-time">{{ note.createdAt | date:'short' }}</span>
+          </div>
+          <p class="note-body">{{ note.body }}</p>
+          <div class="note-actions" style="display: flex; gap: 8px; margin-top: 8px;">
+            <button class="btn-read-toggle" *ngIf="!note.isRead" (click)="markNotificationRead(note, $event)">
+              Mark Read
+            </button>
+            <button class="btn-read-toggle btn-delete" (click)="clearNotification(note, $event)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notification-backdrop" *ngIf="isNotificationOpen" (click)="toggleNotifications()"></div>
   </main>
 </div>

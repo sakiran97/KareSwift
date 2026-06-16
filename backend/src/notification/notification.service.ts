@@ -138,6 +138,51 @@ export class NotificationService {
     return { message: 'All notifications marked as read' };
   }
 
+  async delete(id: number, userId: number) {
+    if (!this.useMock) {
+      try {
+        const notification = await this.prisma.notification.findUnique({ where: { id } });
+        if (!notification || notification.userId !== userId) {
+          throw new NotFoundException('Notification not found');
+        }
+        await this.prisma.notification.delete({ where: { id } });
+        return { message: 'Notification deleted' };
+      } catch (err: any) {
+        if (err instanceof NotFoundException) throw err;
+        if (this.isDbOffline(err)) {
+          this.useMock = true;
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    const index = this.mockNotifications.findIndex(n => n.id === id && n.userId === userId);
+    if (index === -1) throw new NotFoundException('Notification not found');
+    this.mockNotifications.splice(index, 1);
+    return { message: 'Notification deleted' };
+  }
+
+  async clearAll(userId: number) {
+    if (!this.useMock) {
+      try {
+        await this.prisma.notification.deleteMany({
+          where: { userId },
+        });
+        return { message: 'All notifications deleted' };
+      } catch (err: any) {
+        if (this.isDbOffline(err)) {
+          this.useMock = true;
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    this.mockNotifications = this.mockNotifications.filter(n => n.userId !== userId);
+    return { message: 'All notifications deleted' };
+  }
+
   private isDbOffline(err: any) {
     return err.code === 'ECONNREFUSED' || err.message?.includes('conn') || err.message?.includes('refused');
   }

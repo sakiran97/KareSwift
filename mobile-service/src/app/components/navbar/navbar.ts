@@ -111,6 +111,28 @@ export class Navbar implements OnInit, OnDestroy {
     });
   }
 
+  clearNotification(note: any, event: Event) {
+    event.stopPropagation();
+    this.http.delete(`/api/notifications/${note.id}`).subscribe({
+      next: () => {
+        this.notifications = this.notifications.filter(n => n.id !== note.id);
+        this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  clearAllNotifications(event: Event) {
+    event.stopPropagation();
+    this.http.delete('/api/notifications/clear-all').subscribe({
+      next: () => {
+        this.notifications = [];
+        this.unreadNotificationsCount = 0;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   handleNotificationClick(note: any) {
     if (!note.isRead) {
       this.http.patch(`/api/notifications/${note.id}/read`, {}).subscribe({

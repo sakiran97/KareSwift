@@ -116,7 +116,7 @@
         </div>
         <div class="action-buttons">
           <button 
-            *ngIf="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS'].includes(order.status)"
+            *ngIf="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS', 'DIAGNOSED', 'DIAGNOSIS_COMPLETED', 'PRICE_FINALIZED', 'READY_FOR_REPAIR', 'PARTS_ORDERED', 'REPAIRING'].includes(order.status)"
             [routerLink]="['/order/track', order.id]" 
             class="track-btn"
           >

@@ -123,6 +123,7 @@
     <header class="panel-header">
       <h3>Notifications</h3>
       <div class="panel-actions">
+        <button class="mark-all-read" (click)="clearAllNotifications($event)" *ngIf="notifications.length > 0" style="margin-right: 8px; color: #ef4444;">Clear All</button>
         <button class="mark-all-read" (click)="markAllNotificationsRead()" *ngIf="unreadNotificationsCount > 0">Mark all read</button>
         <button class="close-panel-btn" (click)="toggleNotifications()">×</button>
       </div>
@@ -145,9 +146,12 @@
           <span class="note-time" style="font-size: 11px; color: #94a3b8; font-weight: 500;">{{ note.createdAt | date:'short' }}</span>
         </div>
         <p class="note-body">{{ note.body }}</p>
-        <div class="note-actions" *ngIf="!note.isRead">
-          <button class="btn-read-toggle" (click)="markNotificationRead(note, $event)">
+        <div class="note-actions" style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="btn-read-toggle" *ngIf="!note.isRead" (click)="markNotificationRead(note, $event)">
             Mark Read
+          </button>
+          <button class="btn-read-toggle" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);" (click)="clearNotification(note, $event)">
+            Delete
           </button>
         </div>
       </div>
