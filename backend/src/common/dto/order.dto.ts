@@ -55,6 +55,10 @@ export class CreateOrderDto {
   @IsNumber()
   @IsOptional()
   longitude?: number;
+
+  @IsString()
+  @IsOptional()
+  mobileNumber?: string;
 }
 
 export class UpdateOrderStatusDto {
