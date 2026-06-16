@@ -106,6 +106,17 @@
           ✓ Complete Order (Verify OTP)
         </button>
 
+        <!-- Show Payment QR -->
+        <button 
+          *ngIf="order.status === 'PRICE_FINALIZED'"
+          type="button" 
+          class="btn-status-qr"
+          (click)="openQrModal(order.finalAmount)"
+          style="background: #8b5cf6; color: white;"
+        >
+          📱 Show Payment QR
+        </button>
+
         <!-- Chat Support -->
         <button 
           type="button" 
@@ -257,6 +268,31 @@
         >
           ➤
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR PAYMENT MODAL -->
+  <div class="modal-backdrop" *ngIf="showQrModal()">
+    <div class="modal-content glass-panel animate-fade-up" style="max-width: 350px; text-align: center;">
+      <div class="modal-header">
+        <h3>Payment QR Code</h3>
+        <button class="close-btn" (click)="closeQrModal()">×</button>
+      </div>
+      <div class="modal-body" style="padding: 30px 20px;">
+        <p style="margin-bottom: 20px; color: #cbd5e1; font-size: 0.95rem;">Ask customer to scan this QR to pay <strong>₹{{ qrAmount() }}</strong></p>
+        
+        <!-- Placeholder QR Code Image -->
+        <div style="background: white; padding: 20px; border-radius: 12px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=kareswift@ybl&pn=KareSwift&am={{qrAmount()}}&cu=INR" alt="Payment QR Code" style="width: 200px; height: 200px; display: block;" />
+        </div>
+        
+        <p style="margin-top: 20px; font-size: 0.85rem; color: #94a3b8;">
+          Supported apps: GPay, PhonePe, Paytm, CRED
+        </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button class="btn-primary" (click)="closeQrModal()" style="width: 100%;">Done</button>
       </div>
     </div>
   </div>

@@ -45,6 +45,11 @@ export class OrdersComponent implements OnInit {
   chatOrderId = signal<number | null>(null);
   chatMessages = signal<any[]>([]);
   chatInput = '';
+
+  // QR Modal State
+  showQrModal = signal(false);
+  qrAmount = signal<number>(0);
+  
   private sseSub?: Subscription;
 
   constructor(private adminService: AdminService, private sse: SseService) {}
@@ -231,6 +236,17 @@ export class OrdersComponent implements OnInit {
   closeChatModal() {
     this.showChatModal.set(false);
     this.chatOrderId.set(null);
+  }
+
+  // QR Modal
+  openQrModal(amount: number) {
+    this.qrAmount.set(amount);
+    this.showQrModal.set(true);
+  }
+
+  closeQrModal() {
+    this.showQrModal.set(false);
+    this.qrAmount.set(0);
   }
 
   sendChatMessage() {
