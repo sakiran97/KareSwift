@@ -53,9 +53,9 @@ export class App implements OnInit, OnDestroy {
       }
     });
 
-    // Auto popup location modal if no location is set
+    // Auto popup location modal if no location is set and user is logged in
     setTimeout(() => {
-      if (!this.locationService.currentLocation()) {
+      if (this.authService.isLoggedIn() && !this.locationService.currentLocation()) {
         this.showLocationModal = true;
       }
     }, 1000);

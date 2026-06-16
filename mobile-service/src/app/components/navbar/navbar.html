@@ -9,7 +9,7 @@
     </a>
 
     <!-- Location Selector (Blinkit Style) -->
-    <div class="location-selector" (click)="triggerLocationModal()">
+    <div class="location-selector" *ngIf="isLoggedIn()" (click)="triggerLocationModal()">
       <div class="loc-title">
         <strong style="font-size: 1rem; color: var(--text-primary); font-weight: 800;">Doorstep Repair</strong>
       </div>
