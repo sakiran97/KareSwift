@@ -54,8 +54,8 @@ export class LayoutComponent implements OnInit {
 
   loadNotifications() {
     this.http.get<any[]>('/api/notifications').subscribe({
-      next: (res: any[]) => {
-        this.notifications = res || [];
+      next: (res: any) => {
+        this.notifications = Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []);
         this.unreadNotificationsCount = this.notifications.filter(n => !n.isRead).length;
         this.cdr.detectChanges();
       },
