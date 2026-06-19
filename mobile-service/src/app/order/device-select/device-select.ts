@@ -100,9 +100,7 @@ export class DeviceSelect implements OnInit, OnDestroy {
       },
       error: () => {
         this.pincodeChecking = false;
-        // Fallback: check locally against known pincodes
-        const servicedPincodes = ['500003', '500016', '500017', '500027', '500033', '500036', '500044', '500062', '500072', '500094', '501301', '501302'];
-        this.pincodeResult = servicedPincodes.includes(this.pincodeInput) ? 'available' : 'unavailable';
+        this.pincodeResult = 'unavailable';
         this.cdr.detectChanges();
       }
     });
