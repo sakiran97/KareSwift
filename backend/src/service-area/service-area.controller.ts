@@ -4,7 +4,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('service-areas')
 export class ServiceAreaController {
   constructor(private readonly serviceAreaService: ServiceAreaService) {}
@@ -25,28 +24,28 @@ export class ServiceAreaController {
   }
 
   // Admin Configuration Endpoints
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Get('admin')
   async adminFindAll() {
     return this.serviceAreaService.findAll(false);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Post()
   async create(@Body() data: any) {
     return this.serviceAreaService.create(data);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: any) {
     return this.serviceAreaService.update(Number(id), data);
   }
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
