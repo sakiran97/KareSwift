@@ -36,7 +36,7 @@ export class DeviceSelect implements OnInit, OnDestroy {
     if (typeof window !== 'undefined') {
       this.carouselInterval = setInterval(() => {
         this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroImages.length;
-      }, 5000);
+      }, 4000);
     }
   }
 
