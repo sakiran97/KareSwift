@@ -148,121 +148,46 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
 
-    .hero-device {
-      position: relative;
-
-      .device-body {
-        width: 180px;
-        height: 320px;
-        background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        box-shadow:
-          0 20px 60px rgba(0,0,0,0.3),
-          inset 0 1px 0 rgba(255,255,255,0.05);
-        backdrop-filter: blur(8px);
-
-        .device-screen {
-          width: 150px;
-          height: 240px;
-          background: rgba($color-primary, 0.03);
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.04);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .screen-icon {
-            color: rgba($color-primary-light, 0.5);
-            animation: pulse 3s ease-in-out infinite;
-          }
-        }
-
-        .device-home {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          border: 1px solid rgba(255,255,255,0.08);
-          margin-top: 8px;
-        }
-      }
-
-      .device-tools {
-        position: absolute;
-        inset: -20px;
-        pointer-events: none;
-
-        .tool {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: rgba($color-primary, 0.08);
-          border: 1px solid rgba($color-primary, 0.12);
-          color: $color-primary-light;
-
-          &.tool-1 {
-            top: -10px;
-            right: -10px;
-            animation: float 3s ease-in-out infinite;
-          }
-
-          &.tool-2 {
-            bottom: 30px;
-            left: -15px;
-            animation: float 3.5s ease-in-out 0.5s infinite;
-          }
-
-          &.tool-3 {
-            bottom: -10px;
-            right: 10px;
-            animation: float 2.5s ease-in-out 1s infinite;
-          }
-        }
-      }
-    }
-
-    .hero-floating-icons {
+    .hero-carousel {
       position: absolute;
-      inset: -60px;
-      pointer-events: none;
+      inset: 0;
+      width: 100%;
+      height: 100%;
 
-      .floating-icon {
+      .carousel-slide {
         position: absolute;
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba($color-on-background, 0.3);
-        backdrop-filter: blur(4px);
+        inset: 0;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: 1;
 
-        &.fi-1 {
-          top: 10%;
-          left: -30px;
+        &.active {
+          opacity: 1;
+          z-index: 2;
+
+          img {
+            transform: scale(1.05);
+          }
         }
 
-        &.fi-2 {
-          top: 50%;
-          right: -20px;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 6s ease-out;
         }
 
-        &.fi-3 {
-          bottom: 10%;
-          left: -10px;
+        .carousel-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.2) 100%);
         }
       }
     }
@@ -534,73 +459,65 @@
       pointer-events: none;
     }
 
-    .card-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: rgba($color-on-background, 0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.4s ease;
-      position: relative;
-      z-index: 1;
-    }
+    &.image-card {
+      padding: 0;
+      min-height: 260px;
+      justify-content: flex-end;
+      align-items: flex-start;
+      border: 1px solid rgba(255, 255, 255, 0.1);
 
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: $color-on-background;
-      margin: 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    p {
-      font-size: 0.85rem;
-      line-height: 1.4;
-      color: rgba($color-on-background, 0.4);
-      margin: 0;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-action {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: $color-primary-light;
-      opacity: 0;
-      transform: translateY(4px);
-      transition: all 0.3s ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    &:hover {
-      transform: translateY(-6px);
-      border-color: rgba($color-primary, 0.2);
-      box-shadow:
-        0 12px 32px rgba(0, 0, 0, 0.25),
-        0 0 40px rgba($color-primary, 0.05);
-
-      .card-bg-glow { opacity: 1; }
-
-      .card-icon {
-        background: rgba($color-primary, 0.12);
-        border-color: rgba($color-primary, 0.2);
-        color: $color-primary-light;
-        transform: scale(1.05);
+      .category-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 0;
       }
 
-      .card-action {
-        opacity: 1;
-        transform: translateY(0);
+      .card-content-overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding: 1.5rem;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 70%, transparent 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-sizing: border-box;
+
+        h3 { 
+          margin: 0; 
+          text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+          font-size: 1.35rem;
+        }
+        
+        p { 
+          text-align: left; 
+          text-shadow: 0 1px 2px rgba(0,0,0,0.5); 
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .card-action {
+          margin-top: 0.5rem;
+          transform: translateX(-10px);
+        }
+      }
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba($color-primary, 0.2);
+
+        .category-image {
+          transform: scale(1.1);
+        }
+
+        .card-action {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
     }
   }
@@ -712,15 +629,7 @@
     }
 
     .hero-visual {
-      .hero-device .device-body {
-        width: 140px;
-        height: 260px;
-
-        .device-screen {
-          width: 120px;
-          height: 200px;
-        }
-      }
+      height: 300px;
     }
   }
 

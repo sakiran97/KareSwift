@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ScrollAnimateDirective } from '../../directives/scroll-animate.directive';
@@ -10,11 +10,34 @@ import { ScrollAnimateDirective } from '../../directives/scroll-animate.directiv
   templateUrl: './device-select.html',
   styleUrl: './device-select.scss',
 })
-export class DeviceSelect implements OnInit {
+export class DeviceSelect implements OnInit, OnDestroy {
+  heroImages = [
+    'assets/images/hero-1.png',
+    'assets/images/hero-2.png',
+    'assets/images/hero-3.png'
+  ];
+  currentHeroIndex = 0;
+  private carouselInterval: any;
+
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.requestCurrentLocation();
+    this.startCarousel();
+  }
+
+  ngOnDestroy(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+  }
+
+  startCarousel(): void {
+    if (typeof window !== 'undefined') {
+      this.carouselInterval = setInterval(() => {
+        this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroImages.length;
+      }, 5000);
+    }
   }
 
   requestCurrentLocation(): void {
