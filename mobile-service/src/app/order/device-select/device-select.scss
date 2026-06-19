@@ -627,6 +627,306 @@
       .hero-stats { justify-content: center; }
       h1 { font-size: 2.5rem; }
     }
+// ── Pincode Checker ────────────────────────────────────────
+.pincode-checker-section {
+  .pincode-checker-card {
+    @include glass-card(16px, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+
+    .pincode-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, rgba($color-primary, 0.2), rgba($color-secondary, 0.2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      svg { stroke: $color-primary-light; }
+    }
+
+    .pincode-text {
+      flex: 1;
+      min-width: 180px;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      p {
+        margin: 0.25rem 0 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .pincode-input-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+
+      input {
+        padding: 0.7rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #fff;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        width: 160px;
+        outline: none;
+        letter-spacing: 2px;
+        text-align: center;
+
+        &:focus {
+          border-color: $color-primary-light;
+          box-shadow: 0 0 8px rgba($color-primary-light, 0.15);
+        }
+
+        &::placeholder {
+          letter-spacing: 0;
+          font-weight: 400;
+          font-size: 0.85rem;
+        }
+      }
+
+      .btn-check-pincode {
+        padding: 0.7rem 1.25rem;
+        background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+        border: none;
+        border-radius: 10px;
+        color: $color-on-primary;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .pincode-result {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      animation: fadeIn 0.3s ease;
+
+      &.available {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        color: #10b981;
+      }
+
+      &.unavailable {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #ef4444;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ── Explainer Video Section ────────────────────────────────
+.explainer-video-section {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 3rem;
+  align-items: center;
+
+  .explainer-content {
+    .video-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.15;
+      color: #fff;
+      margin: 1rem 0 1.25rem;
+      letter-spacing: -1px;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.7;
+    }
+  }
+
+  .explainer-video-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16/10;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+      .play-btn-circle {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px rgba($color-primary, 0.4);
+      }
+    }
+
+    .video-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+
+      .video-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      .play-btn-circle {
+        width: 64px;
+        height: 64px;
+        background: $color-primary;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba($color-primary, 0.3);
+        transition: all 0.3s ease;
+
+        svg {
+          fill: #fff;
+          margin-left: 4px;
+        }
+      }
+
+      .video-duration {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(0, 0, 0, 0.5);
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+// ── Video Modal ────────────────────────────────────────────
+.video-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.video-modal-content {
+  position: relative;
+  max-width: 800px;
+  width: 90%;
+
+  .video-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.2s;
+
+    &:hover { color: #fff; }
+  }
+
+  .video-player-placeholder {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.9);
+
+    .video-coming-soon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: rgba(0, 0, 0, 0.6);
+
+      svg { stroke: $color-primary-light; }
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 0 1rem;
+
+        code {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 0.15rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+// ── Responsive adjustments ─────────────────────────────────
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 3rem 0;
 
     .hero-visual {
       height: 300px;
@@ -641,6 +941,30 @@
   .banner-row {
     grid-template-columns: 1fr;
   }
+
+  .pincode-checker-section .pincode-checker-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+
+    .pincode-input-group {
+      width: 100%;
+      justify-content: center;
+
+      input { flex: 1; }
+    }
+  }
+
+  .explainer-video-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    .explainer-content {
+      text-align: center;
+
+      h2 { font-size: 2rem; }
+    }
+  }
 }
 
 @media (max-width: 500px) {
@@ -649,4 +973,6 @@
   .section-header h2 { font-size: 1.6rem; }
   .selection-section .devices-grid { grid-template-columns: 1fr; }
   .how-it-works .steps-container { grid-template-columns: 1fr; }
+
+  .explainer-video-section .explainer-content h2 { font-size: 1.6rem; }
 }

@@ -1,12 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { ScrollAnimateDirective } from '../../directives/scroll-animate.directive';
 
 @Component({
   selector: 'app-device-select',
   standalone: true,
-  imports: [CommonModule, RouterLink, ScrollAnimateDirective],
+  imports: [CommonModule, RouterLink, ScrollAnimateDirective, FormsModule],
   templateUrl: './device-select.html',
   styleUrl: './device-select.scss',
 })
@@ -19,7 +21,15 @@ export class DeviceSelect implements OnInit, OnDestroy {
   currentHeroIndex = 0;
   private carouselInterval: any;
 
-  constructor(private router: Router) {}
+  // Pincode checker
+  pincodeInput = '';
+  pincodeResult: 'available' | 'unavailable' | null = null;
+  pincodeChecking = false;
+
+  // Video modal
+  showVideoModal = false;
+
+  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.requestCurrentLocation();
@@ -75,5 +85,34 @@ export class DeviceSelect implements OnInit, OnDestroy {
   onSelectDevice(deviceType: string): void {
     localStorage.setItem('selectedDeviceCategory', deviceType);
     this.router.navigate(['/order/create']);
+  }
+
+  checkPincode(): void {
+    if (!this.pincodeInput || this.pincodeInput.length !== 6) return;
+    this.pincodeChecking = true;
+    this.pincodeResult = null;
+
+    this.http.get<any>(`/api/service-areas/check-pincode/${this.pincodeInput}`).subscribe({
+      next: (res: any) => {
+        this.pincodeChecking = false;
+        this.pincodeResult = res.available ? 'available' : 'unavailable';
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.pincodeChecking = false;
+        // Fallback: check locally against known pincodes
+        const servicedPincodes = ['500003', '500016', '500017', '500027', '500033', '500036', '500044', '500062', '500072', '500094', '501301', '501302'];
+        this.pincodeResult = servicedPincodes.includes(this.pincodeInput) ? 'available' : 'unavailable';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openVideoModal(): void {
+    this.showVideoModal = true;
+  }
+
+  closeVideoModal(): void {
+    this.showVideoModal = false;
   }
 }

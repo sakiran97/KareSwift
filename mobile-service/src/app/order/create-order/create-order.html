@@ -421,4 +421,26 @@
       </form>
     </div>
   </div>
+
+  <!-- Login Prompt Modal -->
+  <div class="login-prompt-overlay" *ngIf="showLoginPrompt" (click)="dismissLoginPrompt()">
+    <div class="login-prompt-modal" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="dismissLoginPrompt()">&times;</button>
+      <div class="login-prompt-icon">
+        <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h3>Login / Signup</h3>
+      <p>Sign in to your account to complete your booking request.</p>
+      <div class="login-prompt-features">
+        <span>✅ Doorstep service</span>
+        <span>✅ Genuine parts</span>
+        <span>✅ 90-Day Warranty</span>
+      </div>
+      <button class="btn-login-action" (click)="goToLogin()">Continue to Login</button>
+      <button class="btn-login-secondary" (click)="dismissLoginPrompt()">Continue Browsing</button>
+    </div>
+  </div>
 </div>

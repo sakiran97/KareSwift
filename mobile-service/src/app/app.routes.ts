@@ -10,7 +10,7 @@ import { HomeComponent } from './components/home/home';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'auth', loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule) },
-  { path: 'order', loadChildren: () => import('./order/order-module').then(m => m.OrderModule), canActivate: [AuthGuard] },
+  { path: 'order', loadChildren: () => import('./order/order-module').then(m => m.OrderModule) },
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
   { path: 'help', component: Help },

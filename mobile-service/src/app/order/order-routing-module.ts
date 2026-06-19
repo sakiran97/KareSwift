@@ -7,15 +7,16 @@ import { Feedback } from './feedback/feedback';
 import { OrderHistory } from './order-history/order-history';
 import { Diagnostic } from './diagnostic/diagnostic';
 import { WarrantyList } from './warranty/warranty-list';
+import { AuthGuard } from '../guards/auth.guard';
 
 const routes: Routes = [
   { path: 'device-select', component: DeviceSelect },
   { path: 'create', component: CreateOrder },
-  { path: 'track/:id', component: TrackOrder },
-  { path: 'feedback/:id', component: Feedback },
-  { path: 'history', component: OrderHistory },
+  { path: 'track/:id', component: TrackOrder, canActivate: [AuthGuard] },
+  { path: 'feedback/:id', component: Feedback, canActivate: [AuthGuard] },
+  { path: 'history', component: OrderHistory, canActivate: [AuthGuard] },
   { path: 'diagnostic', component: Diagnostic },
-  { path: 'warranty', component: WarrantyList },
+  { path: 'warranty', component: WarrantyList, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'device-select', pathMatch: 'full' }
 ];
 
@@ -24,3 +25,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class OrderRoutingModule {}
+

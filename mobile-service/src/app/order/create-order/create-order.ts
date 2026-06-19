@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '../../services/app-config.service';
 import { LocationService } from '../../services/location.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-create-order',
@@ -27,6 +28,7 @@ export class CreateOrder implements OnInit {
   addressSuccess: string | null = null;
   bookingDisabled = false;
   isDetectingLocation = false;
+  showLoginPrompt = false;
 
   // Catalog data
   brands = ['Apple', 'Samsung', 'OnePlus', 'Vivo', 'Oppo', 'Xiaomi', 'Realme', 'Other'];
@@ -79,7 +81,8 @@ export class CreateOrder implements OnInit {
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     public config: AppConfigService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private authService: AuthService
   ) {
     this.orderForm = this.fb.group({
       brand: ['', Validators.required],
@@ -437,6 +440,13 @@ export class CreateOrder implements OnInit {
   }
 
   onSubmit(): void {
+    // Check if user is logged in before submitting
+    if (!this.authService.isLoggedIn()) {
+      this.showLoginPrompt = true;
+      this.cdr.detectChanges();
+      return;
+    }
+
     if (this.orderForm.invalid) {
       this.orderForm.markAllAsTouched();
       return;
@@ -483,5 +493,23 @@ export class CreateOrder implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  goToLogin(): void {
+    // Save current form state so they can resume after login
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('pendingOrder', JSON.stringify({
+        brand: this.orderForm.value.brand,
+        model: this.orderForm.value.model,
+        serviceCategoryId: this.orderForm.value.serviceCategoryId,
+        description: this.orderForm.value.description
+      }));
+    }
+    this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/order/create' } });
+  }
+
+  dismissLoginPrompt(): void {
+    this.showLoginPrompt = false;
+    this.cdr.detectChanges();
   }
 }

@@ -57,6 +57,43 @@
     </div>
   </section>
 
+  <!-- Pincode Availability Checker -->
+  <section class="pincode-checker-section" scrollAnimate="animate-fade-up">
+    <div class="pincode-checker-card">
+      <div class="pincode-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      <div class="pincode-text">
+        <h3>Check Service Availability</h3>
+        <p>Enter your pincode to see if KareSwift operates in your area</p>
+      </div>
+      <div class="pincode-input-group">
+        <input
+          type="text"
+          [(ngModel)]="pincodeInput"
+          placeholder="Enter 6-digit pincode"
+          maxlength="6"
+          (keyup.enter)="checkPincode()"
+        />
+        <button class="btn-check-pincode" (click)="checkPincode()" [disabled]="pincodeInput.length !== 6 || pincodeChecking">
+          <span *ngIf="!pincodeChecking">Check</span>
+          <span *ngIf="pincodeChecking">Checking...</span>
+        </button>
+      </div>
+      <div class="pincode-result available" *ngIf="pincodeResult === 'available'">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Great news! KareSwift doorstep repair is available in your area.
+      </div>
+      <div class="pincode-result unavailable" *ngIf="pincodeResult === 'unavailable'">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Sorry, we don't currently serve this area. We're expanding soon!
+      </div>
+    </div>
+  </section>
+
   <!-- Contact + Diagnostic Banners -->
   <div class="banner-row">
     <section class="contact-banner" scrollAnimate="animate-fade-up">
@@ -98,6 +135,28 @@
       </div>
     </section>
   </div>
+
+  <!-- Explainer Video Section -->
+  <section class="explainer-video-section" scrollAnimate="animate-fade-up">
+    <div class="explainer-content">
+      <span class="section-badge video-badge">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Watch & Learn
+      </span>
+      <h2>See Our Magic<br>in Action</h2>
+      <p>Discover how our expert technicians bring your devices back to life with precision, care, and cutting-edge techniques. Every repair tells a story of excellence.</p>
+    </div>
+    <div class="explainer-video-wrapper" (click)="openVideoModal()">
+      <img src="assets/images/video-thumbnail.png" alt="KareSwift Explainer Video" class="video-thumbnail" />
+      <div class="video-play-overlay">
+        <span class="video-title">Watch our Explainer Video</span>
+        <div class="play-btn-circle">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <span class="video-duration">1:03</span>
+      </div>
+    </div>
+  </section>
 
   <!-- Device Selection Grid -->
   <section class="selection-section" scrollAnimate="animate-fade-up">
@@ -216,4 +275,18 @@
       </div>
     </div>
   </section>
+</div>
+
+<!-- Video Modal -->
+<div class="video-modal-overlay" *ngIf="showVideoModal" (click)="closeVideoModal()">
+  <div class="video-modal-content" (click)="$event.stopPropagation()">
+    <button class="video-modal-close" (click)="closeVideoModal()">&times;</button>
+    <div class="video-player-placeholder">
+      <img src="assets/images/video-thumbnail.png" alt="Explainer Video" style="width:100%;border-radius:12px;" />
+      <div class="video-coming-soon">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <p>Video coming soon! Upload your explainer video to <code>assets/videos/explainer.mp4</code></p>
+      </div>
+    </div>
+  </div>
 </div>
