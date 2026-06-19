@@ -236,6 +236,7 @@ exports.Prisma.ServiceAreaScalarFieldEnum = {
   id: 'id',
   name: 'name',
   city: 'city',
+  pincodes: 'pincodes',
   travelCharge: 'travelCharge',
   isActive: 'isActive',
   createdAt: 'createdAt',

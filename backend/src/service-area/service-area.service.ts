@@ -5,11 +5,12 @@ import { PrismaService } from '../prisma.service';
 export class ServiceAreaService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: { name: string; city: string; travelCharge: number; isActive?: boolean }) {
+  async create(data: { name: string; city: string; travelCharge: number; isActive?: boolean; pincodes?: string[] }) {
     return this.prisma.serviceArea.create({
       data: {
         name: data.name,
         city: data.city,
+        pincodes: data.pincodes || [],
         travelCharge: data.travelCharge,
         isActive: data.isActive !== undefined ? data.isActive : true,
       },
@@ -29,7 +30,7 @@ export class ServiceAreaService {
     return area;
   }
 
-  async update(id: number, data: { name?: string; city?: string; travelCharge?: number; isActive?: boolean }) {
+  async update(id: number, data: { name?: string; city?: string; travelCharge?: number; isActive?: boolean; pincodes?: string[] }) {
     await this.findOne(id);
     return this.prisma.serviceArea.update({
       where: { id },
@@ -47,11 +48,33 @@ export class ServiceAreaService {
     const address = await this.prisma.address.findUnique({ where: { id: addressId } });
     if (!address) throw new NotFoundException('Address not found');
 
-    // Perform exact case-insensitive match on the area name and city
+    // Find a service area that includes this exact pincode
     const serviceArea = await this.prisma.serviceArea.findFirst({
       where: {
-        name: { equals: address.area, mode: 'insensitive' },
-        city: { equals: address.city, mode: 'insensitive' },
+        pincodes: {
+          has: address.pincode,
+        },
+        isActive: true,
+      },
+    });
+
+    if (!serviceArea) {
+      return { available: false, travelCharge: 0 };
+    }
+
+    return {
+      available: true,
+      travelCharge: Number(serviceArea.travelCharge),
+      serviceAreaId: serviceArea.id,
+    };
+  }
+
+  async checkPincode(pincode: string) {
+    const serviceArea = await this.prisma.serviceArea.findFirst({
+      where: {
+        pincodes: {
+          has: pincode,
+        },
         isActive: true,
       },
     });

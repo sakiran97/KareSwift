@@ -144,11 +144,12 @@ model Address {
 }
 
 model ServiceArea {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   name         String
   city         String
-  travelCharge Decimal  @default(0.00) @db.Decimal(10, 2)
-  isActive     Boolean  @default(true)
+  pincodes     String[]
+  travelCharge Decimal   @default(0.00) @db.Decimal(10, 2)
+  isActive     Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now()) @updatedAt
   deletedAt    DateTime?

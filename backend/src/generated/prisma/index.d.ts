@@ -11994,6 +11994,7 @@ export namespace Prisma {
     id: number
     name: number
     city: number
+    pincodes: number
     travelCharge: number
     isActive: number
     createdAt: number
@@ -12039,6 +12040,7 @@ export namespace Prisma {
     id?: true
     name?: true
     city?: true
+    pincodes?: true
     travelCharge?: true
     isActive?: true
     createdAt?: true
@@ -12137,6 +12139,7 @@ export namespace Prisma {
     id: number
     name: string
     city: string
+    pincodes: string[]
     travelCharge: Decimal
     isActive: boolean
     createdAt: Date
@@ -12167,6 +12170,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     city?: boolean
+    pincodes?: boolean
     travelCharge?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -12180,6 +12184,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     city?: boolean
+    pincodes?: boolean
     travelCharge?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -12191,6 +12196,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     city?: boolean
+    pincodes?: boolean
     travelCharge?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -12202,6 +12208,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     city?: boolean
+    pincodes?: boolean
     travelCharge?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -12209,7 +12216,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type ServiceAreaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "travelCharge" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceArea"]>
+  export type ServiceAreaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "city" | "pincodes" | "travelCharge" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceArea"]>
   export type ServiceAreaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | ServiceArea$ordersArgs<ExtArgs>
     _count?: boolean | ServiceAreaCountOutputTypeDefaultArgs<ExtArgs>
@@ -12226,6 +12233,7 @@ export namespace Prisma {
       id: number
       name: string
       city: string
+      pincodes: string[]
       travelCharge: Prisma.Decimal
       isActive: boolean
       createdAt: Date
@@ -12658,6 +12666,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ServiceArea", 'Int'>
     readonly name: FieldRef<"ServiceArea", 'String'>
     readonly city: FieldRef<"ServiceArea", 'String'>
+    readonly pincodes: FieldRef<"ServiceArea", 'String[]'>
     readonly travelCharge: FieldRef<"ServiceArea", 'Decimal'>
     readonly isActive: FieldRef<"ServiceArea", 'Boolean'>
     readonly createdAt: FieldRef<"ServiceArea", 'DateTime'>
@@ -17591,6 +17600,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     city: 'city',
+    pincodes: 'pincodes',
     travelCharge: 'travelCharge',
     isActive: 'isActive',
     createdAt: 'createdAt',
@@ -18509,6 +18519,7 @@ export namespace Prisma {
     id?: IntFilter<"ServiceArea"> | number
     name?: StringFilter<"ServiceArea"> | string
     city?: StringFilter<"ServiceArea"> | string
+    pincodes?: StringNullableListFilter<"ServiceArea">
     travelCharge?: DecimalFilter<"ServiceArea"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeFilter<"ServiceArea"> | Date | string
@@ -18521,6 +18532,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     city?: SortOrder
+    pincodes?: SortOrder
     travelCharge?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -18536,6 +18548,7 @@ export namespace Prisma {
     NOT?: ServiceAreaWhereInput | ServiceAreaWhereInput[]
     name?: StringFilter<"ServiceArea"> | string
     city?: StringFilter<"ServiceArea"> | string
+    pincodes?: StringNullableListFilter<"ServiceArea">
     travelCharge?: DecimalFilter<"ServiceArea"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeFilter<"ServiceArea"> | Date | string
@@ -18548,6 +18561,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     city?: SortOrder
+    pincodes?: SortOrder
     travelCharge?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -18567,6 +18581,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"ServiceArea"> | number
     name?: StringWithAggregatesFilter<"ServiceArea"> | string
     city?: StringWithAggregatesFilter<"ServiceArea"> | string
+    pincodes?: StringNullableListFilter<"ServiceArea">
     travelCharge?: DecimalWithAggregatesFilter<"ServiceArea"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolWithAggregatesFilter<"ServiceArea"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ServiceArea"> | Date | string
@@ -19615,6 +19630,7 @@ export namespace Prisma {
   export type ServiceAreaCreateInput = {
     name: string
     city: string
+    pincodes?: ServiceAreaCreatepincodesInput | string[]
     travelCharge?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     createdAt?: Date | string
@@ -19627,6 +19643,7 @@ export namespace Prisma {
     id?: number
     name: string
     city: string
+    pincodes?: ServiceAreaCreatepincodesInput | string[]
     travelCharge?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     createdAt?: Date | string
@@ -19638,6 +19655,7 @@ export namespace Prisma {
   export type ServiceAreaUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19650,6 +19668,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19662,6 +19681,7 @@ export namespace Prisma {
     id?: number
     name: string
     city: string
+    pincodes?: ServiceAreaCreatepincodesInput | string[]
     travelCharge?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     createdAt?: Date | string
@@ -19672,6 +19692,7 @@ export namespace Prisma {
   export type ServiceAreaUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19683,6 +19704,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20747,6 +20769,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     city?: SortOrder
+    pincodes?: SortOrder
     travelCharge?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -21555,6 +21578,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAddressesInput, UserUpdateWithoutAddressesInput>, UserUncheckedUpdateWithoutAddressesInput>
   }
 
+  export type ServiceAreaCreatepincodesInput = {
+    set: string[]
+  }
+
   export type OrderCreateNestedManyWithoutServiceAreaInput = {
     create?: XOR<OrderCreateWithoutServiceAreaInput, OrderUncheckedCreateWithoutServiceAreaInput> | OrderCreateWithoutServiceAreaInput[] | OrderUncheckedCreateWithoutServiceAreaInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutServiceAreaInput | OrderCreateOrConnectWithoutServiceAreaInput[]
@@ -21567,6 +21594,11 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutServiceAreaInput | OrderCreateOrConnectWithoutServiceAreaInput[]
     createMany?: OrderCreateManyServiceAreaInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type ServiceAreaUpdatepincodesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -22471,6 +22503,7 @@ export namespace Prisma {
   export type ServiceAreaCreateWithoutOrdersInput = {
     name: string
     city: string
+    pincodes?: ServiceAreaCreatepincodesInput | string[]
     travelCharge?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     createdAt?: Date | string
@@ -22482,6 +22515,7 @@ export namespace Prisma {
     id?: number
     name: string
     city: string
+    pincodes?: ServiceAreaCreatepincodesInput | string[]
     travelCharge?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     createdAt?: Date | string
@@ -22713,6 +22747,7 @@ export namespace Prisma {
   export type ServiceAreaUpdateWithoutOrdersInput = {
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22724,6 +22759,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     city?: StringFieldUpdateOperationsInput | string
+    pincodes?: ServiceAreaUpdatepincodesInput | string[]
     travelCharge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

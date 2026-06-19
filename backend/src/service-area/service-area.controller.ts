@@ -19,6 +19,11 @@ export class ServiceAreaController {
     return this.serviceAreaService.checkAvailability(Number(addressId));
   }
 
+  @Get('check-pincode/:pincode')
+  async checkPincode(@Param('pincode') pincode: string) {
+    return this.serviceAreaService.checkPincode(pincode);
+  }
+
   // Admin Configuration Endpoints
   @UseGuards(RolesGuard)
   @Roles('admin')
