@@ -37,6 +37,10 @@
   }
 }
 
+.sidebar-overlay {
+  display: none; // Hidden on desktop
+}
+
 // ── Sidebar ───────────────────────────────────────────────
 .sidebar {
   display: flex;
@@ -260,7 +264,8 @@
 // ── Responsive Layout ─────────────────────────────────────
 @media (max-width: 1024px) {
   .admin-wrapper {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     
     &.sidebar-collapsed {
       .sidebar {
@@ -288,6 +293,7 @@
   }
 
   .sidebar-overlay {
+    display: block; // Show on mobile
     position: fixed;
     top: 0;
     left: 0;
