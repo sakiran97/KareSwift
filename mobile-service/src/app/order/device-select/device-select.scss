@@ -627,6 +627,22 @@
       .hero-stats { justify-content: center; }
       h1 { font-size: 2.5rem; }
     }
+
+    .hero-visual {
+      height: 300px;
+    }
+  }
+
+  .stats-banner .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .banner-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 // ── Pincode Checker ────────────────────────────────────────
 .pincode-checker-section {
   .pincode-checker-card {
@@ -921,27 +937,8 @@
   }
 }
 
-// ── Responsive adjustments ─────────────────────────────────
+// ── Additional responsive adjustments ──────────────────────
 @media (max-width: 768px) {
-  .hero-section {
-    flex-direction: column;
-    gap: 2rem;
-    padding: 3rem 0;
-
-    .hero-visual {
-      height: 300px;
-    }
-  }
-
-  .stats-banner .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-
-  .banner-row {
-    grid-template-columns: 1fr;
-  }
-
   .pincode-checker-section .pincode-checker-card {
     flex-direction: column;
     text-align: center;
