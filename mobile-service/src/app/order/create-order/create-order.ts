@@ -111,6 +111,38 @@ export class CreateOrder implements OnInit {
   }
 
   ngOnInit(): void {
+    if (typeof window !== 'undefined') {
+      const pendingPayloadStr = sessionStorage.getItem('pendingOrderPayload');
+      if (pendingPayloadStr && this.authService.isLoggedIn()) {
+        try {
+          const payload = JSON.parse(pendingPayloadStr);
+          sessionStorage.removeItem('pendingOrderPayload');
+          
+          this.isLoading = true;
+          // Set an arbitrary state so UI doesn't look completely empty while loading
+          this.currentStep = 9; 
+          this.cdr.detectChanges();
+
+          this.orderService.createOrder('1', payload).subscribe({
+            next: (res: any) => {
+              const orderId = res.id || res.orderId;
+              localStorage.setItem('activeOrderId', String(orderId));
+              this.router.navigate([`/order/track/${orderId}`]);
+            },
+            error: (err: any) => {
+              this.isLoading = false;
+              this.errorMessage = err.error?.message || 'Failed to submit pending order. Please try again.';
+              this.cdr.detectChanges();
+            }
+          });
+          return; // Stop initialization, we are redirecting
+        } catch (e) {
+          console.error('Failed to parse pending payload', e);
+          sessionStorage.removeItem('pendingOrderPayload');
+        }
+      }
+    }
+
     if (!this.config.getBoolean('booking_enabled', true)) {
       this.bookingDisabled = true;
       return;
@@ -525,14 +557,39 @@ export class CreateOrder implements OnInit {
   }
 
   goToLogin(): void {
-    // Save current form state so they can resume after login
+    // Generate full payload to submit automatically after login
+    const { brand, model, customModel, serviceCategoryId, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
+    const finalModel = model === 'Other / Custom Model' ? customModel : model;
+
+    const matchedDevice = this.devices.find(
+      d => d.brand?.toLowerCase() === brand?.toLowerCase() && d.model?.toLowerCase() === finalModel?.toLowerCase()
+    );
+    const deviceId = matchedDevice ? matchedDevice.id : (this.devices.length > 0 ? this.devices[0].id : 1);
+    
+    const selectedAddress = this.addresses.find(a => a.id === Number(addressId));
+
+    const payload = {
+      deviceId,
+      serviceCategoryId: Number(serviceCategoryId),
+      notes: `${brand} ${finalModel} - ${description}`,
+      address: this.getSelectedAddressText(),
+      mobileNumber: selectedAddress?.mobileNumber || '',
+      scheduledDate,
+      scheduledSlot,
+      travelCharge: this.travelCharge,
+      serviceAreaId: this.serviceAreaId,
+      diagnosticPhotos: this.uploadedImages,
+      latitude: this.locationService.currentLocation()?.lat || null,
+      longitude: this.locationService.currentLocation()?.lng || null
+    };
+
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('pendingOrder', JSON.stringify({
-        brand: this.orderForm.value.brand,
-        model: this.orderForm.value.model,
-        serviceCategoryId: this.orderForm.value.serviceCategoryId,
-        description: this.orderForm.value.description
-      }));
+      try {
+        sessionStorage.setItem('pendingOrderPayload', JSON.stringify(payload));
+      } catch (e) {
+        // Ignore quota exceeded errors
+        console.warn('Could not save pending order payload to sessionStorage', e);
+      }
     }
     this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/order/create' } });
   }
