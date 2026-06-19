@@ -347,11 +347,31 @@
 
 // Media Queries
 @media (max-width: 768px) {
+  .nav-container {
+    padding: 0.75rem 1rem;
+    gap: 8px;
+  }
   .desktop-nav {
     display: none;
   }
+  .brand-logo {
+    gap: 0.25rem;
+    .brand-name {
+      display: none;
+    }
+  }
+  .location-selector {
+    margin-left: 0;
+    flex: 1;
+    min-width: 0;
+    padding: 5px;
+    .loc-address .truncate-text {
+      max-width: 100%;
+    }
+  }
   .hamburger-btn {
     display: flex;
+    flex-shrink: 0;
   }
 }
 

@@ -98,11 +98,16 @@ export class Login {
     this.authService.signInWithPassword(email, password).subscribe({
       next: (res: LoginResponse) => {
         this.isLoading = false;
-        if (res.user.role === 'admin') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/order/device-select']);
-        }
+        this.isRedirecting = true;
+        this.cdr.detectChanges();
+        
+        setTimeout(() => {
+          if (res.user.role === 'admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/order/device-select']);
+          }
+        }, 1200);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;

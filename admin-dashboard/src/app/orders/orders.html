@@ -36,7 +36,10 @@
     </div>
 
     <!-- Order Card -->
-    <div class="order-card-admin glass-panel" *ngFor="let order of orders()" [class.cancelled]="order.status === 'CANCELLED'">
+    <div class="order-card-admin glass-panel" *ngFor="let order of orders()" [class.cancelled]="order.status === 'CANCELLED'" style="position: relative;">
+      <div *ngIf="updatingOrderId() === order.id" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10; display: flex; align-items: center; justify-content: center; border-radius: inherit; backdrop-filter: blur(2px);">
+        <span class="spinner" style="width: 40px; height: 40px; border-width: 4px;"></span>
+      </div>
       <div class="card-header">
         <span class="order-id">ORD-{{ order.id }}</span>
         <span class="status-badge" [class]="getStatusBadgeClass(order.status)">

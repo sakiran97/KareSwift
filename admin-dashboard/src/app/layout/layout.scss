@@ -266,6 +266,10 @@
       .sidebar {
         transform: translateX(-100%);
       }
+      .sidebar-overlay {
+        opacity: 0;
+        pointer-events: none;
+      }
     }
   }
   
@@ -274,17 +278,38 @@
     top: 0;
     bottom: 0;
     left: 0;
+    width: 280px;
     margin: 0;
     border-radius: 0;
     height: 100vh;
     transform: translateX(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 105;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 104;
+    transition: opacity 0.3s;
   }
   
   .top-bar {
+    padding: 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 12px;
     .menu-toggle {
       display: inline-flex;
     }
+  }
+
+  .content-body {
+    padding: 16px;
   }
 }
 

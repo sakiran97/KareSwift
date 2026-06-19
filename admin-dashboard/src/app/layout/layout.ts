@@ -16,7 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class LayoutComponent implements OnInit {
   user: AdminUser | null = null;
-  sidebarOpen = true;
+  sidebarOpen = typeof window !== 'undefined' ? window.innerWidth > 1024 : true;
   newOrderAlert: any = null;
 
   isNotificationOpen = false;

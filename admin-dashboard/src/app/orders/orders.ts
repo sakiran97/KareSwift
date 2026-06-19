@@ -17,6 +17,7 @@ export class OrdersComponent implements OnInit {
   Number = Number;
   orders = signal<any[]>([]);
   loading = signal(true);
+  updatingOrderId = signal<number | null>(null);
   error = signal('');
   
   // Pagination & Filters
@@ -163,11 +164,14 @@ export class OrdersComponent implements OnInit {
   }
 
   updateStatus(orderId: number, nextStatus: string) {
+    this.updatingOrderId.set(orderId);
     this.adminService.updateOrderStatus(orderId, nextStatus).subscribe({
       next: () => {
+        this.updatingOrderId.set(null);
         this.loadOrders();
       },
       error: (err) => {
+        this.updatingOrderId.set(null);
         alert(err.error?.message || 'Failed to update order status.');
       }
     });
@@ -197,16 +201,19 @@ export class OrdersComponent implements OnInit {
     const id = this.finalizeOrderId();
     if (!id || this.finalAmount <= 0) return;
 
+    this.updatingOrderId.set(id);
     this.adminService.updateOrderStatus(id, 'PRICE_FINALIZED', {
       finalAmount: this.finalAmount,
       paymentMethod: this.paymentMethod,
       repairNotes: this.repairNotes
     }).subscribe({
       next: () => {
+        this.updatingOrderId.set(null);
         this.closeFinalizeModal();
         this.loadOrders();
       },
       error: (err) => {
+        this.updatingOrderId.set(null);
         alert(err.error?.message || 'Failed to finalize price.');
       }
     });
@@ -229,14 +236,17 @@ export class OrdersComponent implements OnInit {
     const otp = this.completeOtp.trim();
     if (!id || !otp) return;
 
+    this.updatingOrderId.set(id);
     this.adminService.updateOrderStatus(id, 'COMPLETED', {
       otp: otp
     }).subscribe({
       next: () => {
+        this.updatingOrderId.set(null);
         this.closeCompleteModal();
         this.loadOrders();
       },
       error: (err) => {
+        this.updatingOrderId.set(null);
         alert(err.error?.message || 'Invalid completion OTP. Verification failed.');
       }
     });
@@ -259,12 +269,15 @@ export class OrdersComponent implements OnInit {
     const reason = this.cancelReason.trim();
     if (!id || !reason) return;
 
+    this.updatingOrderId.set(id);
     this.adminService.cancelOrder(id, reason).subscribe({
       next: () => {
+        this.updatingOrderId.set(null);
         this.closeCancelModal();
         this.loadOrders();
       },
       error: (err) => {
+        this.updatingOrderId.set(null);
         alert(err.error?.message || 'Failed to cancel order.');
       }
     });
