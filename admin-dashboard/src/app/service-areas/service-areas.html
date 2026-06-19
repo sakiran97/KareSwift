@@ -26,6 +26,11 @@
           <input type="text" formControlName="city" placeholder="Hyderabad" />
         </div>
         <div class="form-group">
+          <label>Covered Pincodes</label>
+          <input type="text" formControlName="pincodes" placeholder="e.g. 500062, 500032" />
+          <span class="hint">Comma-separated list of pincodes covered in this area.</span>
+        </div>
+        <div class="form-group">
           <label>Doorstep Travel Charge (₹)</label>
           <input type="number" formControlName="travelCharge" placeholder="e.g. 0, 199, 299" />
           <span class="hint">Charge ₹0 for local areas close to service base, and ₹199-299 for further areas.</span>
@@ -52,7 +57,7 @@
           <thead>
             <tr>
               <th>Area / Locality</th>
-              <th>City</th>
+              <th>Covered Pincodes</th>
               <th>Doorstep Travel Charge</th>
               <th>Status</th>
               <th>Actions</th>
@@ -63,8 +68,11 @@
               <td colspan="5">No service areas configured yet. Add one to start doorstep service.</td>
             </tr>
             <tr *ngFor="let area of areas()" [class.inactive-row]="!area.isActive">
-              <td><strong>{{ area.name }}</strong></td>
-              <td>{{ area.city }}</td>
+              <td><strong>{{ area.name }}</strong><br><small style="opacity:0.7">{{ area.city }}</small></td>
+              <td>
+                <span class="pincode-pill" *ngFor="let p of area.pincodes" style="display:inline-block;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:0.8rem;margin:2px;">{{ p }}</span>
+                <em *ngIf="!area.pincodes || area.pincodes.length === 0" style="opacity:0.5;font-size:0.8rem;">No pincodes</em>
+              </td>
               <td>
                 <span class="charge-badge" [class.free]="Number(area.travelCharge) === 0">
                   {{ Number(area.travelCharge) === 0 ? 'FREE' : '₹' + area.travelCharge }}

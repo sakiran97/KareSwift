@@ -29,6 +29,7 @@ export class ServiceAreasComponent implements OnInit {
     this.areaForm = this.fb.group({
       name: ['', Validators.required],
       city: ['Hyderabad', Validators.required],
+      pincodes: [''],
       travelCharge: [0, [Validators.required, Validators.min(0)]],
       isActive: [true]
     });
@@ -62,6 +63,7 @@ export class ServiceAreasComponent implements OnInit {
       this.areaForm.patchValue({
         name: area.name,
         city: area.city,
+        pincodes: area.pincodes ? area.pincodes.join(', ') : '',
         travelCharge: Number(area.travelCharge),
         isActive: area.isActive
       });
@@ -70,6 +72,7 @@ export class ServiceAreasComponent implements OnInit {
       this.areaForm.reset({
         name: '',
         city: 'Hyderabad',
+        pincodes: '',
         travelCharge: 0,
         isActive: true
       });
@@ -84,7 +87,18 @@ export class ServiceAreasComponent implements OnInit {
 
   saveArea() {
     if (this.areaForm.invalid) return;
-    const data = this.areaForm.value;
+    const formData = this.areaForm.value;
+    
+    // Parse comma-separated pincodes into an array of strings
+    let pincodesArray: string[] = [];
+    if (formData.pincodes && formData.pincodes.trim()) {
+      pincodesArray = formData.pincodes.split(',').map((p: string) => p.trim()).filter((p: string) => p.length > 0);
+    }
+    
+    const data = {
+      ...formData,
+      pincodes: pincodesArray
+    };
 
     const request = this.editingAreaId
       ? this.adminService.updateServiceArea(this.editingAreaId, data)
