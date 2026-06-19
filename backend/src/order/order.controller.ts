@@ -5,7 +5,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Order } from '../generated/prisma';
 import { CreateOrderDto, UpdateOrderStatusDto } from '../common/dto/order.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -13,6 +12,7 @@ export class OrderController {
     private readonly slotService: SlotService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Req() req: any) {
     const userId = req.user?.id ? Number(req.user.id) : null;
@@ -25,6 +25,7 @@ export class OrderController {
     return this.orderService.findByUserId(userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
     @Req() req: any,
@@ -60,6 +61,7 @@ export class OrderController {
     return this.orderService.findServiceCategories();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Order> {
     const cleanId = id.startsWith('ORD-') ? id.replace('ORD-', '') : id;
@@ -70,6 +72,7 @@ export class OrderController {
     return this.orderService.findById(parsedId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id/timeline')
   async getTimeline(@Param('id') id: string) {
     const cleanId = id.startsWith('ORD-') ? id.replace('ORD-', '') : id;
@@ -80,6 +83,7 @@ export class OrderController {
     return this.orderService.getTimeline(parsedId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
   async updateStatus(
     @Param('id') id: string,
