@@ -6,6 +6,10 @@ export const adminGuard: CanActivateFn = () => {
   const adminService = inject(AdminService);
   const router = inject(Router);
 
+  if (typeof window === 'undefined') {
+    return true;
+  }
+
   if (adminService.isLoggedIn()) {
     return true;
   }
