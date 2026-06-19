@@ -79,10 +79,6 @@ export class HomeComponent implements OnInit {
   }
 
   bookNow() {
-    if (this.isLoggedIn()) {
-      this.router.navigate(['/order/device-select']);
-    } else {
-      this.router.navigate(['/auth/login']);
-    }
+    this.router.navigate(['/order/device-select']);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -30,7 +30,8 @@ export class Login {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
@@ -65,7 +66,8 @@ export class Login {
         if (user && user.role === 'admin') {
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate(['/order/device-select']);
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          this.router.navigate([returnUrl || '/order/device-select']);
         }
       }
     });
@@ -105,7 +107,8 @@ export class Login {
           if (res.user.role === 'admin') {
             this.router.navigate(['/admin']);
           } else {
-            this.router.navigate(['/order/device-select']);
+            const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+            this.router.navigate([returnUrl || '/order/device-select']);
           }
         }, 1200);
       },
