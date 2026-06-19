@@ -272,9 +272,18 @@ export class CreateOrder implements OnInit {
   }
 
   checkAvailability(addressId: number): void {
+    const address = this.addresses.find(a => a.id === addressId);
+    if (!address || !address.pincode) {
+      this.isServiceAvailable = false;
+      this.travelCharge = 0;
+      this.serviceAreaId = null;
+      this.errorMessage = 'Invalid address selected.';
+      return;
+    }
+
     this.isLocating = true;
     this.errorMessage = null;
-    this.orderService.checkServiceAreaAvailability(addressId).subscribe({
+    this.http.get<any>(`/api/service-areas/check-pincode/${address.pincode}`).subscribe({
       next: (res: any) => {
         this.isLocating = false;
         if (res.available) {
@@ -285,7 +294,7 @@ export class CreateOrder implements OnInit {
           this.isServiceAvailable = false;
           this.travelCharge = 0;
           this.serviceAreaId = null;
-          this.errorMessage = 'Sorry, KareSwift mobile repairs are not available at this address. Please select or add an address in ECIL, Hitech City, Tarnaka, etc.';
+          this.errorMessage = 'Sorry, KareSwift mobile repairs are not available at this pincode. Please select a different address.';
         }
         this.cdr.detectChanges();
       },
@@ -325,6 +334,22 @@ export class CreateOrder implements OnInit {
     this.addressError = null;
     this.addressSuccess = null;
     
+    if (!this.authService.isLoggedIn()) {
+      // Guest flow: Keep address locally
+      const newAddr = {
+        ...this.addressForm.value,
+        id: Date.now() // temporary ID
+      };
+      this.addresses.push(newAddr);
+      this.orderForm.patchValue({ addressId: newAddr.id });
+      this.isLoading = false;
+      this.addressSuccess = 'Address saved for this session!';
+      this.addressForm.reset();
+      this.showNewAddressForm = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
     this.http.post<any>('/api/addresses', this.addressForm.value).subscribe({
       next: (newAddr: any) => {
         this.isLoading = false;
