@@ -37,8 +37,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(finalReq);
           }),
           catchError((refreshErr) => {
-            authService.logout();
-            router.navigate(['/auth/login']);
+            if (authService.isLoggedIn()) {
+              authService.logout();
+              router.navigate(['/auth/login']);
+            }
             return throwError(() => refreshErr);
           })
         );

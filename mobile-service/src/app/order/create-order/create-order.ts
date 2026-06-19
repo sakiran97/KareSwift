@@ -222,6 +222,10 @@ export class CreateOrder implements OnInit {
   }
 
   loadAddresses(): void {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+
     this.http.get<any[]>('/api/addresses').subscribe({
       next: (res: any) => {
         this.addresses = res || [];
