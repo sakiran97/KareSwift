@@ -277,15 +277,54 @@
   </section>
 </div>
 
-<!-- Video Modal -->
+<!-- Video Modal - Animated KareSwift Explainer -->
 <div class="video-modal-overlay" *ngIf="showVideoModal" (click)="closeVideoModal()">
-  <div class="video-modal-content" (click)="$event.stopPropagation()">
+  <div class="video-modal-content explainer-player" (click)="$event.stopPropagation()">
     <button class="video-modal-close" (click)="closeVideoModal()">&times;</button>
-    <div class="video-player-placeholder">
-      <img src="assets/images/video-thumbnail.png" alt="Explainer Video" style="width:100%;border-radius:12px;" />
-      <div class="video-coming-soon">
-        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <p>Video coming soon! Upload your explainer video to <code>assets/videos/explainer.mp4</code></p>
+    <div class="explainer-animation">
+      <!-- KareSwift Branding Header -->
+      <div class="explainer-brand">
+        <span class="brand-k">K</span> KareSwift
+      </div>
+      <h2 class="explainer-title">How Doorstep Repair Works</h2>
+
+      <!-- Animated Steps Carousel -->
+      <div class="explainer-steps-carousel">
+        <div class="explainer-step step-1">
+          <div class="step-circle">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          </div>
+          <h3>1. Select Your Device</h3>
+          <p>Choose your brand, model, and describe the issue.</p>
+        </div>
+        <div class="explainer-step step-2">
+          <div class="step-circle">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+          </div>
+          <h3>2. Book a Slot</h3>
+          <p>Pick a date and time that works for you. Same-day available!</p>
+        </div>
+        <div class="explainer-step step-3">
+          <div class="step-circle">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h3>3. Expert Arrives</h3>
+          <p>A certified KareSwift technician comes to your doorstep.</p>
+        </div>
+        <div class="explainer-step step-4">
+          <div class="step-circle">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>4. Device Fixed!</h3>
+          <p>Pay only when satisfied. 90-day warranty included.</p>
+        </div>
+      </div>
+
+      <!-- Bottom Trust Badges -->
+      <div class="explainer-trust">
+        <span>✅ Genuine Parts</span>
+        <span>🛡️ 90-Day Warranty</span>
+        <span>⚡ 30-Min Response</span>
       </div>
     </div>
   </div>
