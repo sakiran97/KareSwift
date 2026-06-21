@@ -61,6 +61,14 @@ export class OrderService {
         },
       });
 
+      await this.prisma.orderStatusHistory.create({
+        data: {
+          orderId: order.id,
+          status: 'BOOKED',
+          notes: 'Order placed successfully'
+        }
+      });
+
       // Update user's phone number if it's missing but provided in the payload
       if (mobileNumber && !order.user?.phone) {
         await this.prisma.user.update({

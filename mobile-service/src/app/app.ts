@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, OnDestroy, NgZone, inject } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, NgZone, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
@@ -36,6 +36,23 @@ export class App implements OnInit, OnDestroy {
   private readonly resetEvents = ['mousemove', 'keydown', 'wheel', 'touchstart'];
   private resetTimeoutBound = this.resetTimeout.bind(this);
 
+  constructor() {
+    // Handle global SSE notifications based on login state
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        this.sseService.connect().pipe(
+          filter((e: SseEvent) => e.type === 'notification')
+        ).subscribe((event: any) => {
+          if (event.data && event.data.title && event.data.body) {
+            this.toastService.show(`${event.data.title}: ${event.data.body}`, 'info', 6000);
+          }
+        });
+      } else {
+        this.sseService.disconnect();
+      }
+    });
+  }
+
   ngOnInit() {
     this.ngZone.runOutsideAngular(() => {
       this.resetEvents.forEach(event => {
@@ -43,15 +60,6 @@ export class App implements OnInit, OnDestroy {
       });
     });
     this.resetTimeout();
-
-    // Listen to global notifications
-    this.sseService.connect().pipe(
-      filter((e: SseEvent) => e.type === 'notification')
-    ).subscribe((event: any) => {
-      if (event.data && event.data.title && event.data.body) {
-        this.toastService.show(`${event.data.title}: ${event.data.body}`, 'info', 6000);
-      }
-    });
 
     // Auto popup location modal if no location is set and user is logged in
     setTimeout(() => {
