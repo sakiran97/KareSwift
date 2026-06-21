@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject, Output, EventEmitter, effect } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -39,27 +39,34 @@ export class Navbar implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private router: Router,
     public themeService: ThemeService
-  ) {}
+  ) {
+    effect(() => {
+      if (this.isLoggedIn()) {
+        this.loadNotifications();
+        this.sseSub = this.sse.connect().subscribe({
+          next: (event: SseEvent) => {
+            if (event.type === 'notification') {
+              const currentUser = this.getCurrentUser();
+              if (currentUser && event.data.userId === currentUser.id) {
+                if (!this.notifications.some(n => n.id === event.data.id)) {
+                  this.notifications.unshift(event.data);
+                  this.unreadNotificationsCount++;
+                  this.cdr.detectChanges();
+                }
+              }
+            }
+          },
+        });
+      } else {
+        if (this.sseSub) {
+          this.sseSub.unsubscribe();
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     window.addEventListener('scroll', this.onScroll, { passive: true });
-    if (this.isLoggedIn()) {
-      this.loadNotifications();
-      this.sseSub = this.sse.connect().subscribe({
-        next: (event: SseEvent) => {
-          if (event.type === 'notification') {
-            const currentUser = this.getCurrentUser();
-            if (currentUser && event.data.userId === currentUser.id) {
-              if (!this.notifications.some(n => n.id === event.data.id)) {
-                this.notifications.unshift(event.data);
-                this.unreadNotificationsCount++;
-                this.cdr.detectChanges();
-              }
-            }
-          }
-        },
-      });
-    }
   }
 
   getCurrentUser(): any {

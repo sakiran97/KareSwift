@@ -4,7 +4,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('config')
 export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
@@ -29,7 +28,7 @@ export class ConfigController {
   /**
    * PATCH /config/:key — Update a config value (admin only)
    */
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Patch(':key')
   async update(@Param('key') key: string, @Body('value') value: string) {

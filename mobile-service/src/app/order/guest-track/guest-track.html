@@ -73,6 +73,10 @@
       <!-- TIMELINE -->
       <h3 style="margin-top: 30px; margin-bottom: 20px; color: white;">Status Timeline</h3>
       <div class="timeline-container glass-panel">
+        <div *ngIf="timelineResult.length === 0" style="text-align: center; color: #94a3b8; padding: 20px;">
+          <p style="margin: 0;">Order placed successfully. Waiting for updates.</p>
+        </div>
+        
         <div class="timeline-item" *ngFor="let item of timelineResult; let isLast = last" [class.last]="isLast">
           <div class="timeline-icon">
             {{ getStepIcon(item.status) }}
