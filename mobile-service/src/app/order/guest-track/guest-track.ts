@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,11 @@ export class GuestTrackComponent implements OnInit {
   orderResult: any = null;
   timelineResult: any[] = [];
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {
     this.trackForm = this.fb.group({
       orderId: ['', Validators.required],
       mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]]
@@ -46,10 +50,12 @@ export class GuestTrackComponent implements OnInit {
         this.isLoading = false;
         this.orderResult = res.order;
         this.timelineResult = res.timeline;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || 'Unable to track order. Please check the details and try again.';
+        this.cdr.detectChanges();
       }
     });
   }
