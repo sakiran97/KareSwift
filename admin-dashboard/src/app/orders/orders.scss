@@ -175,11 +175,12 @@
           }
 
           &.actions-cell {
-            flex-direction: row;
+            flex-direction: column;
+            align-items: stretch;
             gap: 0.5rem;
-            flex-wrap: wrap;
 
             @media (max-width: 900px) {
+              flex-direction: row;
               justify-content: flex-end;
               margin-top: 0.5rem;
               &::before { display: none; }
@@ -193,6 +194,9 @@
               border: none;
               cursor: pointer;
               transition: all 0.2s;
+              text-align: center;
+              width: 100%;
+              box-sizing: border-box;
 
               &.next-btn {
                 background: linear-gradient(135deg, $color-secondary, $color-secondary-dark);
