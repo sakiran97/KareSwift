@@ -182,6 +182,13 @@
       <div class="past-orders-section">
         <h3>Past Services</h3>
         <div class="orders-list">
+          <div *ngIf="loadingOrders" class="orders-loader">
+            <div class="spinner"></div>
+            <span>Loading orders...</span>
+          </div>
+          <div *ngIf="!loadingOrders && pastOrders.length === 0" class="no-orders-msg">
+            <p>No past services found.</p>
+          </div>
           <div *ngFor="let order of pastOrders" class="order-item">
             <div class="order-left">
               <strong>{{ order.service }}</strong>

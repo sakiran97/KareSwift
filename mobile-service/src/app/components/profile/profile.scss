@@ -39,7 +39,7 @@
 // Ensure the right side cards stack properly
 .user-card {
   grid-column: 1;
-  grid-row: 1 / span 10;
+  grid-row: 1 / span 3;
   margin-bottom: 0; // Left side doesn't need the bottom margin in grid
 }
 
@@ -223,6 +223,12 @@
 
   .orders-list {
     display: flex; flex-direction: column; gap: 0.75rem;
+
+    .orders-loader {
+      display: flex; align-items: center; gap: 10px; padding: 1.5rem; justify-content: center; color: rgba(255,255,255,0.6); font-size: 0.9rem;
+      .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+    }
+    .no-orders-msg { text-align: center; padding: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.9rem; background: rgba(0,0,0,0.2); border-radius: 12px; }
     
     .order-item {
       background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1rem 1.25rem; border-radius: 12px;

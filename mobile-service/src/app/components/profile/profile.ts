@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   isSaving = false;
   activeOrderId: string | null = null;
   pastOrders: any[] = [];
+  loadingOrders = true;
 
   // Saved Address management variables
   addresses: any[] = [];
@@ -90,9 +91,11 @@ export class ProfileComponent implements OnInit {
   }
 
   loadOrders(): void {
+    this.loadingOrders = true;
     this.activeOrderId = localStorage.getItem('activeOrderId');
     this.orderService.getUserOrders().subscribe({
       next: (orders: any[]) => {
+        this.loadingOrders = false;
         if (orders?.length) {
           this.pastOrders = orders.slice(0, 3).map((o: any) => ({
             id: 'ORD-' + o.id,
@@ -113,7 +116,10 @@ export class ProfileComponent implements OnInit {
         }
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => {
+        this.loadingOrders = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
