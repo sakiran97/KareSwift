@@ -24,23 +24,21 @@
       <!-- Customer Links (Logged In) -->
       <ng-container *ngIf="isLoggedIn() && isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Dashboard</a>
-        <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
+        <a routerLink="/order/history" routerLinkActive="active" class="nav-link">Order History</a>
         <a routerLink="/order/warranty" routerLinkActive="active" class="nav-link">Warranties</a>
+        <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
       </ng-container>
 
-      <!-- Common Links (Logged In or Logged Out) -->
-      <ng-container *ngIf="!isLoggedIn() || isCustomer()">
-        <a routerLink="/about" routerLinkActive="active" class="nav-link">About Us</a>
-        <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact Us</a>
-        <a routerLink="/help" routerLinkActive="active" class="nav-link">Help & Queries</a>
+      <!-- Guest Links (Logged Out) -->
+      <ng-container *ngIf="!isLoggedIn()">
         <a routerLink="/track" routerLinkActive="active" class="nav-link">Track Order</a>
       </ng-container>
 
       <!-- Admin Links -->
       <ng-container *ngIf="isLoggedIn() && isAdmin()">
-        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Admin</a>
         <a routerLink="/admin/orders" routerLinkActive="active" class="nav-link">Orders</a>
-        <a routerLink="/admin/config" routerLinkActive="active" class="nav-link">Configuration</a>
+        <a routerLink="/admin/config" routerLinkActive="active" class="nav-link">Settings</a>
         <a routerLink="/order/device-select" routerLinkActive="active" class="nav-link">Customer View</a>
       </ng-container>
 
@@ -83,26 +81,29 @@
       <!-- Customer Links (Logged In) -->
       <ng-container *ngIf="isLoggedIn() && isCustomer()">
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
-        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Profile</a>
         <a routerLink="/order/history" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Order History</a>
         <a routerLink="/order/warranty" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Warranties</a>
+        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Profile</a>
       </ng-container>
 
-      <!-- Common Links (Logged In or Logged Out) -->
-      <ng-container *ngIf="!isLoggedIn() || isCustomer()">
-        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">About Us</a>
-        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Contact Us</a>
-        <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Help & Queries</a>
+      <!-- Guest Links (Logged Out) -->
+      <ng-container *ngIf="!isLoggedIn()">
         <a routerLink="/track" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Track Order</a>
       </ng-container>
 
       <!-- Admin Links -->
       <ng-container *ngIf="isLoggedIn() && isAdmin()">
-        <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Dashboard</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Admin Dashboard</a>
         <a routerLink="/admin/orders" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Orders</a>
-        <a routerLink="/admin/config" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Configuration</a>
+        <a routerLink="/admin/config" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Settings</a>
         <a routerLink="/order/device-select" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Customer View</a>
       </ng-container>
+
+      <!-- Common Links (For all) -->
+      <div class="drawer-divider"></div>
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">About Us</a>
+      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Contact Us</a>
+      <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Help & Queries</a>
 
       <!-- Mobile Notifications trigger -->
       <ng-container *ngIf="isLoggedIn()">
