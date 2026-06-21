@@ -14,6 +14,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./orders.scss']
 })
 export class OrdersComponent implements OnInit {
+  Math = Math;
   Number = Number;
   orders = signal<any[]>([]);
   loading = signal(true);
@@ -22,10 +23,20 @@ export class OrdersComponent implements OnInit {
   
   // Pagination & Filters
   currentPage = signal(1);
-  pageSize = signal(20);
+  pageSize = signal(10);
   totalPages = signal(1);
   searchQuery = signal('');
   statusFilter = signal('');
+
+  get pages(): number[] {
+    return Array(this.totalPages()).fill(0).map((x, i) => i + 1);
+  }
+
+  expandedOrderId = signal<number | null>(null);
+
+  toggleExpand(orderId: number) {
+    this.expandedOrderId.set(this.expandedOrderId() === orderId ? null : orderId);
+  }
   
   // Payment Options Config
   upiEnabled = true;

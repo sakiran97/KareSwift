@@ -30,150 +30,172 @@
     <button class="btn-primary" (click)="onSearch()" style="padding: 10px 20px;">Search</button>
   </div>
 
-  <div class="orders-grid" *ngIf="!loading()">
+  <div class="data-grid-container" *ngIf="!loading()">
     <div class="no-orders glass-panel" *ngIf="orders().length === 0">
       <p>No customer doorstep orders found in the system queue.</p>
     </div>
 
-    <!-- Order Card -->
-    <div class="order-card-admin glass-panel" *ngFor="let order of orders()" [class.cancelled]="order.status === 'CANCELLED'" style="position: relative;">
-      <div *ngIf="updatingOrderId() === order.id" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10; display: flex; align-items: center; justify-content: center; border-radius: inherit; backdrop-filter: blur(2px);">
-        <span class="spinner" style="width: 40px; height: 40px; border-width: 4px;"></span>
-      </div>
-      <div class="card-header">
-        <span class="order-id">ORD-{{ order.id }}</span>
-        <span class="status-badge" [class]="getStatusBadgeClass(order.status)">
-          {{ order.status }}
-        </span>
+    <div class="data-grid" *ngIf="orders().length > 0">
+      <!-- Header -->
+      <div class="grid-header glass-panel">
+        <div class="grid-col">Order ID</div>
+        <div class="grid-col">Customer</div>
+        <div class="grid-col">Device & Service</div>
+        <div class="grid-col">Status</div>
+        <div class="grid-col">Quick Actions</div>
       </div>
 
-      <div class="card-body">
-        <div class="detail-section">
-          <h4>Customer Details</h4>
-          <p class="txt-primary"><strong>Name:</strong> {{ order.user?.name || 'Valued Customer' }}</p>
-          <p>
-            <strong>Phone:</strong> 
-            <a href="tel:{{ order.user?.phone }}" class="call-link">
-              📞 {{ order.user?.phone || 'N/A' }}
-            </a>
-          </p>
-          <p><strong>Address:</strong> {{ order.address }}</p>
-          <p *ngIf="order.latitude && order.longitude">
-            <strong>Location:</strong> 
-            <a [href]="'https://www.google.com/maps/search/?api=1&query=' + order.latitude + ',' + order.longitude" target="_blank" class="call-link" style="color: #0ea5e9; font-weight: bold;">
-              📍 View on Google Maps
-            </a>
-            <iframe 
-              width="100%" 
-              height="200" 
-              frameborder="0" 
-              style="border:0; border-radius: 8px; margin-top: 10px;" 
-              [src]="getMapUrl(order.latitude, order.longitude)" 
-              allowfullscreen>
-            </iframe>
-          </p>
-          <p *ngIf="order.travelCharge !== undefined">
-            <strong>Travel Charge:</strong> 
-            <span class="charge-amount">{{ Number(order.travelCharge) === 0 ? 'FREE (₹0)' : '₹' + order.travelCharge }}</span>
-          </p>
-        </div>
-
-        <div class="detail-section">
-          <h4>Device & Service Details</h4>
-          <p><strong>Device:</strong> {{ order.device?.brand }} {{ order.device?.model }}</p>
-          <p><strong>Service:</strong> {{ order.serviceCategory?.name || 'General Diagnosis' }}</p>
-          <p><strong>Schedule:</strong> {{ order.scheduledDate }} at {{ order.scheduledSlot }}</p>
-          <p><strong>Notes:</strong> {{ order.notes || order.diagnosticNotes || 'None' }}</p>
-        </div>
-
-        <!-- Diagnostic Photos if available -->
-        <div class="detail-section" *ngIf="order.diagnosticPhotos?.length > 0">
-          <h4>Uploaded Photos</h4>
-          <div class="photos-preview-row">
-            <a *ngFor="let photo of order.diagnosticPhotos" [href]="photo" target="_blank">
-              <img [src]="photo" alt="Device Issue Photo" class="photo-thumbnail" />
-            </a>
+      <!-- Rows -->
+      <div class="grid-row-wrapper" *ngFor="let order of orders()" [class.cancelled]="order.status === 'CANCELLED'">
+        
+        <div class="grid-row glass-panel" [class.expanded]="expandedOrderId() === order.id">
+          <div *ngIf="updatingOrderId() === order.id" class="row-overlay">
+            <span class="spinner"></span>
+          </div>
+          
+          <div class="grid-cell" data-label="Order ID">
+            <span class="order-id">ORD-{{ order.id }}</span>
+          </div>
+          
+          <div class="grid-cell" data-label="Customer">
+            <div class="customer-info">
+              <strong>{{ order.user?.name || 'Valued Customer' }}</strong>
+              <span class="phone">📞 {{ order.user?.phone || 'N/A' }}</span>
+            </div>
+          </div>
+          
+          <div class="grid-cell" data-label="Device & Service">
+            <div class="service-info">
+              <strong>{{ order.device?.brand }} {{ order.device?.model }}</strong>
+              <span class="service">{{ order.serviceCategory?.name || 'Diagnosis' }}</span>
+              <span class="date">{{ order.scheduledDate }} ({{ order.scheduledSlot }})</span>
+            </div>
+          </div>
+          
+          <div class="grid-cell" data-label="Status">
+            <span class="status-badge" [class]="getStatusBadgeClass(order.status)">
+              {{ order.status }}
+            </span>
+          </div>
+          
+          <div class="grid-cell actions-cell" data-label="Quick Actions">
+            <!-- Next status inline -->
+            <button 
+              *ngIf="getNextStatusValue(order.status) && order.status !== 'COMPLETED' && order.status !== 'CANCELLED'"
+              class="action-btn next-btn"
+              (click)="updateStatus(order.id, getNextStatusValue(order.status))"
+              title="Advance to next step"
+            >
+              {{ getNextStatusText(order.status) }}
+            </button>
+            <button class="action-btn expand-btn" (click)="toggleExpand(order.id)">
+              {{ expandedOrderId() === order.id ? 'Close Details' : 'View Details' }}
+            </button>
           </div>
         </div>
 
-        <!-- Finalized Pricing details if available -->
-        <div class="detail-section pricing-details" *ngIf="order.finalAmount || order.completionOtp">
-          <h4>Pricing & Completion details</h4>
-          <p *ngIf="order.finalAmount"><strong>Final Amount:</strong> <span class="price">₹{{ order.finalAmount }}</span></p>
-          <p *ngIf="order.paymentMethod"><strong>Payment Method:</strong> {{ order.paymentMethod | uppercase }}</p>
-          <p *ngIf="order.completionOtp && order.status !== 'COMPLETED'"><strong>Completion OTP:</strong> <span class="otp-code">{{ order.completionOtp }}</span></p>
-          <p *ngIf="order.repairNotes"><strong>Repair Notes:</strong> {{ order.repairNotes }}</p>
+        <!-- Expanded Details Panel -->
+        <div class="expanded-details glass-panel" *ngIf="expandedOrderId() === order.id">
+          
+          <div class="details-grid">
+            <!-- Location & Address -->
+            <div class="detail-section">
+              <h4>Location & Travel</h4>
+              <p><strong>Address:</strong> {{ order.address }}</p>
+              <p *ngIf="order.travelCharge !== undefined">
+                <strong>Travel Charge:</strong> 
+                <span class="charge-amount">{{ Number(order.travelCharge) === 0 ? 'FREE (₹0)' : '₹' + order.travelCharge }}</span>
+              </p>
+              <div *ngIf="order.latitude && order.longitude" class="map-container">
+                <a [href]="'https://www.google.com/maps/search/?api=1&query=' + order.latitude + ',' + order.longitude" target="_blank" class="map-link">
+                  📍 Open in Google Maps
+                </a>
+                <iframe 
+                  width="100%" 
+                  height="150" 
+                  frameborder="0" 
+                  style="border:0; border-radius: 8px; margin-top: 10px;" 
+                  [src]="getMapUrl(order.latitude, order.longitude)" 
+                  allowfullscreen>
+                </iframe>
+              </div>
+            </div>
+
+            <!-- Notes & Media -->
+            <div class="detail-section">
+              <h4>Notes & Media</h4>
+              <p><strong>Notes:</strong> {{ order.notes || order.diagnosticNotes || 'None' }}</p>
+              <div *ngIf="order.diagnosticPhotos?.length > 0">
+                <strong>Uploaded Photos:</strong>
+                <div class="photos-preview-row">
+                  <a *ngFor="let photo of order.diagnosticPhotos" [href]="photo" target="_blank">
+                    <img [src]="photo" alt="Device Issue Photo" class="photo-thumbnail" />
+                  </a>
+                </div>
+              </div>
+              <div class="pricing-details" *ngIf="order.finalAmount || order.completionOtp">
+                <strong>Final Amount:</strong> <span class="price">₹{{ order.finalAmount }}</span><br/>
+                <ng-container *ngIf="order.paymentMethod"><strong>Payment Method:</strong> {{ order.paymentMethod | uppercase }}<br/></ng-container>
+                <ng-container *ngIf="order.completionOtp && order.status !== 'COMPLETED'"><strong>Completion OTP:</strong> <span class="otp-code">{{ order.completionOtp }}</span><br/></ng-container>
+                <ng-container *ngIf="order.repairNotes"><strong>Repair Notes:</strong> {{ order.repairNotes }}</ng-container>
+              </div>
+            </div>
+            
+            <!-- Advanced Actions -->
+            <div class="detail-section actions-panel">
+              <h4>Advanced Actions</h4>
+              <div class="action-buttons-grid">
+                <button *ngIf="order.status === 'IN_PROGRESS'" class="btn-status-finalize full-width" (click)="openFinalizeModal(order.id)">
+                  💰 Finalize Price & Notes
+                </button>
+
+                <button *ngIf="order.status === 'PRICE_FINALIZED'" class="btn-status-complete full-width" (click)="openCompleteModal(order.id)">
+                  ✓ Complete Order (Verify OTP)
+                </button>
+
+                <button *ngIf="order.status === 'PRICE_FINALIZED'" class="btn-status-qr full-width" (click)="openQrModal(order.finalAmount)">
+                  📱 Show Payment QR
+                </button>
+
+                <button class="btn-status-chat full-width" (click)="openChatModal(order.id)">
+                  💬 Chat with Customer
+                </button>
+
+                <button *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'" class="btn-status-cancel full-width" (click)="openCancelModal(order.id)">
+                  Cancel Order
+                </button>
+                
+                <span *ngIf="(order.status === 'COMPLETED' || order.status === 'CANCELLED') && order.status !== 'PRICE_FINALIZED'">
+                  <em>No further actions available.</em>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Footer Actions -->
-      <div class="card-footer" *ngIf="order.status !== 'COMPLETED' && order.status !== 'CANCELLED'">
-        <!-- Standard Status Transition -->
-        <button 
-          *ngIf="getNextStatusValue(order.status)"
-          type="button" 
-          class="btn-status-next" 
-          (click)="updateStatus(order.id, getNextStatusValue(order.status))"
-        >
-          {{ getNextStatusText(order.status) }}
-        </button>
-
-        <!-- Finalize Price (when IN_PROGRESS) -->
-        <button 
-          *ngIf="order.status === 'IN_PROGRESS'"
-          type="button" 
-          class="btn-status-finalize"
-          (click)="openFinalizeModal(order.id)"
-        >
-          💰 Finalize Price & Notes
-        </button>
-
-        <!-- Complete Order OTP (when PRICE_FINALIZED) -->
-        <button 
-          *ngIf="order.status === 'PRICE_FINALIZED'"
-          type="button" 
-          class="btn-status-complete"
-          (click)="openCompleteModal(order.id)"
-        >
-          ✓ Complete Order (Verify OTP)
-        </button>
-
-        <!-- Show Payment QR -->
-        <button 
-          *ngIf="order.status === 'PRICE_FINALIZED'"
-          type="button" 
-          class="btn-status-qr"
-          (click)="openQrModal(order.finalAmount)"
-          style="background: #8b5cf6; color: white;"
-        >
-          📱 Show Payment QR
-        </button>
-
-        <!-- Chat Support -->
-        <button 
-          type="button" 
-          class="btn-status-chat"
-          (click)="openChatModal(order.id)"
-          style="background: #3b82f6; color: white;"
-        >
-          💬 Chat with Customer
-        </button>
-
-        <button 
-          type="button" 
-          class="btn-status-cancel" 
-          (click)="openCancelModal(order.id)"
-        >
-          Cancel Order
-        </button>
       </div>
     </div>
-  </div>
-
-  <div class="pagination-controls glass-panel" *ngIf="!loading() && totalPages() > 1" style="margin-top: 20px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-    <button class="btn-secondary" [disabled]="currentPage() === 1" (click)="prevPage()">Previous</button>
-    <span style="color: white;">Page {{ currentPage() }} of {{ totalPages() }}</span>
-    <button class="btn-secondary" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Next</button>
+    
+    <!-- Pagination Controls -->
+    <div class="pagination-footer glass-panel" *ngIf="totalPages() > 1">
+      <div class="pagination-info">
+        Showing Page {{ currentPage() }} of {{ totalPages() }}
+      </div>
+      <div class="pagination-controls">
+        <button class="page-btn" [disabled]="currentPage() === 1" (click)="prevPage()">Previous</button>
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pages" 
+            class="page-num" 
+            [class.active]="currentPage() === page"
+            (click)="currentPage.set(page); loadOrders()"
+          >
+            {{ page }}
+          </button>
+        </div>
+        <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Next</button>
+      </div>
+    </div>
   </div>
 
   <div class="loading-panel glass-panel" *ngIf="loading()">
