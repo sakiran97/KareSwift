@@ -1,72 +1,92 @@
 <div class="reviews-container">
-  <div class="reviews-header glass-panel">
+  <div class="reviews-header glass-panel" style="padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <div>
-      <h2>Customer Reviews Moderation</h2>
-      <p>Approve or hide customer reviews before displaying them on the public homepage.</p>
+      <h2 style="margin: 0; font-size: 1.5rem;">Customer Reviews Moderation</h2>
+      <p style="margin: 0.25rem 0 0 0; opacity: 0.5;">Approve or hide customer reviews before displaying them on the public homepage.</p>
     </div>
-    <button class="btn-refresh" (click)="loadReviews()">
+    <button class="btn-refresh" (click)="loadReviews()" style="padding: 0.6rem 1.25rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; cursor: pointer;">
       🔄 Refresh List
     </button>
   </div>
 
-  <div class="reviews-grid" *ngIf="!loading()">
-    <div class="no-records glass-panel" *ngIf="reviews().length === 0">
+  <div class="data-grid-container" style="position: relative;">
+    <div *ngIf="loading()" style="position: absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.3); z-index:50; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(2px); border-radius:12px;">
+      <span class="spinner"></span>
+    </div>
+
+    <div class="no-records glass-panel" *ngIf="!loading() && reviews().length === 0">
       <p>No customer reviews submitted yet.</p>
     </div>
 
-    <!-- Review Card -->
-    <div class="review-card glass-panel" *ngFor="let r of reviews()" [class.unverified]="!r.isVerified">
-      <div class="card-header">
-        <div class="user-meta">
-          <strong>ORD-{{ r.orderId }}</strong>
-          <span class="user-name" *ngIf="r.order?.user?.name">by {{ r.order.user.name }}</span>
-        </div>
-        <button type="button" class="btn-status-toggle" [class.verified-status]="r.isVerified" (click)="toggleVerify(r)">
-          {{ r.isVerified ? 'Verified & Public' : 'Hidden / Unverified' }}
-        </button>
+    <div class="data-grid" *ngIf="reviews().length > 0">
+      <div class="grid-header" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr;">
+        <div>Order & Customer</div>
+        <div>Overall Rating</div>
+        <div>Date Submitted</div>
+        <div>Quick Actions</div>
       </div>
 
-      <div class="card-body">
-        <!-- Multi-Ratings breakdown -->
-        <div class="ratings-row">
-          <div class="rating-badge">
-            <span class="label">Overall:</span>
-            <span class="stars">⭐ {{ r.overallRating }}/5</span>
+      <div class="grid-row-wrapper" *ngFor="let r of reviews()" [class.cancelled]="!r.isVerified">
+        <div class="grid-row" [class.expanded]="expandedReviewId() === r.id" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr;">
+          
+          <div class="grid-cell" data-label="Order & Customer">
+            <span class="order-id">ORD-{{ r.orderId }}</span>
+            <div class="customer-info">
+              <strong *ngIf="r.order?.user?.name">{{ r.order.user.name }}</strong>
+            </div>
           </div>
-          <div class="rating-badge">
-            <span class="label">Quality:</span>
-            <span class="stars">⭐ {{ r.serviceQuality }}/5</span>
+
+          <div class="grid-cell" data-label="Overall Rating">
+            <span class="primary-text">⭐ {{ r.overallRating }}/5</span>
           </div>
-          <div class="rating-badge">
-            <span class="label">Timeliness:</span>
-            <span class="stars">⭐ {{ r.timeliness }}/5</span>
+
+          <div class="grid-cell" data-label="Date Submitted">
+            <span class="secondary-text">{{ r.createdAt | date:'mediumDate' }}</span>
           </div>
-          <div class="rating-badge">
-            <span class="label">Professionalism:</span>
-            <span class="stars">⭐ {{ r.professionalism }}/5</span>
+
+          <div class="grid-cell actions-cell">
+            <button type="button" class="action-btn next-btn" style="background: {{ r.isVerified ? 'linear-gradient(135deg, #10b981, #059669)' : 'rgba(239, 68, 68, 0.2)' }}" (click)="toggleVerify(r)">
+              {{ r.isVerified ? 'Verified & Public' : 'Hidden / Unverified' }}
+            </button>
+            <button type="button" class="action-btn expand-btn" (click)="toggleExpand(r.id)">
+              {{ expandedReviewId() === r.id ? 'Hide Review Details' : 'View Review Details' }}
+            </button>
           </div>
         </div>
 
-        <div class="review-comments" *ngIf="r.comments">
-          <p>"{{ r.comments }}"</p>
-        </div>
+        <!-- Expandable Details Panel -->
+        <div class="expanded-details" *ngIf="expandedReviewId() === r.id">
+          <div class="details-grid">
+            <div class="detail-section">
+              <h4>Detailed Ratings</h4>
+              <p><strong>Quality:</strong> ⭐ {{ r.serviceQuality }}/5</p>
+              <p><strong>Timeliness:</strong> ⭐ {{ r.timeliness }}/5</p>
+              <p><strong>Professionalism:</strong> ⭐ {{ r.professionalism }}/5</p>
+            </div>
 
-        <!-- Photos if uploaded -->
-        <div class="photos-preview" *ngIf="r.photos?.length > 0">
-          <a *ngFor="let p of r.photos" [href]="p" target="_blank">
-            <img [src]="p" alt="Review Photo" class="review-thumbnail" />
-          </a>
+            <div class="detail-section" style="grid-column: span 2;">
+              <h4>Customer Comments</h4>
+              <p *ngIf="r.comments" style="font-style: italic;">"{{ r.comments }}"</p>
+              <p *ngIf="!r.comments" style="opacity: 0.5;">No written comments provided.</p>
+
+              <div *ngIf="r.photos?.length > 0" style="margin-top: 1rem;">
+                <h4>Attached Photos</h4>
+                <div class="photos-preview-row">
+                  <a *ngFor="let p of r.photos" [href]="p" (click)="openImageModal(p, $event)">
+                    <img [src]="p" alt="Review Photo" class="photo-thumbnail" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div class="card-footer">
-        <span class="date-submitted">Submitted: {{ r.createdAt | date:'mediumDate' }}</span>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="loading-panel glass-panel" *ngIf="loading()">
-    <span class="spinner"></span>
-    <p>Loading customer reviews...</p>
-  </div>
+<!-- Image Lightbox Modal -->
+<div class="image-lightbox" *ngIf="showImageModal()" style="position: fixed; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center;">
+  <button class="lightbox-close" (click)="closeImageModal()">&times;</button>
+  <img [src]="selectedImageUrl()" class="lightbox-img" alt="Enlarged review photo" />
 </div>

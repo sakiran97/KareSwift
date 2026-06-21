@@ -42,37 +42,43 @@
     <!-- Service List Table -->
     <div class="list-card-service glass-panel" [class.full-width]="!isEditing">
       <h3>Catalog Items</h3>
-      <div class="table-responsive">
-        <table class="services-table">
-          <thead>
-            <tr>
-              <th>Service Name</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="no-records" *ngIf="services().length === 0">
-              <td colspan="4">No services configured in catalog yet. Add one to show booking options.</td>
-            </tr>
-            <tr *ngFor="let s of services()" [class.inactive-row]="!s.isActive">
-              <td><strong>{{ s.name }}</strong></td>
-              <td>{{ s.description || '—' }}</td>
-              <td>
-                <button type="button" class="btn-status-toggle" [class.active-status]="s.isActive" (click)="toggleActiveStatus(s)">
+      <div class="data-grid-container" style="margin-top: 1rem;">
+        <div class="no-records glass-panel" *ngIf="services().length === 0">
+          <p>No services configured in catalog yet. Add one to show booking options.</p>
+        </div>
+
+        <div class="data-grid" *ngIf="services().length > 0">
+          <div class="grid-header" style="grid-template-columns: 1.5fr 2.5fr 1fr 0.5fr;">
+            <div>Service Name</div>
+            <div>Description</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+
+          <div class="grid-row-wrapper" *ngFor="let s of services()" [class.cancelled]="!s.isActive">
+            <div class="grid-row" style="grid-template-columns: 1.5fr 2.5fr 1fr 0.5fr;">
+              
+              <div class="grid-cell" data-label="Service Name">
+                <strong class="primary-text">{{ s.name }}</strong>
+              </div>
+
+              <div class="grid-cell" data-label="Description">
+                <span class="secondary-text">{{ s.description || '—' }}</span>
+              </div>
+
+              <div class="grid-cell" data-label="Status">
+                <button type="button" class="btn-status-toggle" style="background: {{ s.isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)' }}; color: {{ s.isActive ? '#10b981' : '#ef4444' }}; border: 1px solid {{ s.isActive ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)' }}; padding: 0.3rem 0.85rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer;" (click)="toggleActiveStatus(s)">
                   {{ s.isActive ? 'Active' : 'Inactive' }}
                 </button>
-              </td>
-              <td>
-                <div class="actions-row">
-                  <button type="button" class="btn-icon edit" (click)="showForm(s)" title="Edit">✏️</button>
-                  <button type="button" class="btn-icon delete" (click)="deleteService(s.id)" title="Delete">🗑️</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+
+              <div class="grid-cell actions-cell" style="flex-direction: row; gap: 0.5rem; justify-content: flex-end;">
+                <button type="button" class="btn-icon edit" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="showForm(s)" title="Edit">✏️</button>
+                <button type="button" class="btn-icon delete" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="deleteService(s.id)" title="Delete">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

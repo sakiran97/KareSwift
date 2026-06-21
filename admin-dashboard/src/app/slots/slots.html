@@ -53,43 +53,50 @@
     <!-- Slot List Table -->
     <div class="list-card-slot glass-panel" [class.full-width]="!isEditing">
       <h3>Active Booking Slots</h3>
-      <div class="table-responsive">
-        <table class="slots-table">
-          <thead>
-            <tr>
-              <th>Slot Name</th>
-              <th>Timings (Start - End)</th>
-              <th>Max Capacity</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="no-records" *ngIf="slots().length === 0">
-              <td colspan="5">No booking slots configured yet. Add one to open slots.</td>
-            </tr>
-            <tr *ngFor="let slot of slots()" [class.inactive-row]="!slot.isActive">
-              <td><strong>{{ slot.name }}</strong></td>
-              <td>{{ slot.startTime }} - {{ slot.endTime }}</td>
-              <td>
-                <span class="capacity-badge">
+      <div class="data-grid-container" style="margin-top: 1rem;">
+        <div class="no-records glass-panel" *ngIf="slots().length === 0">
+          <p>No booking slots configured yet. Add one to open slots.</p>
+        </div>
+
+        <div class="data-grid" *ngIf="slots().length > 0">
+          <div class="grid-header" style="grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;">
+            <div>Slot Name</div>
+            <div>Timings (Start - End)</div>
+            <div>Max Capacity</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+
+          <div class="grid-row-wrapper" *ngFor="let slot of slots()" [class.cancelled]="!slot.isActive">
+            <div class="grid-row" style="grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;">
+              
+              <div class="grid-cell" data-label="Slot Name">
+                <strong class="primary-text">{{ slot.name }}</strong>
+              </div>
+
+              <div class="grid-cell" data-label="Timings">
+                <span class="secondary-text" style="font-family: monospace; font-size: 0.9rem;">{{ slot.startTime }} - {{ slot.endTime }}</span>
+              </div>
+
+              <div class="grid-cell" data-label="Capacity">
+                <span class="capacity-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">
                   {{ slot.maxBookings }} Max Bookings
                 </span>
-              </td>
-              <td>
-                <button type="button" class="btn-status-toggle" [class.active-status]="slot.isActive" (click)="toggleActiveStatus(slot)">
+              </div>
+
+              <div class="grid-cell" data-label="Status">
+                <button type="button" class="btn-status-toggle" style="background: {{ slot.isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)' }}; color: {{ slot.isActive ? '#10b981' : '#ef4444' }}; border: 1px solid {{ slot.isActive ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)' }}; padding: 0.3rem 0.85rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer;" (click)="toggleActiveStatus(slot)">
                   {{ slot.isActive ? 'Active' : 'Inactive' }}
                 </button>
-              </td>
-              <td>
-                <div class="actions-row">
-                  <button type="button" class="btn-icon edit" (click)="showForm(slot)" title="Edit">✏️</button>
-                  <button type="button" class="btn-icon delete" (click)="deleteSlot(slot.id)" title="Delete">🗑️</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+
+              <div class="grid-cell actions-cell" style="flex-direction: row; gap: 0.5rem; justify-content: flex-end;">
+                <button type="button" class="btn-icon edit" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="showForm(slot)" title="Edit">✏️</button>
+                <button type="button" class="btn-icon delete" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="deleteSlot(slot.id)" title="Delete">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

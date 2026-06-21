@@ -52,46 +52,51 @@
     <!-- Area List Table -->
     <div class="list-card-area glass-panel" [class.full-width]="!isEditing">
       <h3>Active Service Locations</h3>
-      <div class="table-responsive">
-        <table class="areas-table">
-          <thead>
-            <tr>
-              <th>Area / Locality</th>
-              <th>Covered Pincodes</th>
-              <th>Doorstep Travel Charge</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="no-records" *ngIf="areas().length === 0">
-              <td colspan="5">No service areas configured yet. Add one to start doorstep service.</td>
-            </tr>
-            <tr *ngFor="let area of areas()" [class.inactive-row]="!area.isActive">
-              <td><strong>{{ area.name }}</strong><br><small style="opacity:0.7">{{ area.city }}</small></td>
-              <td>
-                <span class="pincode-pill" *ngFor="let p of area.pincodes" style="display:inline-block;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:0.8rem;margin:2px;">{{ p }}</span>
+      <div class="data-grid-container" style="margin-top: 1rem;">
+        <div class="no-records glass-panel" *ngIf="areas().length === 0">
+          <p>No service areas configured yet. Add one to start doorstep service.</p>
+        </div>
+
+        <div class="data-grid" *ngIf="areas().length > 0">
+          <div class="grid-header" style="grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;">
+            <div>Area / Locality</div>
+            <div>Covered Pincodes</div>
+            <div>Doorstep Charge</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+
+          <div class="grid-row-wrapper" *ngFor="let area of areas()" [class.cancelled]="!area.isActive">
+            <div class="grid-row" style="grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;">
+              <div class="grid-cell" data-label="Area">
+                <span class="primary-text">{{ area.name }}</span>
+                <span class="secondary-text">{{ area.city }}</span>
+              </div>
+
+              <div class="grid-cell" data-label="Pincodes" style="flex-direction: row; flex-wrap: wrap; gap: 4px;">
+                <span class="pincode-pill" *ngFor="let p of area.pincodes" style="display:inline-block;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:0.8rem;">{{ p }}</span>
                 <em *ngIf="!area.pincodes || area.pincodes.length === 0" style="opacity:0.5;font-size:0.8rem;">No pincodes</em>
-              </td>
-              <td>
-                <span class="charge-badge" [class.free]="Number(area.travelCharge) === 0">
+              </div>
+
+              <div class="grid-cell" data-label="Charge">
+                <span class="charge-badge" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:4px; font-weight:bold; font-size:0.85rem;" [style.background]="Number(area.travelCharge) === 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.1)'" [style.color]="Number(area.travelCharge) === 0 ? '#10b981' : '#fff'">
                   {{ Number(area.travelCharge) === 0 ? 'FREE' : '₹' + area.travelCharge }}
                 </span>
-              </td>
-              <td>
-                <button type="button" class="btn-status-toggle" [class.active-status]="area.isActive" (click)="toggleActiveStatus(area)">
+              </div>
+
+              <div class="grid-cell" data-label="Status">
+                <button type="button" class="btn-status-toggle" style="background: {{ area.isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)' }}; color: {{ area.isActive ? '#10b981' : '#ef4444' }}; border: 1px solid {{ area.isActive ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)' }}; padding: 0.3rem 0.85rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer;" (click)="toggleActiveStatus(area)">
                   {{ area.isActive ? 'Active' : 'Inactive' }}
                 </button>
-              </td>
-              <td>
-                <div class="actions-row">
-                  <button type="button" class="btn-icon edit" (click)="showForm(area)" title="Edit">✏️</button>
-                  <button type="button" class="btn-icon delete" (click)="deleteArea(area.id)" title="Delete">🗑️</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+
+              <div class="grid-cell actions-cell" style="flex-direction: row; gap: 0.5rem; justify-content: flex-end;">
+                <button type="button" class="btn-icon edit" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="showForm(area)" title="Edit">✏️</button>
+                <button type="button" class="btn-icon delete" style="background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:0.7; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" (click)="deleteArea(area.id)" title="Delete">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -13,11 +13,38 @@ export class ReviewsComponent implements OnInit {
   reviews = signal<any[]>([]);
   loading = signal(true);
   error = signal('');
+  
+  // Expandable Row
+  expandedReviewId = signal<number | null>(null);
+
+  // Image Modal State
+  showImageModal = signal(false);
+  selectedImageUrl = signal<string>('');
 
   constructor(private adminService: AdminService) {}
 
   ngOnInit() {
     this.loadReviews();
+  }
+
+  toggleExpand(reviewId: number) {
+    if (this.expandedReviewId() === reviewId) {
+      this.expandedReviewId.set(null);
+    } else {
+      this.expandedReviewId.set(reviewId);
+    }
+  }
+
+  // Image Modal
+  openImageModal(url: string, event: Event) {
+    event.preventDefault(); // prevent navigation
+    this.selectedImageUrl.set(url);
+    this.showImageModal.set(true);
+  }
+
+  closeImageModal() {
+    this.showImageModal.set(false);
+    this.selectedImageUrl.set('');
   }
 
   loadReviews() {
