@@ -404,3 +404,111 @@
     }
   }
 }
+
+// Modal Styles
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    [data-theme="dark"] & {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #212529;
+      [data-theme="dark"] & { color: white; }
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #6c757d;
+      &:hover { color: #dc3545; }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+
+    .modal-desc {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #495057;
+      font-size: 0.95rem;
+      [data-theme="dark"] & { color: #adb5bd; }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      textarea {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.8);
+        font-family: inherit;
+        font-size: 0.95rem;
+        resize: vertical;
+        transition: all 0.2s;
+
+        [data-theme="dark"] & {
+          background: rgba(15, 23, 42, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+
+        &.invalid {
+          border-color: #dc3545;
+        }
+      }
+
+      .error-text {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        [data-theme="dark"] & { color: #ff6b6b; }
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+  }
+}
+

@@ -28,7 +28,7 @@ export class WarrantyService {
     return this.http.get<WarrantyInfo>(`${this.apiUrl}/${orderId}`);
   }
 
-  claimWarranty(orderId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/${orderId}/claim`, {});
+  claimWarranty(orderId: number, description?: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${orderId}/claim`, { description });
   }
 }

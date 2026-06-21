@@ -22,10 +22,14 @@ export class WarrantyController {
   }
 
   @Post(':orderId/claim')
-  async claimWarranty(@Param('orderId') orderId: string, @Req() req: any) {
+  async claimWarranty(
+    @Param('orderId') orderId: string, 
+    @Req() req: any,
+    @Body() body?: { description?: string }
+  ) {
     const parsedOrderId = Number(orderId);
     if (isNaN(parsedOrderId)) throw new BadRequestException('Invalid order ID');
     const userId = Number(req.user.id);
-    return this.warrantyService.claimWarranty(parsedOrderId, userId);
+    return this.warrantyService.claimWarranty(parsedOrderId, userId, body?.description);
   }
 }

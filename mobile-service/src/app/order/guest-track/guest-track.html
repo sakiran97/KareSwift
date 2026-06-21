@@ -1,0 +1,89 @@
+<div class="guest-track-container page-container">
+  
+  <div class="header-banner glass-panel animate-fade-down">
+    <button routerLink="/" class="btn-back">← Back</button>
+    <h1>Track Your Order</h1>
+    <p>Enter your details below to check the live status of your repair.</p>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- SEARCH FORM -->
+    <div class="search-card glass-panel animate-fade-up" *ngIf="!orderResult">
+      <form [formGroup]="trackForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="errorMessage" class="error-banner animate-shake">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-group">
+          <label>Order ID</label>
+          <input 
+            type="text" 
+            formControlName="orderId" 
+            placeholder="e.g. ORD-15"
+            [class.invalid]="trackForm.get('orderId')?.invalid && trackForm.get('orderId')?.touched"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input 
+            type="tel" 
+            formControlName="mobileNumber" 
+            placeholder="10-digit number used during booking"
+            [class.invalid]="trackForm.get('mobileNumber')?.invalid && trackForm.get('mobileNumber')?.touched"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading || trackForm.invalid">
+          <span *ngIf="!isLoading">Track Order</span>
+          <div *ngIf="isLoading" class="spinner"></div>
+        </button>
+      </form>
+    </div>
+
+    <!-- RESULTS VIEW -->
+    <div class="results-view animate-fade-up" *ngIf="orderResult">
+      <div class="result-header">
+        <h2>Order {{ orderResult.id }}</h2>
+        <span class="status-badge" [ngClass]="orderResult.status.toLowerCase()">
+          {{ orderResult.status.replace('_', ' ') }}
+        </span>
+        <button class="btn-secondary" (click)="resetSearch()">Track Another</button>
+      </div>
+
+      <div class="order-summary glass-panel">
+        <div class="summary-row">
+          <span class="label">Device:</span>
+          <span class="value">{{ orderResult.device?.brand }} {{ orderResult.device?.model }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Service:</span>
+          <span class="value">{{ orderResult.serviceCategory?.name }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Date Booked:</span>
+          <span class="value">{{ orderResult.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="label">Scheduled For:</span>
+          <span class="value">{{ orderResult.scheduledDate | date:'longDate' }} ({{ orderResult.scheduledSlot }})</span>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <h3 style="margin-top: 30px; margin-bottom: 20px; color: white;">Status Timeline</h3>
+      <div class="timeline-container glass-panel">
+        <div class="timeline-item" *ngFor="let item of timelineResult; let isLast = last" [class.last]="isLast">
+          <div class="timeline-icon">
+            {{ getStepIcon(item.status) }}
+          </div>
+          <div class="timeline-content">
+            <h4>{{ item.status.replace('_', ' ') }}</h4>
+            <span class="time">{{ item.createdAt | date:'medium' }}</span>
+            <p *ngIf="item.notes" class="notes">{{ item.notes }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

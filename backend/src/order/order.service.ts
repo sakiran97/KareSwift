@@ -115,6 +115,39 @@ export class OrderService {
     });
   }
 
+  async trackGuest(id: number, mobileNumber: string): Promise<any> {
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: {
+        device: true,
+        serviceCategory: true,
+        user: { select: { phone: true } },
+      }
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const orderPhone = order.mobileNumber || order.user?.phone || '';
+    
+    // Check if the provided mobile number matches the order's mobile number
+    // Clean both numbers (remove spaces, etc) for comparison
+    const cleanInput = mobileNumber.replace(/\D/g, '').slice(-10);
+    const cleanOrderPhone = orderPhone.replace(/\D/g, '').slice(-10);
+
+    if (!cleanInput || !cleanOrderPhone || cleanInput !== cleanOrderPhone) {
+      throw new BadRequestException('Unauthorized: Mobile number does not match the order records');
+    }
+
+    const timeline = await this.getTimeline(id);
+
+    return {
+      order,
+      timeline
+    };
+  }
+
   async updateStatus(
     id: number,
     status: OrderStatus,

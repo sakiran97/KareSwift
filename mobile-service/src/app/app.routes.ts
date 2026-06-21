@@ -6,6 +6,7 @@ import { Contact } from './components/contact/contact';
 import { Help } from './components/help/help';
 import { ProfileComponent } from './components/profile/profile';
 import { HomeComponent } from './components/home/home';
+import { GuestTrackComponent } from './order/guest-track/guest-track';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'order/device-select', pathMatch: 'full' },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
   { path: 'help', component: Help },
+  { path: 'track', component: GuestTrackComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'order/device-select' }
 ];

@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { WarrantyService, WarrantyInfo } from '../../services/warranty.service';
 
 @Component({
   selector: 'app-warranty-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './warranty-list.html',
   styleUrl: './warranty-list.scss'
 })
@@ -17,11 +18,20 @@ export class WarrantyList implements OnInit {
   claimLoadingOrderId: number | null = null;
   claimSuccessMessage = '';
 
+  isModalOpen = false;
+  selectedOrderIdForClaim: number | null = null;
+  claimForm: FormGroup;
+
   constructor(
     private warrantyService: WarrantyService,
     private cdr: ChangeDetectorRef,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.claimForm = this.fb.group({
+      description: ['', [Validators.required, Validators.minLength(5)]]
+    });
+  }
 
   ngOnInit() {
     this.loadWarranties();
@@ -72,17 +82,37 @@ export class WarrantyList implements OnInit {
     return this.getDaysRemaining(expiresAt) <= 0;
   }
 
-  claimWarranty(orderId: number) {
+  openClaimModal(orderId: number) {
+    this.selectedOrderIdForClaim = orderId;
+    this.claimForm.reset();
+    this.isModalOpen = true;
+    this.error = '';
+    this.claimSuccessMessage = '';
+    this.cdr.detectChanges();
+  }
+
+  closeClaimModal() {
+    this.isModalOpen = false;
+    this.selectedOrderIdForClaim = null;
+    this.cdr.detectChanges();
+  }
+
+  claimWarranty() {
+    if (this.claimForm.invalid || !this.selectedOrderIdForClaim) return;
+    
     if (this.claimLoadingOrderId !== null) return;
-    this.claimLoadingOrderId = orderId;
+    this.claimLoadingOrderId = this.selectedOrderIdForClaim;
     this.error = '';
     this.claimSuccessMessage = '';
     this.cdr.detectChanges();
 
-    this.warrantyService.claimWarranty(orderId).subscribe({
+    const description = this.claimForm.value.description;
+
+    this.warrantyService.claimWarranty(this.selectedOrderIdForClaim, description).subscribe({
       next: (res: any) => {
         this.claimLoadingOrderId = null;
         this.claimSuccessMessage = 'Warranty claim submitted successfully! Redirecting...';
+        this.isModalOpen = false;
         this.cdr.detectChanges();
 
         // Redirect to track the new order

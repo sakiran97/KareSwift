@@ -61,6 +61,19 @@ export class OrderController {
     return this.orderService.findServiceCategories();
   }
 
+  @Post('track-guest')
+  async trackGuest(@Body() body: { orderId: string; mobileNumber: string }) {
+    if (!body.orderId || !body.mobileNumber) {
+      throw new BadRequestException('Order ID and Mobile Number are required');
+    }
+    const cleanId = body.orderId.startsWith('ORD-') ? body.orderId.replace('ORD-', '') : body.orderId;
+    const parsedId = Number(cleanId);
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('Invalid order ID format');
+    }
+    return this.orderService.trackGuest(parsedId, body.mobileNumber);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Order> {

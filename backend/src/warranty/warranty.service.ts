@@ -77,7 +77,7 @@ export class WarrantyService {
     };
   }
 
-  async claimWarranty(orderId: number, userId: number) {
+  async claimWarranty(orderId: number, userId: number, description?: string) {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
       include: { warranty: true },
@@ -98,14 +98,17 @@ export class WarrantyService {
       data: { claimCount: { increment: 1 } },
     });
 
+    const baseNotes = `Warranty claim for order #${orderId}`;
+    const claimNotes = description ? `${baseNotes}. Issue: ${description}` : baseNotes;
+
     // Create new order as warranty claim
     const claimOrder = await this.orderService.create({
       userId,
       deviceId: order.deviceId,
       serviceCategoryId: order.serviceCategoryId,
       address: order.address || undefined,
-      notes: `Warranty claim for order #${orderId}`,
-      diagnosticNotes: `Warranty claim for order #${orderId}`,
+      notes: claimNotes,
+      diagnosticNotes: claimNotes,
     });
 
     return {

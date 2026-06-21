@@ -95,9 +95,9 @@
           
           <button 
             *ngIf="!isExpired(warranty.expiresAt)" 
-            (click)="claimWarranty(warranty.orderId)" 
-            [disabled]="claimLoadingOrderId !== null"
-            class="btn btn-primary">
+            (click)="openClaimModal(warranty.orderId)" 
+            class="btn btn-primary"
+            [disabled]="claimLoadingOrderId === warranty.orderId">
             <span *ngIf="claimLoadingOrderId === warranty.orderId" class="button-spinner"></span>
             {{ claimLoadingOrderId === warranty.orderId ? 'Submitting...' : 'Claim Warranty' }}
           </button>
@@ -109,6 +109,42 @@
             Warranty Expired
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claim Warranty Modal -->
+  <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeClaimModal()">
+    <div class="modal-content glass" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Claim Warranty</h3>
+        <button class="close-btn" (click)="closeClaimModal()">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="modal-desc">Please briefly describe the issue you are facing with your repaired device.</p>
+        
+        <form [formGroup]="claimForm" (ngSubmit)="claimWarranty()">
+          <div class="form-group">
+            <textarea 
+              formControlName="description" 
+              placeholder="e.g., Screen is flickering again..." 
+              rows="4"
+              [class.invalid]="claimForm.get('description')?.invalid && claimForm.get('description')?.touched"
+            ></textarea>
+            <div class="error-text" *ngIf="claimForm.get('description')?.invalid && claimForm.get('description')?.touched">
+              Please provide a description (min 5 chars).
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" (click)="closeClaimModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="claimForm.invalid || claimLoadingOrderId !== null">
+              <span *ngIf="claimLoadingOrderId !== null" class="button-spinner"></span>
+              {{ claimLoadingOrderId !== null ? 'Submitting...' : 'Submit Claim' }}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
