@@ -46,13 +46,13 @@ export class GuestTrackComponent implements OnInit {
     const payload = this.trackForm.value;
 
     this.http.post<any>('/api/orders/track-guest', payload).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.isLoading = false;
         this.orderResult = res.order;
         this.timelineResult = res.timeline;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || 'Unable to track order. Please check the details and try again.';
         this.cdr.detectChanges();
