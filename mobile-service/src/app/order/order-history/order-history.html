@@ -73,7 +73,7 @@
       *ngFor="let order of filteredOrders"
       [class.completed]="order.status === 'COMPLETED'"
       [class.cancelled]="order.status === 'CANCELLED'"
-      [class.active-card]="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS'].includes(order.status)"
+      [class.active-card]="!['COMPLETED', 'CANCELLED'].includes(order.status)"
     >
       <div class="card-header">
         <div class="order-id-group">
@@ -116,7 +116,7 @@
         </div>
         <div class="action-buttons">
           <button 
-            *ngIf="['PENDING', 'CONFIRMED', 'EN_ROUTE', 'IN_PROGRESS', 'DIAGNOSED', 'DIAGNOSIS_COMPLETED', 'PRICE_FINALIZED', 'READY_FOR_REPAIR', 'PARTS_ORDERED', 'REPAIRING'].includes(order.status)"
+            *ngIf="!['COMPLETED', 'CANCELLED'].includes(order.status)"
             [routerLink]="['/order/track', order.id]" 
             class="track-btn"
           >
