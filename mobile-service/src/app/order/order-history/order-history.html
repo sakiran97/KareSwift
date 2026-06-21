@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="orders-list">
+  <div class="data-grid-container">
     <div class="loading-state" *ngIf="loading">
       <div class="spinner"></div>
       <p>Loading your orders...</p>
@@ -68,71 +68,102 @@
       <button class="action-btn" routerLink="/order/device-select">Book a Repair</button>
     </div>
 
-    <div 
-      class="order-card" 
-      *ngFor="let order of filteredOrders"
-      [class.completed]="order.status === 'COMPLETED'"
-      [class.cancelled]="order.status === 'CANCELLED'"
-      [class.active-card]="!['COMPLETED', 'CANCELLED'].includes(order.status)"
-    >
-      <div class="card-header">
-        <div class="order-id-group">
-          <span class="order-label">ORDER ID</span>
+    <div class="data-grid" *ngIf="!loading && !error && filteredOrders.length > 0">
+      <!-- Grid Header -->
+      <div class="grid-header">
+        <div class="grid-col sortable" (click)="sortBy('id')">
+          Order ID
+          <span class="sort-icon" *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+        </div>
+        <div class="grid-col sortable" (click)="sortBy('service')">
+          Device & Service
+          <span class="sort-icon" *ngIf="sortColumn === 'service'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+        </div>
+        <div class="grid-col sortable" (click)="sortBy('date')">
+          Date Booked
+          <span class="sort-icon" *ngIf="sortColumn === 'date'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+        </div>
+        <div class="grid-col sortable" (click)="sortBy('status')">
+          Status
+          <span class="sort-icon" *ngIf="sortColumn === 'status'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+        </div>
+        <div class="grid-col">Actions</div>
+      </div>
+
+      <!-- Grid Body -->
+      <div class="grid-row" *ngFor="let order of filteredOrders" [class.completed]="order.status === 'COMPLETED'" [class.cancelled]="order.status === 'CANCELLED'">
+        <!-- Order ID -->
+        <div class="grid-cell" data-label="Order ID">
           <span class="order-id">ORD-{{ order.id }}</span>
         </div>
-        <span class="status-badge" [class]="order.status.toLowerCase()">
-          {{ order.status }}
-        </span>
-      </div>
-
-      <div class="card-body">
-        <div class="device-details">
-          <h3>{{ order.device?.brand }} {{ order.device?.model }}</h3>
-          <p class="service-name">{{ order.serviceCategory?.name }}</p>
+        
+        <!-- Device & Service -->
+        <div class="grid-cell" data-label="Service">
+          <div class="device-details">
+            <h3 class="device-name">{{ order.device?.brand }} {{ order.device?.model }}</h3>
+            <p class="service-name">{{ order.serviceCategory?.name }}</p>
+          </div>
         </div>
-
-        <div class="meta-grid">
-          <div class="meta-item">
-            <span class="meta-label">Date booked</span>
+        
+        <!-- Date Booked -->
+        <div class="grid-cell" data-label="Date Booked">
+          <div class="date-info">
             <span class="meta-value">{{ order.createdAt | date:'mediumDate' }}</span>
-          </div>
-          <div class="meta-item" *ngIf="order.scheduledDate">
-            <span class="meta-label">Scheduled For</span>
-            <span class="meta-value">{{ order.scheduledDate }} ({{ order.scheduledSlot }})</span>
-          </div>
-          <div class="meta-item" *ngIf="order.technician">
-            <span class="meta-label">Specialist</span>
-            <span class="meta-value">{{ order.technician.name }}</span>
+            <span class="scheduled-time" *ngIf="order.scheduledDate">Sched: {{ order.scheduledDate }}</span>
           </div>
         </div>
-      </div>
-
-      <div class="card-footer">
-        <div class="warranty-badge" *ngIf="order.status === 'COMPLETED'">
-          🛡️ 90-Day Warranty: 
-          <span class="warranty-status active">
-            {{ getDaysRemaining(order.completedAt || order.updatedAt) }} days left
+        
+        <!-- Status -->
+        <div class="grid-cell" data-label="Status">
+          <span class="status-badge" [class]="order.status.toLowerCase()">
+            {{ order.status }}
           </span>
+          <div class="warranty-badge" *ngIf="order.status === 'COMPLETED'">
+            <span class="warranty-status active">
+              {{ getDaysRemaining(order.completedAt || order.updatedAt) }} days left
+            </span>
+          </div>
         </div>
-        <div class="action-buttons">
+        
+        <!-- Actions -->
+        <div class="grid-cell actions-cell" data-label="Actions">
           <button 
             *ngIf="!['COMPLETED', 'CANCELLED'].includes(order.status)"
             [routerLink]="['/order/track', order.id]" 
-            class="track-btn"
+            class="action-btn track-btn"
           >
             Track Real-time
           </button>
           
-          <!-- Receipt / Invoice button was removed in accordance with Phase 5 -->
-
           <button 
             *ngIf="order.status === 'COMPLETED'" 
             [routerLink]="['/order/feedback', order.id]" 
-            class="feedback-btn"
+            class="action-btn feedback-btn"
           >
             Review Repair
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="pagination-footer" *ngIf="totalPages > 1 && !loading && !error && filteredOrders.length > 0">
+      <div class="pagination-info">
+        Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalFiltered) }} of {{ totalFiltered }} orders
+      </div>
+      <div class="pagination-controls">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">Previous</button>
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pages" 
+            class="page-num" 
+            [class.active]="currentPage === page"
+            (click)="changePage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">Next</button>
       </div>
     </div>
   </div>

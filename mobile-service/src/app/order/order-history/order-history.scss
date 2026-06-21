@@ -128,7 +128,7 @@
     }
   }
 
-  .orders-list {
+  .data-grid-container {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -182,185 +182,296 @@
       }
     }
 
-    .order-card {
+    .data-grid {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: all 0.3s ease;
+      overflow: hidden;
       backdrop-filter: blur(10px);
-
-      &:hover {
-        border-color: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      
+      .grid-header {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        
+        .grid-col {
+          font-size: 12px;
+          text-transform: uppercase;
+          color: #9ca3af;
+          font-weight: 600;
+          letter-spacing: 0.05em;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          
+          &.sortable {
+            cursor: pointer;
+            transition: color 0.2s;
+            &:hover {
+              color: #ffffff;
+            }
+          }
+          
+          .sort-icon {
+            color: #3b82f6;
+          }
+        }
       }
 
-      &.active-card {
-        border-left: 4px solid #3b82f6;
-      }
-
-      &.completed {
-        border-left: 4px solid #10b981;
-      }
-
-      &.cancelled {
-        border-left: 4px solid #ef4444;
-        opacity: 0.8;
-      }
-
-      .card-header {
-        display: flex;
-        justify-content: space-between;
+      .grid-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1.5fr 1fr 1fr;
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         align-items: center;
+        transition: background 0.2s;
 
-        .order-id-group {
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.02);
+        }
+
+        &.completed {
+          border-left: 3px solid #10b981;
+        }
+
+        &.cancelled {
+          border-left: 3px solid #ef4444;
+          opacity: 0.8;
+        }
+
+        .grid-cell {
           display: flex;
           flex-direction: column;
-
-          .order-label {
-            font-size: 10px;
-            color: #6b7280;
-            letter-spacing: 0.05em;
-          }
+          gap: 4px;
 
           .order-id {
             font-family: monospace;
             font-weight: 600;
             color: #d1d5db;
-            font-size: 15px;
-          }
-        }
-
-        .status-badge {
-          font-size: 11px;
-          font-weight: 600;
-          padding: 4px 10px;
-          border-radius: 12px;
-          text-transform: uppercase;
-          letter-spacing: 0.02em;
-
-          &.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-          &.confirmed { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-          &.en_route { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-          &.in_progress { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
-          &.completed { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-          &.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        }
-      }
-
-      .card-body {
-        .device-details {
-          margin-bottom: 12px;
-
-          h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 2px;
-          }
-
-          .service-name {
-            color: #9ca3af;
             font-size: 14px;
           }
-        }
 
-        .meta-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-          gap: 12px;
+          .device-details {
+            .device-name {
+              font-size: 15px;
+              font-weight: 600;
+              margin: 0 0 2px 0;
+            }
+            .service-name {
+              color: #9ca3af;
+              font-size: 13px;
+              margin: 0;
+            }
+          }
 
-          .meta-item {
+          .date-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-
-            .meta-label {
-              font-size: 11px;
-              color: #6b7280;
-            }
-
+            gap: 2px;
             .meta-value {
-              font-size: 13px;
+              font-size: 14px;
               color: #e5e7eb;
               font-weight: 500;
             }
+            .scheduled-time {
+              font-size: 12px;
+              color: #9ca3af;
+            }
+          }
+
+          .status-badge {
+            align-self: flex-start;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+
+            &.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+            &.confirmed { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+            &.en_route { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+            &.in_progress { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+            &.completed { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+            &.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+          }
+
+          .warranty-badge {
+            margin-top: 6px;
+            font-size: 11px;
+            .warranty-status {
+              color: #10b981;
+              font-weight: 600;
+            }
+          }
+
+          &.actions-cell {
+            flex-direction: row;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .action-btn {
+              border: none;
+              padding: 6px 12px;
+              border-radius: 6px;
+              font-size: 12px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.2s ease;
+            }
+
+            .track-btn {
+              background: #3b82f6;
+              color: #ffffff;
+              &:hover { background: #2563eb; transform: translateY(-1px); }
+            }
+
+            .feedback-btn {
+              background: rgba(16, 185, 129, 0.1);
+              color: #10b981;
+              border: 1px solid rgba(16, 185, 129, 0.2);
+              &:hover { background: rgba(16, 185, 129, 0.2); transform: translateY(-1px); }
+            }
           }
         }
       }
+    }
 
-      .card-footer {
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        padding-top: 12px;
+    .pagination-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      .pagination-info {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      .pagination-controls {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
         gap: 8px;
+        align-items: center;
 
-        .warranty-badge {
-          font-size: 12px;
-          color: #9ca3af;
-          display: flex;
-          align-items: center;
-          gap: 6px;
+        .page-btn {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 13px;
+          cursor: pointer;
+          transition: all 0.2s;
 
-          .warranty-status.active {
-            color: #10b981;
-            font-weight: 600;
+          &:hover:not([disabled]) {
+            background: rgba(255, 255, 255, 0.1);
+          }
+
+          &[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
           }
         }
 
-        .action-buttons {
+        .page-numbers {
           display: flex;
-          gap: 8px;
-          margin-left: auto;
+          gap: 4px;
 
-          button {
-            border: none;
-            padding: 6px 12px;
+          .page-num {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #9ca3af;
+            width: 32px;
+            height: 32px;
             border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
             cursor: pointer;
-            transition: all 0.2s ease;
-          }
-
-          .track-btn {
-            background: #3b82f6;
-            color: #ffffff;
+            transition: all 0.2s;
 
             &:hover {
-              background: #2563eb;
-              transform: translateY(-1px);
+              background: rgba(255, 255, 255, 0.05);
             }
-          }
 
-          .invoice-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #e5e7eb;
-
-            &:hover {
-              background: rgba(255, 255, 255, 0.12);
-              color: #ffffff;
-            }
-          }
-
-          .feedback-btn {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.2) !important;
-
-            &:hover {
-              background: rgba(16, 185, 129, 0.2);
-              transform: translateY(-1px);
+            &.active {
+              background: #3b82f6;
+              color: white;
+              font-weight: 600;
             }
           }
         }
+      }
+    }
+  }
+
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    .data-grid {
+      border: none !important;
+      background: transparent !important;
+      
+      .grid-header {
+        display: none !important;
+      }
+
+      .grid-row {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        padding: 16px !important;
+
+        .grid-cell {
+          flex-direction: row !important;
+          justify-content: space-between;
+          align-items: center;
+
+          &::before {
+            content: attr(data-label);
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+
+          &.actions-cell {
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            justify-content: flex-end;
+            
+            &::before {
+              display: none;
+            }
+          }
+
+          .device-details, .date-info {
+            text-align: right;
+            align-items: flex-end;
+          }
+        }
+      }
+    }
+
+    .pagination-footer {
+      flex-direction: column;
+      justify-content: center;
+      
+      .pagination-info {
+        text-align: center;
       }
     }
   }

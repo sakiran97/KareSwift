@@ -12,6 +12,11 @@ import { OrderService } from '../../services/order.service';
   styleUrl: './order-history.scss',
 })
 export class OrderHistory implements OnInit {
+  Math = Math;
+  
+  get pages(): number[] {
+    return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+  }
   orders: any[] = [];
   filteredOrders: any[] = [];
   loading = true;
@@ -20,6 +25,14 @@ export class OrderHistory implements OnInit {
   // Search & Filters
   searchQuery = '';
   statusFilter = 'ALL';
+
+  // Pagination & Sorting
+  currentPage = 1;
+  pageSize = 5;
+  sortColumn = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
+  totalPages = 1;
+  totalFiltered = 0;
 
   constructor(
     private orderService: OrderService,
@@ -50,7 +63,7 @@ export class OrderHistory implements OnInit {
   }
 
   applyFilters(): void {
-    this.filteredOrders = this.orders.filter(order => {
+    let result = this.orders.filter(order => {
       // Filter by status
       let matchesStatus = true;
       if (this.statusFilter === 'ACTIVE') {
@@ -80,15 +93,69 @@ export class OrderHistory implements OnInit {
 
       return matchesStatus && matchesSearch;
     });
+
+    // Sort the results
+    result.sort((a, b) => {
+      let valA, valB;
+      switch (this.sortColumn) {
+        case 'id':
+          valA = a.id; valB = b.id;
+          break;
+        case 'status':
+          valA = a.status; valB = b.status;
+          break;
+        case 'service':
+          valA = a.serviceCategory?.name || ''; valB = b.serviceCategory?.name || '';
+          break;
+        case 'date':
+        default:
+          valA = new Date(a.createdAt || 0).getTime(); valB = new Date(b.createdAt || 0).getTime();
+          break;
+      }
+
+      if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    this.totalFiltered = result.length;
+    this.totalPages = Math.max(1, Math.ceil(result.length / this.pageSize));
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    // Paginate
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.filteredOrders = result.slice(startIndex, startIndex + this.pageSize);
+
     this.cdr.detectChanges();
+  }
+
+  sortBy(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = column === 'date' ? 'desc' : 'asc';
+    }
+    this.applyFilters();
+  }
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.applyFilters();
+    }
   }
 
   onFilterChange(status: string): void {
     this.statusFilter = status;
+    this.currentPage = 1;
     this.applyFilters();
   }
 
   onSearchChange(): void {
+    this.currentPage = 1;
     this.applyFilters();
   }
 
