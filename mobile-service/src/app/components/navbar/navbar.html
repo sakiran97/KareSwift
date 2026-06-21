@@ -31,6 +31,9 @@
 
       <!-- Guest Links (Logged Out) -->
       <ng-container *ngIf="!isLoggedIn()">
+        <a routerLink="/about" routerLinkActive="active" class="nav-link">About Us</a>
+        <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact Us</a>
+        <a routerLink="/help" routerLinkActive="active" class="nav-link">Help</a>
         <a routerLink="/track" routerLinkActive="active" class="nav-link">Track Order</a>
       </ng-container>
 
@@ -88,6 +91,9 @@
 
       <!-- Guest Links (Logged Out) -->
       <ng-container *ngIf="!isLoggedIn()">
+        <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">About Us</a>
+        <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Contact Us</a>
+        <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Help & Queries</a>
         <a routerLink="/track" routerLinkActive="active" (click)="closeMenu()" class="mobile-link">Track Order</a>
       </ng-container>
 
