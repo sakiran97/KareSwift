@@ -129,7 +129,7 @@ export class OrderService {
       throw new NotFoundException('Order not found');
     }
 
-    const orderPhone = order.mobileNumber || order.user?.phone || '';
+    const orderPhone = order.user?.phone || '';
     
     // Check if the provided mobile number matches the order's mobile number
     // Clean both numbers (remove spaces, etc) for comparison
