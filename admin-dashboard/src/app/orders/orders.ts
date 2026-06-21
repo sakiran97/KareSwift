@@ -69,6 +69,10 @@ export class OrdersComponent implements OnInit {
   // QR Modal State
   showQrModal = signal(false);
   qrAmount = signal<number>(0);
+
+  // Image Modal State
+  showImageModal = signal(false);
+  selectedImageUrl = signal<string>('');
   
   private sseSub?: Subscription;
 
@@ -323,6 +327,18 @@ export class OrdersComponent implements OnInit {
   closeQrModal() {
     this.showQrModal.set(false);
     this.qrAmount.set(0);
+  }
+
+  // Image Modal
+  openImageModal(url: string, event: Event) {
+    event.preventDefault(); // prevent navigation
+    this.selectedImageUrl.set(url);
+    this.showImageModal.set(true);
+  }
+
+  closeImageModal() {
+    this.showImageModal.set(false);
+    this.selectedImageUrl.set('');
   }
 
   sendChatMessage() {
