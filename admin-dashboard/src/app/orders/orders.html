@@ -30,8 +30,12 @@
     <button class="btn-primary" (click)="onSearch()" style="padding: 10px 20px;">Search</button>
   </div>
 
-  <div class="data-grid-container" *ngIf="!loading()">
-    <div class="no-orders glass-panel" *ngIf="orders().length === 0">
+  <div class="data-grid-container" style="position: relative;">
+    <div *ngIf="loading()" style="position: absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.3); z-index:50; display:flex; align-items:center; justify-content:center; border-radius: 8px; backdrop-filter: blur(2px);">
+      <span class="spinner" style="width: 50px; height: 50px; border-width: 4px;"></span>
+    </div>
+
+    <div class="no-orders glass-panel" *ngIf="orders().length === 0 && !loading()">
       <p>No customer doorstep orders found in the system queue.</p>
     </div>
 
@@ -196,11 +200,6 @@
         <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Next</button>
       </div>
     </div>
-  </div>
-
-  <div class="loading-panel glass-panel" *ngIf="loading()">
-    <span class="spinner"></span>
-    <p>Loading active orders queue...</p>
   </div>
 
   <!-- FINALIZE PRICE MODAL -->
