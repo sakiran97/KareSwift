@@ -277,7 +277,10 @@
   right: -280px;
   width: 280px;
   height: 100vh;
-  background: rgba($color-surface, 0.9);
+  background: var(--color-surface);
+  @supports (background: color-mix(in srgb, var(--color-surface) 95%, transparent)) {
+    background: color-mix(in srgb, var(--color-surface) 95%, transparent);
+  }
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border-left: 1px solid rgba(255, 255, 255, 0.08);
@@ -305,11 +308,22 @@
     color: rgba($color-on-background, 0.6);
     text-decoration: none;
     padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
     @include transition(color);
 
     &:hover, &.active {
       color: $color-primary-light;
     }
+  }
+
+  button.mobile-link {
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
   }
 
   .drawer-divider {
@@ -319,12 +333,10 @@
   }
 
   .btn-mobile-logout {
-    border: none;
-    background: none;
-    text-align: left;
-    cursor: pointer;
-    font-family: inherit;
     color: #fca5a5 !important;
+    &:hover {
+      color: #ef4444 !important;
+    }
   }
 }
 
