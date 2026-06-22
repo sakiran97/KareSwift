@@ -6,6 +6,10 @@
   margin: 0 auto;
   padding: 3rem 1.5rem 5rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  @media (max-width: 600px) {
+    padding: 1.5rem 1rem 3rem;
+  }
 }
 
 // ── Header Card ───────────────────────────────────────────
@@ -115,8 +119,12 @@
 // ── Warranties Grid ───────────────────────────────────────
 .warranties-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 2rem;
+
+  @media (max-width: 600px) {
+    gap: 1.25rem;
+  }
 }
 
 .warranty-card {
@@ -167,6 +175,10 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     background: rgba(255, 255, 255, 0.02);
 
+    @media (max-width: 480px) {
+      padding: 1.5rem;
+    }
+
     .device-icon {
       font-size: 2rem;
       width: 64px; height: 64px;
@@ -175,6 +187,7 @@
       border-radius: 16px;
       display: flex; justify-content: center; align-items: center;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
     }
 
     .device-info {
@@ -188,6 +201,11 @@
     padding: 2rem;
     flex: 1;
     display: flex; flex-direction: column; gap: 2rem;
+
+    @media (max-width: 480px) {
+      padding: 1.5rem;
+      gap: 1.5rem;
+    }
 
     .progress-container {
       .progress-labels { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: rgba(255, 255, 255, 0.6); margin-bottom: 0.75rem; .pct { color: white; font-weight: 700; } }
@@ -212,6 +230,11 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     display: grid; grid-template-columns: 1fr 1.5fr; gap: 1rem;
     background: rgba(0, 0, 0, 0.2);
+
+    @media (max-width: 480px) {
+      padding: 1.25rem 1.5rem;
+      grid-template-columns: 1fr;
+    }
 
     .btn {
       display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: all 0.2s; border: none;

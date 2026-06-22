@@ -115,13 +115,15 @@
         
         <!-- Status -->
         <div class="grid-cell" data-label="Status">
-          <span class="status-badge" [class]="order.status.toLowerCase()">
-            {{ order.status }}
-          </span>
-          <div class="warranty-badge" *ngIf="order.status === 'COMPLETED'">
-            <span class="warranty-status active">
-              {{ getDaysRemaining(order.completedAt || order.updatedAt) }} days left
+          <div class="status-content">
+            <span class="status-badge" [class]="order.status.toLowerCase()">
+              {{ order.status }}
             </span>
+            <div class="warranty-badge" *ngIf="order.status === 'COMPLETED'">
+              <span class="warranty-status active">
+                {{ getDaysRemaining(order.completedAt || order.updatedAt) }} days left
+              </span>
+            </div>
           </div>
         </div>
         

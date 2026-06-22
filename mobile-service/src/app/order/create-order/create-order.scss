@@ -779,7 +779,7 @@ textarea {
     border-color: rgba($color-primary, 0.3);
   }
 
-  &.selected {
+  &.selected, &.selected:hover:not(.disabled) {
     background: linear-gradient(135deg, $color-primary, $color-primary-dark);
     border-color: $color-primary;
     color: $color-on-primary;
@@ -854,6 +854,27 @@ textarea {
       .charge {
         color: $color-primary-light;
         font-weight: 700;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 0.35rem;
+
+      .label {
+        min-width: auto;
+      }
+      .val {
+        text-align: left;
+      }
+      
+      &.highlight-charge {
+        flex-direction: row;
+        align-items: center;
+        
+        .val {
+          text-align: right;
+        }
       }
     }
   }
