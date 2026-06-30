@@ -1,7 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AdminService } from '../services/admin.service';
+import { SseService } from '../services/sse.service';
+import { Subscription } from 'rxjs';
 
 interface Stats {
   totalOrders: number;
@@ -18,16 +20,16 @@ interface Stats {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   stats = signal<Stats | null>(null);
   loading = signal(true);
   errorMsg = signal<string | null>(null);
 
-  private sseSub?: import('rxjs').Subscription;
+  private sseSub?: Subscription;
 
   constructor(
     private adminService: AdminService,
-    private sseService: import('../services/sse.service').SseService
+    private sseService: SseService
   ) {}
 
   ngOnInit() {
