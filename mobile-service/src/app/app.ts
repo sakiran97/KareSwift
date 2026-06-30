@@ -57,12 +57,9 @@ export class App implements OnInit, OnDestroy {
                 {
                   title: event.data.title,
                   body: event.data.body,
-                  id: new Date().getTime(),
+                  id: Math.floor(Math.random() * 1000000),
                   schedule: { at: new Date(Date.now() + 100) },
-                  sound: null,
-                  attachments: null,
-                  actionTypeId: "",
-                  extra: null
+                  actionTypeId: ""
                 }
               ]
             });
