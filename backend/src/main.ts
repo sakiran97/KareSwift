@@ -78,7 +78,9 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000', 
-      'http://localhost:4200', 
+      'http://localhost:4200',
+      'http://localhost', // Android Capacitor WebView
+      'capacitor://localhost', // iOS Capacitor WebView
       'https://kareswift-mobile.onrender.com', 
       'https://kareswift-admin.onrender.com'
     ],
