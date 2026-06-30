@@ -3,11 +3,13 @@ import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateSessionDto, UpdateProfileDto, CheckEmailDto } from '../common/dto/auth.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('session')
   async createSession(@Body() createSessionDto: CreateSessionDto, @Res({ passthrough: true }) res: Response) {
     const { supabaseToken } = createSessionDto;
