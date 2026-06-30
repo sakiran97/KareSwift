@@ -4,6 +4,7 @@ import { RouterOutlet, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { App as CapApp } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Network } from '@capacitor/network';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
 import { ToastContainer } from './components/toast/toast-container';
@@ -92,6 +93,28 @@ export class App implements OnInit, OnDestroy {
 
     // Request permissions for Local Notifications
     LocalNotifications.requestPermissions();
+
+    // Network Status Monitoring
+    Network.addListener('networkStatusChange', status => {
+      this.ngZone.run(() => {
+        if (!status.connected) {
+          this.toastService.show('You are offline. Please check your internet connection.', 'error', 10000);
+        } else {
+          // If we reconnect, show success message and refresh SSE if logged in
+          this.toastService.show('Back online!', 'success', 3000);
+          if (this.authService.isLoggedIn()) {
+            this.sseService.connect();
+          }
+        }
+      });
+    });
+
+    // Check initial status
+    Network.getStatus().then(status => {
+      if (!status.connected) {
+        this.toastService.show('You are offline. Please check your internet connection.', 'error', 10000);
+      }
+    });
 
     // Auto popup location modal if no location is set and user is logged in
     setTimeout(() => {

@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '../../services/app-config.service';
 import { LocationService } from '../../services/location.service';
 import { AuthService } from '../../services/auth.service';
+import { Geolocation } from '@capacitor/geolocation';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-create-order',
@@ -408,54 +410,54 @@ export class CreateOrder implements OnInit {
     });
   }
 
-  autoDetectLocation(): void {
-    if (!navigator.geolocation) {
-      this.addressError = 'Geolocation is not supported by your browser.';
-      return;
-    }
-
+  async autoDetectLocation() {
     this.isDetectingLocation = true;
     this.addressError = null;
+    await Haptics.impact({ style: ImpactStyle.Light });
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        
-        // Use Nominatim free reverse geocoding API
-        this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`).subscribe({
-          next: (res: any) => {
-            this.isDetectingLocation = false;
-            if (res && res.address) {
-              const addr = res.address;
-              this.addressForm.patchValue({
-                street: addr.road || addr.street || '',
-                area: addr.suburb || addr.neighbourhood || addr.village || '',
-                city: addr.city || addr.town || addr.county || '',
-                state: addr.state || '',
-                pincode: addr.postcode || ''
-              });
-              this.addressSuccess = 'Location detected! Please review and fill any missing details.';
-              setTimeout(() => this.addressSuccess = null, 5000);
-              this.cdr.detectChanges();
-            } else {
-              this.addressError = 'Could not determine address from coordinates.';
-            }
-          },
-          error: () => {
-            this.isDetectingLocation = false;
-            this.addressError = 'Failed to fetch address details. Please enter manually.';
+    try {
+      const permission = await Geolocation.checkPermissions();
+      if (permission.location !== 'granted') {
+        await Geolocation.requestPermissions();
+      }
+
+      const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      
+      // Use Nominatim free reverse geocoding API
+      this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`).subscribe({
+        next: async (res: any) => {
+          this.isDetectingLocation = false;
+          if (res && res.address) {
+            const addr = res.address;
+            this.addressForm.patchValue({
+              street: addr.road || addr.street || '',
+              area: addr.suburb || addr.neighbourhood || addr.village || '',
+              city: addr.city || addr.town || addr.county || '',
+              state: addr.state || '',
+              pincode: addr.postcode || ''
+            });
+            this.addressSuccess = 'Location detected! Please review and fill any missing details.';
+            setTimeout(() => this.addressSuccess = null, 5000);
+            await Haptics.impact({ style: ImpactStyle.Medium });
+            this.cdr.detectChanges();
+          } else {
+            this.addressError = 'Could not determine address from coordinates.';
             this.cdr.detectChanges();
           }
-        });
-      },
-      (error) => {
-        this.isDetectingLocation = false;
-        this.addressError = 'Location access denied or failed. Please enter address manually.';
-        this.cdr.detectChanges();
-      },
-      { timeout: 10000 }
-    );
+        },
+        error: () => {
+          this.isDetectingLocation = false;
+          this.addressError = 'Failed to fetch address details. Please enter manually.';
+          this.cdr.detectChanges();
+        }
+      });
+    } catch (error) {
+      this.isDetectingLocation = false;
+      this.addressError = 'Location access denied or unavailable. Please enter address manually.';
+      this.cdr.detectChanges();
+    }
   }
 
   nextStep(): void {
@@ -544,12 +546,14 @@ export class CreateOrder implements OnInit {
     this.orderService.createOrder('1', payload).subscribe({
       next: (res: OrderResponse) => {
         this.isLoading = false;
+        Haptics.notification({ type: 'SUCCESS' as any });
         const orderId = res.id || res.orderId;
         localStorage.setItem('activeOrderId', String(orderId));
         this.router.navigate([`/order/track/${orderId}`]);
       },
       error: (err: any) => {
         this.isLoading = false;
+        Haptics.notification({ type: 'ERROR' as any });
         this.errorMessage = err.error?.message || 'Failed to submit doorstep service request. Please try again.';
         this.cdr.detectChanges();
       }
