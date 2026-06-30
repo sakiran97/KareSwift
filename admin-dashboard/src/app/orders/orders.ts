@@ -82,7 +82,7 @@ export class OrdersComponent implements OnInit {
     this.loadConfigs();
     this.loadOrders();
     
-    // Listen for new chat messages
+    // Listen for new chat messages and order updates
     this.sseSub = this.sse.connect().subscribe({
       next: (event: SseEvent) => {
         if (event.type === 'chat-message') {
@@ -95,6 +95,8 @@ export class OrdersComponent implements OnInit {
               setTimeout(() => this.scrollToBottom(), 100);
             }
           }
+        } else if (event.type === 'new-order' || event.type === 'order-update') {
+          this.loadOrders();
         }
       }
     });

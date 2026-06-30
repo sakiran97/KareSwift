@@ -23,10 +23,24 @@ export class DashboardComponent implements OnInit {
   loading = signal(true);
   errorMsg = signal<string | null>(null);
 
-  constructor(private adminService: AdminService) {}
+  private sseSub?: import('rxjs').Subscription;
+
+  constructor(
+    private adminService: AdminService,
+    private sseService: import('../services/sse.service').SseService
+  ) {}
 
   ngOnInit() {
     this.fetchStats();
+    this.sseSub = this.sseService.connect().subscribe(event => {
+      if (event.type === 'new-order' || event.type === 'order-update') {
+        this.fetchStats();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.sseSub?.unsubscribe();
   }
 
   fetchStats() {

@@ -86,6 +86,18 @@ export class OrderService {
         order.id
       );
 
+      // Notify all admins
+      const admins = await this.prisma.user.findMany({ where: { role: 'admin' } });
+      for (const admin of admins) {
+        await this.createNotification(
+          admin.id,
+          'New Order Booked',
+          `A new repair booking for a ${order.device.brand} ${order.device.model} has been received.`,
+          'NEW_ORDER',
+          order.id
+        );
+      }
+
       this.eventsService.emit('new-order', order);
       return order;
     } catch (err: any) {

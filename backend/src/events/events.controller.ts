@@ -51,7 +51,7 @@ export class EventsController {
             return user.role === 'technician' || event.data?.userId === user.id;
           }
           if (event.type === 'order-update') {
-            return event.data?.userId === user.id || event.data?.technicianId === user.id;
+            return user.role === 'admin' || event.data?.userId === user.id || event.data?.technicianId === user.id;
           }
           if (event.type === 'chat-message') {
             return event.data?.order?.userId === user.id || event.data?.order?.technicianId === user.id;
