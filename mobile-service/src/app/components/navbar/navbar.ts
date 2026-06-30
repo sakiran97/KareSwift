@@ -29,6 +29,7 @@ export class Navbar implements OnInit, OnDestroy {
   public locationService = inject(LocationService);
 
   private sseSub?: Subscription;
+  private pollInterval: any = null;
 
   private authService = inject(AuthService);
   isLoggedIn = this.authService.isLoggedIn;
@@ -43,6 +44,7 @@ export class Navbar implements OnInit, OnDestroy {
     effect(() => {
       if (this.isLoggedIn()) {
         this.loadNotifications();
+        this.startNotificationPolling();
         this.sseSub = this.sse.connect().subscribe({
           next: (event: SseEvent) => {
             if (event.type === 'notification') {
@@ -58,6 +60,7 @@ export class Navbar implements OnInit, OnDestroy {
           },
         });
       } else {
+        this.stopNotificationPolling();
         if (this.sseSub) {
           this.sseSub.unsubscribe();
         }
@@ -196,6 +199,21 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sseSub?.unsubscribe();
+    this.stopNotificationPolling();
+  }
+
+  private startNotificationPolling() {
+    this.stopNotificationPolling();
+    this.pollInterval = setInterval(() => {
+      this.loadNotifications();
+    }, 10000);
+  }
+
+  private stopNotificationPolling() {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+      this.pollInterval = null;
+    }
   }
 
   triggerLocationModal() {

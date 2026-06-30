@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AdminService, AdminUser } from '../services/admin.service';
@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './layout.html',
   styleUrl: './layout.scss'
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
   user: AdminUser | null = null;
   sidebarOpen = typeof window !== 'undefined' ? window.innerWidth > 1024 : true;
   newOrderAlert: any = null;
@@ -22,6 +22,7 @@ export class LayoutComponent implements OnInit {
   isNotificationOpen = false;
   notifications: any[] = [];
   unreadNotificationsCount = 0;
+  private pollInterval: any = null;
 
   constructor(
     private adminService: AdminService,
@@ -50,6 +51,15 @@ export class LayoutComponent implements OnInit {
     });
 
     this.loadNotifications();
+    this.pollInterval = setInterval(() => {
+      this.loadNotifications();
+    }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   loadNotifications() {

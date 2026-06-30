@@ -75,6 +75,7 @@ export class OrdersComponent implements OnInit {
   selectedImageUrl = signal<string>('');
   
   private sseSub?: Subscription;
+  private pollInterval: any = null;
 
   constructor(private adminService: AdminService, private sse: SseService, private sanitizer: DomSanitizer) {}
 
@@ -100,10 +101,17 @@ export class OrdersComponent implements OnInit {
         }
       }
     });
+
+    this.pollInterval = setInterval(() => {
+      this.loadOrders();
+    }, 15000);
   }
 
   ngOnDestroy() {
     this.sseSub?.unsubscribe();
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   loadConfigs() {

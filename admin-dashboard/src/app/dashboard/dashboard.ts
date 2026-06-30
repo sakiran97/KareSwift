@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   errorMsg = signal<string | null>(null);
 
   private sseSub?: Subscription;
+  private pollInterval: any = null;
 
   constructor(
     private adminService: AdminService,
@@ -39,10 +40,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.fetchStats();
       }
     });
+    this.pollInterval = setInterval(() => {
+      this.fetchStats();
+    }, 15000);
   }
 
   ngOnDestroy() {
     this.sseSub?.unsubscribe();
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 
   fetchStats() {
