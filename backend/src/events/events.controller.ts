@@ -1,5 +1,5 @@
-import { Controller, Sse, UnauthorizedException, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Sse, UnauthorizedException, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { merge, Observable, timer } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -13,7 +13,8 @@ export class EventsController {
   ) {}
 
   @Sse('events')
-  events(@Req() req: Request): Observable<MessageEvent> {
+  events(@Req() req: Request, @Res({ passthrough: true }) res: Response): Observable<MessageEvent> {
+    res.setHeader('X-Accel-Buffering', 'no');
     const token = req.cookies && req.cookies['access_token'];
     
     if (!token) {
