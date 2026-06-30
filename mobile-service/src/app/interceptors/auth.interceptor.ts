@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 const PUBLIC_AUTH_PATHS = [
   '/auth/login',
@@ -22,7 +23,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // Always set withCredentials for API calls to send HttpOnly cookies
+  let finalUrl = req.url;
+  
+  // If the URL is relative (starts with /api), prepend the environment API URL.
+  // This is critical for Capacitor mobile apps, because they run on http://localhost internally
+  // and need to reach out to the actual backend server (e.g. Render).
+  if (req.url.startsWith('/api')) {
+    finalUrl = `${environment.apiUrl}${req.url}`;
+  }
+
   const finalReq = req.clone({
+    url: finalUrl,
     withCredentials: true
   });
 
