@@ -51,48 +51,54 @@
 
   <!-- Services Grid (Light) -->
   <section class="tp-services-section">
-    <div class="tp-container">
-      <div class="tp-section-header">
-        <h5 class="tp-subtitle">SERVICES</h5>
-        <h2 class="tp-title">We Repair Gadgets, That's It<span class="tp-dot">.</span></h2>
-        <p class="tp-desc">Learn more about our services.</p>
+    <div class="tp-container tp-services-layout">
+      <!-- Left Column: Title -->
+      <div class="tp-services-header">
+        <h5 class="tp-subtitle">WE REPAIR YOUR GADGETS</h5>
+        <h2 class="tp-title">We Make<br>Mobile Repair<br>Stress-free<span class="tp-dot">.</span></h2>
       </div>
 
-      <div class="tp-services-grid stagger-children" [class.animate-stagger]="true">
+      <!-- Right Column: Icon Grid -->
+      <div class="tp-services-icon-grid stagger-children" [class.animate-stagger]="true">
         <!-- Smartphones -->
-        <div class="tp-service-card" (click)="onSelectDevice('smartphone')">
-          <div class="tp-card-image">
-            <img src="assets/images/cat-smartphone.png" alt="Smartphones">
+        <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
+          <div class="tp-icon-svg">
+            <!-- Simplified phone icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01" stroke="var(--color-primary)" stroke-width="3"/></svg>
           </div>
-          <div class="tp-card-content">
-            <h3>Smartphones</h3>
-            <p>Restore your device's visual clarity and performance with our expert smartphone repair service at your doorstep.</p>
-            <button class="tp-btn-price">Select Device</button>
-          </div>
+          <h3>Smartphones</h3>
+          <p>Restore your device's visual clarity and performance with our expert repair service at your doorstep.</p>
+          <div class="tp-price">Repairs from $ 38</div>
         </div>
 
         <!-- Tablets -->
-        <div class="tp-service-card" (click)="onSelectDevice('tablet')">
-          <div class="tp-card-image">
-            <img src="assets/images/cat-tablet.png" alt="Tablets">
+        <div class="tp-icon-card" (click)="onSelectDevice('tablet')">
+          <div class="tp-icon-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 18h.01" stroke="var(--color-primary)" stroke-width="3"/></svg>
           </div>
-          <div class="tp-card-content">
-            <h3>Tablets</h3>
-            <p>Say goodbye to cracked iPad screens or dwindling battery life with our swift and efficient tablet repair service.</p>
-            <button class="tp-btn-price">Select Device</button>
-          </div>
+          <h3>Tablets</h3>
+          <p>Say goodbye to cracked screens or dwindling battery life with our swift and efficient tablet repair service.</p>
+          <div class="tp-price">Repairs from $ 47</div>
         </div>
 
         <!-- Laptops -->
-        <div class="tp-service-card" (click)="onSelectDevice('laptop')">
-          <div class="tp-card-image">
-            <img src="assets/images/cat-laptop.png" alt="Laptops">
+        <div class="tp-icon-card" (click)="onSelectDevice('laptop')">
+          <div class="tp-icon-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/><path d="M12 16v4" stroke="var(--color-primary)" stroke-width="2"/></svg>
           </div>
-          <div class="tp-card-content">
-            <h3>Laptops</h3>
-            <p>Trust our specialists to restore your MacBook or PC to its optimal functionality, saving your work and data.</p>
-            <button class="tp-btn-price">Select Device</button>
+          <h3>Laptops</h3>
+          <p>Trust our specialists to restore your MacBook or PC to its optimal functionality, saving your work and data.</p>
+          <div class="tp-price">Repairs from $ 85</div>
+        </div>
+
+        <!-- Smartwatches -->
+        <div class="tp-icon-card" (click)="onSelectDevice('smartwatch')">
+          <div class="tp-icon-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="6" y="5" width="12" height="14" rx="3"/><path d="M8 2v3"/><path d="M16 2v3"/><path d="M8 19v3"/><path d="M16 19v3"/><circle cx="12" cy="12" r="1" fill="var(--color-primary)" stroke="none"/></svg>
           </div>
+          <h3>Smartwatches</h3>
+          <p>Get your wearable tech back in perfect condition with our specialized smartwatch repair solutions.</p>
+          <div class="tp-price">Repairs from $ 45</div>
         </div>
       </div>
     </div>
