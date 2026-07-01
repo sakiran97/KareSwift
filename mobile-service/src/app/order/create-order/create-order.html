@@ -161,8 +161,42 @@
           </div>
         </div>
 
-        <!-- STEP 5: Upload Photos (Optional) -->
+        <!-- STEP 5: Service Delivery Method -->
         <div *ngIf="currentStep === 5" class="step-content animate-fade-right">
+          <h2>Select Delivery Method</h2>
+          <p class="subtitle">How would you like to proceed with the repair?</p>
+
+          <div class="service-type-options" [formGroup]="orderForm">
+            <label class="delivery-option glass-card" [class.selected]="orderForm.get('serviceType')?.value === 'DOORSTEP'">
+              <input type="radio" formControlName="serviceType" value="DOORSTEP" class="hidden-radio">
+              <div class="option-icon">🏠</div>
+              <div class="option-details">
+                <h3>Doorstep Repair</h3>
+                <p>Technician repairs at your location</p>
+                <span class="price-tag">Standard fee</span>
+              </div>
+            </label>
+
+            <label class="delivery-option glass-card" [class.selected]="orderForm.get('serviceType')?.value === 'PICKUP_DROP'">
+              <input type="radio" formControlName="serviceType" value="PICKUP_DROP" class="hidden-radio">
+              <div class="option-icon">🛵</div>
+              <div class="option-details">
+                <h3>Pickup & Drop</h3>
+                <p>We pick it up, repair at our lab, and deliver back</p>
+                <span class="price-tag">Standard fee</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-actions mt-20">
+            <button type="button" class="btn-primary" (click)="nextStep()">
+              Next Step: Upload Photos
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 6: Upload Photos (Optional) -->
+        <div *ngIf="currentStep === 6" class="step-content animate-fade-right">
           <h2>Upload Device Images (Optional)</h2>
           <p class="subtitle">Upload photos of the device damage to assist in diagnosis.</p>
           
@@ -197,8 +231,8 @@
           </div>
         </div>
 
-        <!-- STEP 6: Select Saved Address -->
-        <div *ngIf="currentStep === 6" class="step-content animate-fade-right">
+        <!-- STEP 7: Select Saved Address -->
+        <div *ngIf="currentStep === 7" class="step-content animate-fade-right">
           <h2>Select Saved Address</h2>
           <p class="subtitle">Where should our technician meet you for the repair?</p>
 
@@ -313,8 +347,8 @@
           </div>
         </div>
 
-        <!-- STEP 7: Select Date -->
-        <div *ngIf="currentStep === 7" class="step-content animate-fade-right">
+        <!-- STEP 8: Schedule Appointment -->
+        <div *ngIf="currentStep === 8" class="step-content animate-fade-right">
           <h2>Select Appointment Date</h2>
           <p class="subtitle">Select the date for your doorstep repair appointment.</p>
           
@@ -336,8 +370,8 @@
           </div>
         </div>
 
-        <!-- STEP 8: Select Available Slot -->
-        <div *ngIf="currentStep === 8" class="step-content animate-fade-right">
+        <!-- STEP 9: Final Review & Submit -->
+        <div *ngIf="currentStep === 9" class="step-content animate-fade-right">
           <h2>Select Appointment Slot</h2>
           <p class="subtitle">Choose a convenient timeslot on {{ orderForm.get('scheduledDate')?.value }} for repair.</p>
           
@@ -362,8 +396,8 @@
           </div>
         </div>
 
-        <!-- STEP 9: Booking Confirmation -->
-        <div *ngIf="currentStep === 9" class="step-content animate-fade-right">
+        <!-- STEP 10: Booking Confirmation -->
+        <div *ngIf="currentStep === 10" class="step-content animate-fade-right">
           <h2>Review & Confirm Booking</h2>
           <p class="subtitle">Double check your repair request details before booking doorstep repair.</p>
 
@@ -381,7 +415,11 @@
               <span class="val">{{ orderForm.value.scheduledDate | date:'fullDate' }} at {{ orderForm.value.scheduledSlot }}</span>
             </div>
             <div class="recap-row">
-              <span class="label">Doorstep Address:</span>
+              <span class="label">Service Method:</span>
+              <span class="val font-semibold">{{ orderForm.get('serviceType')?.value === 'PICKUP_DROP' ? 'Pickup & Drop' : 'Doorstep Repair' }}</span>
+            </div>
+            <div class="recap-row">
+              <span class="label">Location:</span>
               <span class="val">{{ getSelectedAddressText() }}</span>
             </div>
             <div class="recap-row highlight-charge">
@@ -412,7 +450,7 @@
               class="btn-submit-wizard" 
               [disabled]="orderForm.invalid || isLoading"
             >
-              <span *ngIf="!isLoading">Book Doorstep Repair Now</span>
+              <span *ngIf="!isLoading">Book Repair Now</span>
               <div *ngIf="isLoading" class="spinner"></div>
             </button>
           </div>

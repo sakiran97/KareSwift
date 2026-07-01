@@ -157,6 +157,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   userId: 'userId',
   deviceId: 'deviceId',
   serviceCategoryId: 'serviceCategoryId',
+  serviceType: 'serviceType',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -295,6 +296,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.ServiceType = exports.$Enums.ServiceType = {
+  DOORSTEP: 'DOORSTEP',
+  PICKUP_DROP: 'PICKUP_DROP'
+};
+
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   BOOKED: 'BOOKED',
   CONFIRMED: 'CONFIRMED',
@@ -304,7 +310,12 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   PRICE_FINALIZED: 'PRICE_FINALIZED',
   COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  OUT_FOR_PICKUP: 'OUT_FOR_PICKUP',
+  PICKED_UP: 'PICKED_UP',
+  AT_LAB: 'AT_LAB',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED'
 };
 
 exports.Prisma.ModelName = {

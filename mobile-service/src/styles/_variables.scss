@@ -116,14 +116,14 @@ $elevation-2: 0 12px 40px 0 var(--glass-shadow);
 }
 // Global fallback defaults for admin-style classes used outside admin context
 :root {
-  --bg-card: rgba(255, 255, 255, 0.06);
-  --border-color: rgba(255, 255, 255, 0.06);
+  --bg-card: rgba(255, 255, 255, 1);
+  --border-color: rgba(0, 0, 0, 0.08);
   --text-primary: inherit;
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --text-muted: rgba(255, 255, 255, 0.4);
-  --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.3);
-  --accent: #a855f7;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-muted: rgba(0, 0, 0, 0.4);
+  --primary: #2563EB;
+  --primary-glow: rgba(37, 99, 235, 0.15);
+  --accent: #8B5CF6;
 }
 
 

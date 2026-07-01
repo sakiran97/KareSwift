@@ -33,8 +33,9 @@ export class OrderService {
     mobileNumber?: string;
     latitude?: number;
     longitude?: number;
+    serviceType?: 'DOORSTEP' | 'PICKUP_DROP';
   }): Promise<any> {
-    const { userId, deviceId, serviceCategoryId, estimatedTime, address, mobileNumber, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId, latitude, longitude } = data;
+    const { userId, deviceId, serviceCategoryId, serviceType, estimatedTime, address, mobileNumber, scheduledDate, scheduledSlot, notes, diagnosticNotes, diagnosticPhotos, travelCharge, serviceAreaId, latitude, longitude } = data;
     
     try {
       const order = await this.prisma.order.create({
@@ -42,6 +43,7 @@ export class OrderService {
           userId,
           deviceId,
           serviceCategoryId,
+          serviceType: serviceType || 'DOORSTEP',
           estimatedTime: estimatedTime || 45,
           address,
           scheduledDate,
@@ -81,7 +83,7 @@ export class OrderService {
       await this.createNotification(
         userId,
         'Order Booked Successfully',
-        `Your doorstep repair booking for a ${order.device.brand} ${order.device.model} has been received.`,
+        `Your ${order.serviceType === 'PICKUP_DROP' ? 'pickup & drop' : 'doorstep'} repair booking for a ${order.device.brand} ${order.device.model} has been received.`,
         'ORDER_UPDATE',
         order.id
       );

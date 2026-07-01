@@ -10,4 +10,8 @@
   flex-direction: column;
   position: relative;
   width: 100%;
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
 }

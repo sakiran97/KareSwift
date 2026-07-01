@@ -21,8 +21,10 @@ export class TrackOrder implements OnInit, OnDestroy {
   currentStepIndex = 0;
   isLoading = true;
   
-  // Status Steps for KareSwift Operator Model
-  statusSteps = [
+  // Status Steps for KareSwift
+  statusSteps: { key: string, label: string, desc: string }[] = [];
+
+  doorstepSteps = [
     { key: 'BOOKED', label: 'Booked', desc: 'Repair request successfully received.' },
     { key: 'CONFIRMED', label: 'Confirmed', desc: 'Booking confirmed by service coordinator.' },
     { key: 'CUSTOMER_CONTACTED', label: 'Contacted', desc: 'We contacted you to verify repair details.' },
@@ -31,6 +33,18 @@ export class TrackOrder implements OnInit, OnDestroy {
     { key: 'IN_PROGRESS', label: 'Repair In Progress', desc: 'We are repairing your device at your doorstep.' },
     { key: 'PRICE_FINALIZED', label: 'Price Finalized', desc: 'Final repair pricing has been determined.' },
     { key: 'COMPLETED', label: 'Completed', desc: 'Repair verified and completed successfully.' }
+  ];
+
+  pickupDropSteps = [
+    { key: 'BOOKED', label: 'Booked', desc: 'Repair request successfully received.' },
+    { key: 'CONFIRMED', label: 'Confirmed', desc: 'Booking confirmed by service coordinator.' },
+    { key: 'OUT_FOR_PICKUP', label: 'Out for Pickup', desc: 'Executive is on the way to pick up your device.' },
+    { key: 'PICKED_UP', label: 'Picked Up', desc: 'Device has been securely picked up.' },
+    { key: 'DIAGNOSIS_COMPLETED', label: 'Diagnosed', desc: 'Device diagnosed at our lab.' },
+    { key: 'PRICE_FINALIZED', label: 'Price Finalized', desc: 'Final repair pricing has been determined.' },
+    { key: 'AT_LAB', label: 'Repairing at Lab', desc: 'Device is being repaired by our experts.' },
+    { key: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', desc: 'Repaired device is out for delivery.' },
+    { key: 'COMPLETED', label: 'Delivered & Completed', desc: 'Device delivered and repair completed successfully.' }
   ];
 
   // Pricing & OTP flow state
@@ -77,15 +91,7 @@ export class TrackOrder implements OnInit, OnDestroy {
 
   mapStatusToStepIndex(status: string): number {
     const s = status ? status.toUpperCase() : '';
-    if (s === 'BOOKED') return 0;
-    if (s === 'CONFIRMED') return 1;
-    if (s === 'CUSTOMER_CONTACTED') return 2;
-    if (s === 'DIAGNOSIS_COMPLETED') return 3;
-    if (s === 'VISIT_SCHEDULED') return 4;
-    if (s === 'IN_PROGRESS') return 5;
-    if (s === 'PRICE_FINALIZED') return 6;
-    if (s === 'COMPLETED') return 7;
-    return -1;
+    return this.statusSteps.findIndex(step => step.key === s);
   }
 
   updateOrderData(order: any): void {
@@ -111,6 +117,14 @@ export class TrackOrder implements OnInit, OnDestroy {
     this.orderService.getOrderStatus(this.orderId).subscribe({
       next: (res: any) => {
         this.isCancelled = (res.status === 'CANCELLED');
+        
+        // Setup steps based on serviceType
+        if (res.order?.serviceType === 'PICKUP_DROP' || res.serviceType === 'PICKUP_DROP') {
+          this.statusSteps = this.pickupDropSteps;
+        } else {
+          this.statusSteps = this.doorstepSteps;
+        }
+
         const step = this.mapStatusToStepIndex(res.status || '');
         if (step !== -1) {
           this.currentStepIndex = step;
@@ -136,6 +150,13 @@ export class TrackOrder implements OnInit, OnDestroy {
           if (orderId === this.orderId || orderId === cleanId) {
             const status = event.data.status || '';
             this.isCancelled = (status === 'CANCELLED');
+            
+            if (event.data.serviceType === 'PICKUP_DROP') {
+              this.statusSteps = this.pickupDropSteps;
+            } else if (event.data.serviceType === 'DOORSTEP') {
+              this.statusSteps = this.doorstepSteps;
+            }
+
             const stepIndex = this.mapStatusToStepIndex(status);
             if (stepIndex !== -1) {
               this.currentStepIndex = stepIndex;
@@ -166,6 +187,13 @@ export class TrackOrder implements OnInit, OnDestroy {
         next: (res: any) => {
           const status = res.status || '';
           this.isCancelled = (status === 'CANCELLED');
+
+          if (res.order?.serviceType === 'PICKUP_DROP' || res.serviceType === 'PICKUP_DROP') {
+            this.statusSteps = this.pickupDropSteps;
+          } else {
+            this.statusSteps = this.doorstepSteps;
+          }
+
           const step = this.mapStatusToStepIndex(status);
           if (step !== -1) {
             this.currentStepIndex = step;

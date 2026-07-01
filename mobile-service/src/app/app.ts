@@ -4,6 +4,7 @@ import { RouterOutlet, Router } from '@angular/router';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
 import { ToastContainer } from './components/toast/toast-container';
+import { BottomNavComponent } from './components/bottom-nav/bottom-nav';
 import { AiAssistantComponent } from './shared/ai-assistant/ai-assistant';
 import { AuthService } from './services/auth.service';
 import { ToastService } from './services/toast.service';
@@ -14,7 +15,7 @@ import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer, ToastContainer, AiAssistantComponent, LocationModal, CommonModule],
+  imports: [RouterOutlet, Navbar, Footer, ToastContainer, AiAssistantComponent, LocationModal, CommonModule, BottomNavComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

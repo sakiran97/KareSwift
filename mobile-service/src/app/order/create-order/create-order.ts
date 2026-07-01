@@ -89,6 +89,7 @@ export class CreateOrder implements OnInit {
       model: ['', Validators.required],
       customModel: [''],
       serviceCategoryId: ['', Validators.required],
+      serviceType: ['DOORSTEP', Validators.required],
       description: ['', [Validators.required, Validators.minLength(5)]],
       addressId: ['', Validators.required],
       scheduledDate: ['', Validators.required],
@@ -464,15 +465,16 @@ export class CreateOrder implements OnInit {
     if (this.currentStep === 2 && this.isCustomModel && !this.orderForm.value.customModel) return;
     if (this.currentStep === 3 && !this.orderForm.value.serviceCategoryId) return;
     if (this.currentStep === 4 && this.orderForm.get('description')?.invalid) return;
-    if (this.currentStep === 6) {
+    if (this.currentStep === 5 && !this.orderForm.value.serviceType) return;
+    if (this.currentStep === 7) {
       if (!this.orderForm.value.addressId) return;
       if (!this.isServiceAvailable) {
         this.errorMessage = 'Cannot proceed: Service is unavailable in this area.';
         return;
       }
     }
-    if (this.currentStep === 7 && !this.orderForm.value.scheduledDate) return;
-    if (this.currentStep === 8 && !this.orderForm.value.scheduledSlot) return;
+    if (this.currentStep === 8 && !this.orderForm.value.scheduledDate) return;
+    if (this.currentStep === 9 && !this.orderForm.value.scheduledSlot) return;
 
     this.errorMessage = null;
     this.currentStep++;
@@ -516,7 +518,7 @@ export class CreateOrder implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const { brand, model, customModel, serviceCategoryId, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
+    const { brand, model, customModel, serviceCategoryId, serviceType, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
     const finalModel = model === 'Other / Custom Model' ? customModel : model;
 
     const matchedDevice = this.devices.find(
@@ -529,6 +531,7 @@ export class CreateOrder implements OnInit {
     const payload = {
       deviceId,
       serviceCategoryId: Number(serviceCategoryId),
+      serviceType: serviceType || 'DOORSTEP',
       notes: `${brand} ${finalModel} - ${description}`,
       address: this.getSelectedAddressText(),
       mobileNumber: selectedAddress?.mobileNumber || '',
@@ -558,7 +561,7 @@ export class CreateOrder implements OnInit {
 
   goToLogin(): void {
     // Generate full payload to submit automatically after login
-    const { brand, model, customModel, serviceCategoryId, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
+    const { brand, model, customModel, serviceCategoryId, serviceType, description, addressId, scheduledDate, scheduledSlot } = this.orderForm.value;
     const finalModel = model === 'Other / Custom Model' ? customModel : model;
 
     const matchedDevice = this.devices.find(
@@ -571,6 +574,7 @@ export class CreateOrder implements OnInit {
     const payload = {
       deviceId,
       serviceCategoryId: Number(serviceCategoryId),
+      serviceType: serviceType || 'DOORSTEP',
       notes: `${brand} ${finalModel} - ${description}`,
       address: this.getSelectedAddressText(),
       mobileNumber: selectedAddress?.mobileNumber || '',

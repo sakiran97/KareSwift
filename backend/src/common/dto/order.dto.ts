@@ -15,6 +15,10 @@ export class CreateOrderDto {
   @IsOptional()
   estimatedTime?: number;
 
+  @IsEnum(['DOORSTEP', 'PICKUP_DROP'])
+  @IsOptional()
+  serviceType?: 'DOORSTEP' | 'PICKUP_DROP';
+
   @IsString()
   @IsOptional()
   address?: string;

@@ -12,6 +12,7 @@ export interface OrderResponse {
   orderId: string;
   id?: number;
   status?: string;
+  serviceType?: string;
 }
 
 @Injectable({

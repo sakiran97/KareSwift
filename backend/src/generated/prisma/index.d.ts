@@ -83,7 +83,15 @@ export type OrderStatusHistory = $Result.DefaultSelection<Prisma.$OrderStatusHis
  * Enums
  */
 export namespace $Enums {
-  export const OrderStatus: {
+  export const ServiceType: {
+  DOORSTEP: 'DOORSTEP',
+  PICKUP_DROP: 'PICKUP_DROP'
+};
+
+export type ServiceType = (typeof ServiceType)[keyof typeof ServiceType]
+
+
+export const OrderStatus: {
   BOOKED: 'BOOKED',
   CONFIRMED: 'CONFIRMED',
   CUSTOMER_CONTACTED: 'CUSTOMER_CONTACTED',
@@ -92,12 +100,21 @@ export namespace $Enums {
   IN_PROGRESS: 'IN_PROGRESS',
   PRICE_FINALIZED: 'PRICE_FINALIZED',
   COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  OUT_FOR_PICKUP: 'OUT_FOR_PICKUP',
+  PICKED_UP: 'PICKED_UP',
+  AT_LAB: 'AT_LAB',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
+  DELIVERED: 'DELIVERED'
 };
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 }
+
+export type ServiceType = $Enums.ServiceType
+
+export const ServiceType: typeof $Enums.ServiceType
 
 export type OrderStatus = $Enums.OrderStatus
 
@@ -5710,6 +5727,7 @@ export namespace Prisma {
     userId: number | null
     deviceId: number | null
     serviceCategoryId: number | null
+    serviceType: $Enums.ServiceType | null
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5739,6 +5757,7 @@ export namespace Prisma {
     userId: number | null
     deviceId: number | null
     serviceCategoryId: number | null
+    serviceType: $Enums.ServiceType | null
     status: $Enums.OrderStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5768,6 +5787,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType: number
     status: number
     createdAt: number
     updatedAt: number
@@ -5826,6 +5846,7 @@ export namespace Prisma {
     userId?: true
     deviceId?: true
     serviceCategoryId?: true
+    serviceType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5855,6 +5876,7 @@ export namespace Prisma {
     userId?: true
     deviceId?: true
     serviceCategoryId?: true
+    serviceType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -5884,6 +5906,7 @@ export namespace Prisma {
     userId?: true
     deviceId?: true
     serviceCategoryId?: true
+    serviceType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -6001,6 +6024,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType: $Enums.ServiceType
     status: $Enums.OrderStatus
     createdAt: Date
     updatedAt: Date
@@ -6050,6 +6074,7 @@ export namespace Prisma {
     userId?: boolean
     deviceId?: boolean
     serviceCategoryId?: boolean
+    serviceType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6090,6 +6115,7 @@ export namespace Prisma {
     userId?: boolean
     deviceId?: boolean
     serviceCategoryId?: boolean
+    serviceType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6124,6 +6150,7 @@ export namespace Prisma {
     userId?: boolean
     deviceId?: boolean
     serviceCategoryId?: boolean
+    serviceType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6158,6 +6185,7 @@ export namespace Prisma {
     userId?: boolean
     deviceId?: boolean
     serviceCategoryId?: boolean
+    serviceType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6183,7 +6211,7 @@ export namespace Prisma {
     longitude?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "status" | "createdAt" | "updatedAt" | "deletedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge" | "latitude" | "longitude", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "serviceCategoryId" | "serviceType" | "status" | "createdAt" | "updatedAt" | "deletedAt" | "estimatedTime" | "address" | "scheduledDate" | "scheduledSlot" | "amountConfirmedAt" | "completedAt" | "completionOtp" | "completionVerifiedAt" | "diagnosticNotes" | "diagnosticPhotos" | "finalAmount" | "laborNotes" | "partsUsed" | "paymentMethod" | "repairNotes" | "serviceAreaId" | "travelCharge" | "latitude" | "longitude", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notifications?: boolean | Order$notificationsArgs<ExtArgs>
     chatMessages?: boolean | Order$chatMessagesArgs<ExtArgs>
@@ -6227,6 +6255,7 @@ export namespace Prisma {
       userId: number
       deviceId: number
       serviceCategoryId: number
+      serviceType: $Enums.ServiceType
       status: $Enums.OrderStatus
       createdAt: Date
       updatedAt: Date
@@ -6686,6 +6715,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Order", 'Int'>
     readonly deviceId: FieldRef<"Order", 'Int'>
     readonly serviceCategoryId: FieldRef<"Order", 'Int'>
+    readonly serviceType: FieldRef<"Order", 'ServiceType'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
@@ -17506,6 +17536,7 @@ export namespace Prisma {
     userId: 'userId',
     deviceId: 'deviceId',
     serviceCategoryId: 'serviceCategoryId',
+    serviceType: 'serviceType',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -17749,6 +17780,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ServiceType'
+   */
+  export type EnumServiceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ServiceType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ServiceType[]'
+   */
+  export type ListEnumServiceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ServiceType[]'>
     
 
 
@@ -18008,6 +18053,7 @@ export namespace Prisma {
     userId?: IntFilter<"Order"> | number
     deviceId?: IntFilter<"Order"> | number
     serviceCategoryId?: IntFilter<"Order"> | number
+    serviceType?: EnumServiceTypeFilter<"Order"> | $Enums.ServiceType
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -18047,6 +18093,7 @@ export namespace Prisma {
     userId?: SortOrder
     deviceId?: SortOrder
     serviceCategoryId?: SortOrder
+    serviceType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18089,6 +18136,7 @@ export namespace Prisma {
     userId?: IntFilter<"Order"> | number
     deviceId?: IntFilter<"Order"> | number
     serviceCategoryId?: IntFilter<"Order"> | number
+    serviceType?: EnumServiceTypeFilter<"Order"> | $Enums.ServiceType
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -18128,6 +18176,7 @@ export namespace Prisma {
     userId?: SortOrder
     deviceId?: SortOrder
     serviceCategoryId?: SortOrder
+    serviceType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18166,6 +18215,7 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"Order"> | number
     deviceId?: IntWithAggregatesFilter<"Order"> | number
     serviceCategoryId?: IntWithAggregatesFilter<"Order"> | number
+    serviceType?: EnumServiceTypeWithAggregatesFilter<"Order"> | $Enums.ServiceType
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -19072,6 +19122,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19110,6 +19161,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19141,6 +19193,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19179,6 +19232,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19214,6 +19268,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19240,6 +19295,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateManyMutationInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19269,6 +19325,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20326,6 +20383,13 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type EnumServiceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceType | EnumServiceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceTypeFilter<$PrismaModel> | $Enums.ServiceType
+  }
+
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -20407,6 +20471,7 @@ export namespace Prisma {
     userId?: SortOrder
     deviceId?: SortOrder
     serviceCategoryId?: SortOrder
+    serviceType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20450,6 +20515,7 @@ export namespace Prisma {
     userId?: SortOrder
     deviceId?: SortOrder
     serviceCategoryId?: SortOrder
+    serviceType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20479,6 +20545,7 @@ export namespace Prisma {
     userId?: SortOrder
     deviceId?: SortOrder
     serviceCategoryId?: SortOrder
+    serviceType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20514,6 +20581,16 @@ export namespace Prisma {
     travelCharge?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+  }
+
+  export type EnumServiceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceType | EnumServiceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ServiceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumServiceTypeFilter<$PrismaModel>
+    _max?: NestedEnumServiceTypeFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -21322,6 +21399,10 @@ export namespace Prisma {
     connect?: WarrantyWhereUniqueInput
   }
 
+  export type EnumServiceTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ServiceType
+  }
+
   export type EnumOrderStatusFieldUpdateOperationsInput = {
     set?: $Enums.OrderStatus
   }
@@ -21882,6 +21963,13 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumServiceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceType | EnumServiceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceTypeFilter<$PrismaModel> | $Enums.ServiceType
+  }
+
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -21898,6 +21986,16 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumServiceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceType | EnumServiceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceType[] | ListEnumServiceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ServiceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumServiceTypeFilter<$PrismaModel>
+    _max?: NestedEnumServiceTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -22024,6 +22122,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutUserInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22060,6 +22159,7 @@ export namespace Prisma {
     id?: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22190,6 +22290,7 @@ export namespace Prisma {
     userId?: IntFilter<"Order"> | number
     deviceId?: IntFilter<"Order"> | number
     serviceCategoryId?: IntFilter<"Order"> | number
+    serviceType?: EnumServiceTypeFilter<"Order"> | $Enums.ServiceType
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -22216,6 +22317,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutDeviceInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22252,6 +22354,7 @@ export namespace Prisma {
     id?: number
     userId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22309,6 +22412,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutServiceCategoryInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22345,6 +22449,7 @@ export namespace Prisma {
     id?: number
     userId: number
     deviceId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22898,6 +23003,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutReviewInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22935,6 +23041,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22981,6 +23088,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutReviewInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23018,6 +23126,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23048,6 +23157,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutNotificationsInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23085,6 +23195,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23165,6 +23276,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutNotificationsInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23202,6 +23314,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23272,6 +23385,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutWarrantyInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23309,6 +23423,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23355,6 +23470,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutWarrantyInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23392,6 +23508,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23496,6 +23613,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutServiceAreaInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23533,6 +23651,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23589,6 +23708,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutChatMessagesInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23626,6 +23746,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23672,6 +23793,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutChatMessagesInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23709,6 +23831,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23739,6 +23862,7 @@ export namespace Prisma {
   }
 
   export type OrderCreateWithoutStatusHistoryInput = {
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23776,6 +23900,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23822,6 +23947,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutStatusHistoryInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23859,6 +23985,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23918,6 +24045,7 @@ export namespace Prisma {
     id?: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24020,6 +24148,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutUserInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24056,6 +24185,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24090,6 +24220,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24119,6 +24250,7 @@ export namespace Prisma {
     id?: number
     userId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24145,6 +24277,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutDeviceInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24181,6 +24314,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24215,6 +24349,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24244,6 +24379,7 @@ export namespace Prisma {
     id?: number
     userId: number
     deviceId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24270,6 +24406,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutServiceCategoryInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24306,6 +24443,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24340,6 +24478,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24467,6 +24606,7 @@ export namespace Prisma {
     userId: number
     deviceId: number
     serviceCategoryId: number
+    serviceType?: $Enums.ServiceType
     status?: $Enums.OrderStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24492,6 +24632,7 @@ export namespace Prisma {
   }
 
   export type OrderUpdateWithoutServiceAreaInput = {
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24529,6 +24670,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24563,6 +24705,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     deviceId?: IntFieldUpdateOperationsInput | number
     serviceCategoryId?: IntFieldUpdateOperationsInput | number
+    serviceType?: EnumServiceTypeFieldUpdateOperationsInput | $Enums.ServiceType
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
