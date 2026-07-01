@@ -177,7 +177,6 @@
   background: var(--bg-dark-surface);
   padding: 1.5rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .tp-video-container {
@@ -240,6 +239,21 @@
       color: var(--color-primary);
       .tp-underline { text-decoration-color: #ffffff; }
     }
+  }
+}
+
+// ── Full Width Image Banner ──────────────────────────────
+.tp-fullwidth-image {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: block;
+  background: var(--bg-dark-surface);
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 }
 
