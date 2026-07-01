@@ -11,8 +11,11 @@
   box-shadow: $elevation-1;
 }
 
-// Dark-mode helper disabled to enforce light theme
+// Dark‑mode helper
 @mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
 }
 
 // Transition utility

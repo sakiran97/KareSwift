@@ -9,13 +9,13 @@
   background: $color-background;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.scrolled {
-    background: $color-surface;
-    border-bottom-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: $color-background;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -283,8 +283,8 @@
   }
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
   z-index: 105;
   overflow-y: auto;
   overflow-x: hidden;
@@ -394,9 +394,9 @@
   right: -360px;
   width: 360px;
   height: 100vh;
-  background: #ffffff;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  background: #0f172a;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -414,7 +414,7 @@
 
   .panel-header {
     padding: 18px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -423,7 +423,7 @@
       font-size: 1.1rem;
       font-weight: 700;
       margin: 0;
-      color: #1e293b;
+      color: #ffffff;
     }
 
     .panel-actions {
@@ -494,8 +494,8 @@
     }
 
     .notification-item {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       padding: 14px;
       border-radius: 12px;
       cursor: pointer;
@@ -505,13 +505,13 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
       }
 
       &.unread {
-        background: #eff6ff;
-        border-color: #bfdbfe;
+        background: rgba(59, 130, 246, 0.04);
+        border-color: rgba(59, 130, 246, 0.15);
         border-left: 3px solid #3b82f6;
       }
 
@@ -523,7 +523,7 @@
         .note-title {
           font-size: 13px;
           font-weight: 600;
-          color: #1e293b;
+          color: #ffffff;
         }
 
         .note-time {
