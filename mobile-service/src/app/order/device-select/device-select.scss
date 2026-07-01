@@ -159,14 +159,14 @@
   .tp-hero-phone-wrapper {
     position: relative;
     width: 100%;
-    max-width: 450px;
+    max-width: 350px; // Slimmer width
     z-index: 5;
     transform: translateY(2rem); // Gently push it down to overlap without breaking grid height
 
     .tp-hero-image {
       width: 100%;
       height: auto;
-      max-height: 900px; 
+      max-height: 70vh; // Ensure it never exceeds 70% of the screen height!
       object-fit: contain;
       display: block;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
@@ -272,7 +272,7 @@
 .tp-fullwidth-image {
   width: 100%;
   max-width: 1200px; // Match container
-  margin: -8rem auto 4rem; // Overlap hero, provide space before services
+  margin: -6rem auto -8rem; // Overlap hero top AND pull services section UP from bottom!
   display: block;
   position: relative;
   z-index: 10;
@@ -290,7 +290,7 @@
 // ── Services Grid ──────────────────────────────
 .tp-services-section {
   background: #ffffff;
-  padding: 5rem 0 6rem;
+  padding: 14rem 0 6rem; // Massive top padding so content starts safely below the overlapping banner
   color: #111111;
   position: relative;
   z-index: 1;
