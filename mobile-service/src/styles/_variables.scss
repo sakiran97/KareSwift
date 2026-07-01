@@ -3,64 +3,69 @@ $font-family-base: 'Inter', sans-serif;
 $font-family-headings: 'Outfit', sans-serif;
 
 :root {
-  // Trust Blue
-  --color-primary: hsl(221, 83%, 53%);
-  --color-primary-light: hsl(221, 83%, 65%);
-  --color-primary-dark: hsl(221, 83%, 40%);
+  // Primary Orange
+  --color-primary: #FF6534;
+  --color-primary-light: #ff855e;
+  --color-primary-dark: #e55a2e;
 
-  // Tech Cyan
-  --color-secondary: hsl(189, 94%, 43%);
-  --color-secondary-light: hsl(189, 94%, 55%);
-  --color-secondary-dark: hsl(189, 94%, 30%);
+  // Dark Neutral (replaces secondary)
+  --color-secondary: #181818;
+  --color-secondary-light: #2a2a2a;
+  --color-secondary-dark: #121212;
 
   // Status Colors
-  --color-success: hsl(160, 84%, 39%); // #10B981
-  --color-warning: hsl(38, 92%, 50%);  // #F59E0B
-  --color-error: hsl(0, 84%, 60%);     // #EF4444
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
 
-  --color-background: hsl(210, 20%, 98%);
-  --color-surface: hsl(0, 0%, 100%);
-  --color-surface-variant: hsl(210, 20%, 96%);
+  --color-background: #FFFFFF;
+  --color-surface: #F6F6F6;
+  --color-surface-variant: #EAEAEA;
   
-  --color-on-primary: hsl(0, 0%, 100%);
-  --color-on-secondary: hsl(0, 0%, 100%);
-  --color-on-background: hsl(215, 25%, 15%);
-  --color-on-surface: hsl(215, 25%, 20%);
-  --color-text-muted: hsl(215, 15%, 45%);
+  --color-on-primary: #FFFFFF;
+  --color-on-secondary: #FFFFFF;
+  --color-on-background: #121212;
+  --color-on-surface: #181818;
+  --color-text-muted: #666666;
   
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(37, 99, 235, 0.1); // subtle primary tint
-  --glass-shadow: rgba(37, 99, 235, 0.08);
-  --autofill-bg: #f8fafc;
-  --autofill-color: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+  --autofill-bg: #F6F6F6;
+  --autofill-color: #121212;
+
+  // Dark sections backgrounds
+  --bg-dark-section: #121212;
+  --bg-dark-surface: #181818;
+  --text-on-dark: #FFFFFF;
+  --text-muted-dark: #A0A0A0;
 }
 
 [data-theme="dark"], .dark {
-  // Trust Blue (Slightly brighter for dark mode)
-  --color-primary: hsl(221, 83%, 60%);
-  --color-primary-light: hsl(221, 83%, 70%);
-  --color-primary-dark: hsl(221, 83%, 50%);
+  // Fallback map so dark theme doesn't ruin the hybrid design
+  --color-primary: #FF6534;
+  --color-primary-light: #ff855e;
+  --color-primary-dark: #e55a2e;
 
-  // Tech Cyan
-  --color-secondary: hsl(189, 94%, 50%);
-  --color-secondary-light: hsl(189, 94%, 60%);
-  --color-secondary-dark: hsl(189, 94%, 40%);
+  --color-secondary: #FFFFFF;
+  --color-secondary-light: #F6F6F6;
+  --color-secondary-dark: #EAEAEA;
 
-  --color-background: hsl(222, 47%, 11%); // Deep modern dark
-  --color-surface: hsl(217, 33%, 17%);
-  --color-surface-variant: hsl(215, 28%, 22%);
+  --color-background: #121212;
+  --color-surface: #181818;
+  --color-surface-variant: #222222;
   
-  --color-on-primary: hsl(0, 0%, 100%);
-  --color-on-secondary: hsl(0, 0%, 100%);
-  --color-on-background: hsl(210, 40%, 98%);
-  --color-on-surface: hsl(210, 40%, 96%);
-  --color-text-muted: hsl(215, 20%, 65%);
+  --color-on-primary: #FFFFFF;
+  --color-on-secondary: #121212;
+  --color-on-background: #FFFFFF;
+  --color-on-surface: #F6F6F6;
+  --color-text-muted: #A0A0A0;
   
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-shadow: rgba(0, 0, 0, 0.3);
-  --autofill-bg: #1e293b;
-  --autofill-color: #f8fafc;
+  --glass-bg: rgba(18, 18, 18, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.5);
+  --autofill-bg: #181818;
+  --autofill-color: #FFFFFF;
 }
 
 $color-primary: var(--color-primary);

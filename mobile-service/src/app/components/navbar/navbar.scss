@@ -6,16 +6,16 @@
   top: 0;
   z-index: 100;
   width: 100%;
-  background: $color-background;
+  background: #121212;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.scrolled {
-    background: $color-background;
+    background: rgba(18, 18, 18, 0.95);
     border-bottom-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -57,7 +57,7 @@
   .brand-name {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--color-primary);
+    color: #ffffff;
     letter-spacing: -0.5px;
   }
 }
@@ -84,7 +84,7 @@
     align-items: center;
     gap: 4px;
     font-size: 0.85rem;
-    color: var(--text-secondary, #666);
+    color: rgba(255, 255, 255, 0.8);
     
     .truncate-text {
       max-width: 200px;
@@ -108,7 +108,7 @@
   .nav-link {
     font-size: 0.95rem;
     font-weight: 600;
-    color: rgba($color-on-background, 0.6);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     position: relative;
     padding: 0.25rem 0;
@@ -126,7 +126,7 @@
     }
 
     &:hover, &.active {
-      color: $color-on-background;
+      color: #ffffff;
       &::after {
         width: 100%;
       }
@@ -143,7 +143,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    color: rgba($color-on-background, 0.6);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     padding: 0.25rem;
     background: transparent;
@@ -152,7 +152,7 @@
     outline: none;
     @include transition(color);
 
-    &:hover { color: $color-on-background; }
+    &:hover { color: #ffffff; }
   }
 
   .bell-badge {
@@ -178,7 +178,7 @@
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.04);
-    color: $color-on-background;
+    color: #ffffff;
     font-family: inherit;
     font-size: 0.9rem;
     font-weight: 600;
@@ -194,7 +194,7 @@
   .btn-login {
     padding: 0.5rem 1.2rem;
     border-radius: 6px;
-    background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+    background: var(--color-primary);
     color: #ffffff !important;
     font-family: inherit;
     font-size: 0.9rem;
@@ -204,12 +204,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba($color-primary, 0.25);
+    box-shadow: 0 4px 10px rgba(255, 101, 52, 0.25);
     @include transition((transform, box-shadow));
 
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 15px rgba($color-primary, 0.35);
+      box-shadow: 0 6px 15px rgba(255, 101, 52, 0.4);
     }
   }
 }
