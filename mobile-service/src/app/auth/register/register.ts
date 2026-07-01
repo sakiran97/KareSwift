@@ -4,7 +4,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +16,6 @@ export class Register {
   registerForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
-  isNative = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,8 +23,6 @@ export class Register {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
-    this.isNative = Capacitor.isNativePlatform();
-
     effect(() => {
       if (this.authService.isLoggedIn()) {
         const user = this.authService.getCurrentUser();

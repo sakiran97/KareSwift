@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { LocationService } from '../../services/location.service';
-import { Geolocation } from '@capacitor/geolocation';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 @Component({
   selector: 'app-location-modal',
@@ -46,36 +44,36 @@ export class LocationModal implements OnInit, OnDestroy {
     this.close.emit();
   }
 
-  async detectLocation() {
-    this.isDetecting.set(true);
-    await Haptics.impact({ style: ImpactStyle.Light });
-
-    try {
-      const permission = await Geolocation.checkPermissions();
-      if (permission.location !== 'granted') {
-        await Geolocation.requestPermissions();
-      }
-
-      const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      
-      this.locationService.reverseGeocode(lat, lng).subscribe({
-        next: async (address: string) => {
-          this.locationService.setLocation({ address, lat, lng });
-          this.isDetecting.set(false);
-          await Haptics.impact({ style: ImpactStyle.Medium });
-          this.closeModal();
-        },
-        error: () => {
-          alert('Failed to get address from coordinates.');
-          this.isDetecting.set(false);
-        }
-      });
-    } catch (error) {
-      alert('Location access denied or unavailable. Please search manually.');
-      this.isDetecting.set(false);
+  detectLocation() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
     }
+
+    this.isDetecting.set(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        this.locationService.reverseGeocode(lat, lng).subscribe({
+          next: (address: string) => {
+            this.locationService.setLocation({ address, lat, lng });
+            this.isDetecting.set(false);
+            this.closeModal();
+          },
+          error: () => {
+            alert('Failed to get address from coordinates.');
+            this.isDetecting.set(false);
+          }
+        });
+      },
+      (error) => {
+        alert('Location access denied. Please search manually.');
+        this.isDetecting.set(false);
+      },
+      { timeout: 10000 }
+    );
   }
 
   onSearchChange() {
@@ -111,7 +109,6 @@ export class LocationModal implements OnInit, OnDestroy {
     }
 
     this.locationService.setLocation({ address: cleanAddress, lat, lng });
-    Haptics.impact({ style: ImpactStyle.Medium });
     this.closeModal();
   }
 }

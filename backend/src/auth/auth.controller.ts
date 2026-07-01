@@ -20,19 +20,19 @@ export class AuthController {
 
     res.cookie('access_token', tokens.access_token, {
       httpOnly: true,
-      secure: true, // Required for sameSite: 'none'
-      sameSite: 'none', // Allow cross-site requests
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
-      secure: true, // Required for sameSite: 'none'
-      sameSite: 'none', // Allow cross-site requests
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    return { message: 'Session created', user: tokens.user, access_token: tokens.access_token, refresh_token: tokens.refresh_token };
+    return { message: 'Session created', user: tokens.user };
   }
 
   @Post('refresh')
@@ -44,30 +44,25 @@ export class AuthController {
 
     res.cookie('access_token', tokens.access_token, {
       httpOnly: true,
-      secure: true, // Required for sameSite: 'none'
-      sameSite: 'none', // Allow cross-site requests
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
-      secure: true, // Required for sameSite: 'none'
-      sameSite: 'none', // Allow cross-site requests
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    return { message: 'Session refreshed', access_token: tokens.access_token, refresh_token: tokens.refresh_token };
+    return { message: 'Session refreshed' };
   }
 
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
-    const cookieOptions = {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none' as const
-    };
-    res.clearCookie('access_token', cookieOptions);
-    res.clearCookie('refresh_token', cookieOptions);
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
     return { message: 'Logged out successfully' };
   }
 

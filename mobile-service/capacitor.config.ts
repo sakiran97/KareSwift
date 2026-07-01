@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.example.mobileservice',
   appName: 'mobile-service',
-  webDir: 'dist/mobile-service/browser'
+  webDir: 'www'
 };
 
 export default config;
