@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,8 @@ export class Login {
   // 'new_password_only': showing only new password input (accessed via recovery link)
   forgotPasswordState: 'none' | 'email' | 'new_password_only' = 'none';
 
+  isNative = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -33,6 +36,8 @@ export class Login {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute
   ) {
+    this.isNative = Capacitor.isNativePlatform();
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
       password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]]
