@@ -32,9 +32,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     finalUrl = `${environment.apiUrl}${req.url}`;
   }
 
+  let headers = req.headers;
+  const token = authService.getToken();
+  if (token) {
+    headers = headers.set('Authorization', `Bearer ${token}`);
+  }
+
   const finalReq = req.clone({
     url: finalUrl,
-    withCredentials: true
+    withCredentials: true,
+    headers: headers
   });
 
   return next(finalReq).pipe(
@@ -42,10 +49,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       // Prevent infinite loops if the refresh call itself fails
       if (error.status === 401 && !req.url.includes('/auth/refresh') && !req.url.includes('/auth/session')) {
         // Attempt silent refresh
-        return http.post('/api/auth/refresh', {}, { withCredentials: true }).pipe(
-          switchMap(() => {
+        return http.post<any>('/api/auth/refresh', {}, { withCredentials: true }).pipe(
+          switchMap((res) => {
+            let retriedReq = finalReq;
+            if (res && res.access_token) {
+              localStorage.setItem('jwt', res.access_token);
+              retriedReq = finalReq.clone({
+                headers: finalReq.headers.set('Authorization', `Bearer ${res.access_token}`)
+              });
+            }
             // Retry original request
-            return next(finalReq);
+            return next(retriedReq);
           }),
           catchError((refreshErr) => {
             if (authService.isLoggedIn()) {

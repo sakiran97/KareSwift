@@ -32,7 +32,7 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    return { message: 'Session created', user: tokens.user };
+    return { message: 'Session created', user: tokens.user, access_token: tokens.access_token, refresh_token: tokens.refresh_token };
   }
 
   @Post('refresh')
@@ -56,7 +56,7 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    return { message: 'Session refreshed' };
+    return { message: 'Session refreshed', access_token: tokens.access_token, refresh_token: tokens.refresh_token };
   }
 
   @Post('logout')

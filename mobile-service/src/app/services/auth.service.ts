@@ -233,6 +233,9 @@ export class AuthService {
   // ─── Helpers ──────────────────────────────────────────────────────
 
   private persistLogin(res: LoginResponse): LoginResponse {
+    if (res.access_token) {
+      localStorage.setItem('jwt', res.access_token);
+    }
     localStorage.setItem('user', JSON.stringify(res.user));
     this.isLoggedIn.set(true);
     return res;
@@ -247,7 +250,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return null; // Not using local token anymore
+    return localStorage.getItem('jwt');
   }
 
   logout(): void {
@@ -256,6 +259,7 @@ export class AuthService {
       next: () => {},
       error: () => {}
     });
+    localStorage.removeItem('jwt');
     localStorage.removeItem('user');
     this.isLoggedIn.set(false);
   }
