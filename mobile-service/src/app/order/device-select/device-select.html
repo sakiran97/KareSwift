@@ -59,57 +59,110 @@
     <img src="assets/images/hero-2.png" alt="Repair workstation">
   </section>
 
-  <!-- Services Grid (Light) -->
+  <!-- Services Grid (White) -->
   <section class="tp-services-section">
     <div class="tp-container tp-services-layout">
-      <!-- Left Column: Title -->
-      <div class="tp-services-header">
+      
+      <!-- Left: Title -->
+      <div class="tp-services-header" scrollAnimate="animate-fade-up">
         <h5 class="tp-subtitle">WE REPAIR YOUR GADGETS</h5>
         <h2 class="tp-title">We Make<br>Mobile Repair<br>Stress-free<span class="tp-dot">.</span></h2>
       </div>
 
-      <!-- Right Column: Icon Grid -->
-      <div class="tp-services-icon-grid stagger-children" [class.animate-stagger]="true">
-        <!-- Smartphones -->
+      <!-- Right: Grid -->
+      <div class="tp-services-icon-grid" scrollAnimate="animate-fade-left">
+        
+        <!-- Item 1: Poor Battery Life -->
         <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
           <div class="tp-icon-svg">
-            <!-- Simplified phone icon -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01" stroke="var(--color-primary)" stroke-width="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Orange blob background -->
+              <circle cx="16" cy="16" r="6" fill="var(--color-primary)" opacity="0.15" stroke="none"/>
+              <!-- Phone body -->
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              <!-- Battery bars -->
+              <line x1="9.5" y1="7" x2="14.5" y2="7"/>
+              <line x1="9.5" y1="10" x2="14.5" y2="10"/>
+              <line x1="9.5" y1="13" x2="14.5" y2="13"/>
+              <!-- Red dot indicator -->
+              <circle cx="12" cy="18" r="1.5" fill="var(--color-primary)" stroke="none"/>
+            </svg>
           </div>
-          <h3>Smartphones</h3>
-          <p>Restore your device's visual clarity and performance with our expert repair service at your doorstep.</p>
+          <h3>Poor Battery Life</h3>
+          <p>Revive your device's stamina with KareSwift's battery replacement service.</p>
           <div class="tp-price">Repairs from $ 38</div>
         </div>
 
-        <!-- Tablets -->
-        <div class="tp-icon-card" (click)="onSelectDevice('tablet')">
+        <!-- Item 2: Water Damages -->
+        <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
           <div class="tp-icon-svg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 18h.01" stroke="var(--color-primary)" stroke-width="3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Orange blob background -->
+              <circle cx="16" cy="16" r="6" fill="var(--color-primary)" opacity="0.15" stroke="none"/>
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              <path d="M12 7C12 7 9.5 10 9.5 12C9.5 13.38 10.62 14.5 12 14.5C13.38 14.5 14.5 13.38 14.5 12C14.5 10 12 7 12 7Z"/>
+              <circle cx="12" cy="18" r="1.5" fill="var(--color-primary)" stroke="none"/>
+            </svg>
           </div>
-          <h3>Tablets</h3>
-          <p>Say goodbye to cracked screens or dwindling battery life with our swift and efficient tablet repair service.</p>
+          <h3>Water Damages</h3>
+          <p>Swiftly restore water-damaged devices to their former glory with our expert care.</p>
           <div class="tp-price">Repairs from $ 47</div>
         </div>
 
-        <!-- Laptops -->
-        <div class="tp-icon-card" (click)="onSelectDevice('laptop')">
+        <!-- Item 3: Broken Speakers -->
+        <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
           <div class="tp-icon-svg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/><path d="M12 16v4" stroke="var(--color-primary)" stroke-width="2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Orange blob background -->
+              <circle cx="16" cy="16" r="6" fill="var(--color-primary)" opacity="0.15" stroke="none"/>
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              <polygon points="10 8 13 6 13 14 10 12 10 8"/>
+              <!-- Slash / Cross -->
+              <line x1="15" y1="8" x2="19" y2="12"/>
+              <line x1="19" y1="8" x2="15" y2="12"/>
+              <circle cx="12" cy="18" r="1.5" fill="var(--color-primary)" stroke="none"/>
+            </svg>
           </div>
-          <h3>Laptops</h3>
-          <p>Trust our specialists to restore your MacBook or PC to its optimal functionality, saving your work and data.</p>
-          <div class="tp-price">Repairs from $ 85</div>
-        </div>
-
-        <!-- Smartwatches -->
-        <div class="tp-icon-card" (click)="onSelectDevice('smartwatch')">
-          <div class="tp-icon-svg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="6" y="5" width="12" height="14" rx="3"/><path d="M8 2v3"/><path d="M16 2v3"/><path d="M8 19v3"/><path d="M16 19v3"/><circle cx="12" cy="12" r="1" fill="var(--color-primary)" stroke="none"/></svg>
-          </div>
-          <h3>Smartwatches</h3>
-          <p>Get your wearable tech back in perfect condition with our specialized smartwatch repair solutions.</p>
+          <h3>Broken Speakers</h3>
+          <p>Get crystal-clear sound back with KareSwift's speaker repair service.</p>
           <div class="tp-price">Repairs from $ 45</div>
         </div>
+
+        <!-- Item 4: No WiFi or Bluetooth -->
+        <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
+          <div class="tp-icon-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Orange blob background -->
+              <circle cx="16" cy="16" r="6" fill="var(--color-primary)" opacity="0.15" stroke="none"/>
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              <path d="M12 6C14 6 15.5 6.5 16 7"/>
+              <path d="M12 9C13 9 14 9.5 14.5 10"/>
+              <!-- Slash -->
+              <line x1="8" y1="6" x2="16" y2="14"/>
+              <circle cx="12" cy="18" r="1.5" fill="var(--color-primary)" stroke="none"/>
+            </svg>
+          </div>
+          <h3>No WiFi or Bluetooth</h3>
+          <p>Stay connected with our WiFi and Bluetooth troubleshooting and repair.</p>
+          <div class="tp-price">Repairs from $ 65</div>
+        </div>
+
+        <!-- Item 5: Cracked Screens -->
+        <div class="tp-icon-card" (click)="onSelectDevice('smartphone')">
+          <div class="tp-icon-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Orange blob background -->
+              <circle cx="16" cy="16" r="6" fill="var(--color-primary)" opacity="0.15" stroke="none"/>
+              <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              <path d="M7 6L11 9L9 12L14 14L17 11"/>
+              <circle cx="12" cy="18" r="1.5" fill="var(--color-primary)" stroke="none"/>
+            </svg>
+          </div>
+          <h3>Cracked Screens</h3>
+          <p>Say goodbye to cracks and hello to pristine displays with KareSwift's screen repair service.</p>
+          <div class="tp-price">Repairs from $ 47</div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -149,7 +202,9 @@
         <div class="tp-steps">
           <div class="tp-step">
             <div class="tp-step-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor"/>
+              </svg>
             </div>
             <div class="tp-step-text">
               <h3>Step <span class="tp-step-num">1.</span></h3>
@@ -159,7 +214,10 @@
 
           <div class="tp-step">
             <div class="tp-step-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
             </div>
             <div class="tp-step-text">
               <h3>Step <span class="tp-step-num">2.</span></h3>
@@ -169,7 +227,9 @@
 
           <div class="tp-step">
             <div class="tp-step-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
             </div>
             <div class="tp-step-text">
               <h3>Step <span class="tp-step-num">3.</span></h3>

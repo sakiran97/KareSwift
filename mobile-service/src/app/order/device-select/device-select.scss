@@ -33,7 +33,6 @@
   display: flex;
   align-items: center;
   position: relative;
-  overflow: hidden;
   padding-bottom: 8rem; // Extra padding for the overlapping image
 }
 
@@ -160,12 +159,14 @@
   .tp-hero-phone-wrapper {
     position: relative;
     width: 100%;
-    max-width: 380px;
+    max-width: 450px;
     z-index: 5;
 
     .tp-hero-image {
       width: 100%;
       height: auto;
+      max-height: 850px; // Prevent the image from stretching too tall
+      object-fit: contain;
       display: block;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
     }
@@ -270,7 +271,7 @@
 .tp-fullwidth-image {
   width: 100%;
   max-width: 1200px;
-  margin: -100px auto 0;
+  margin: -150px auto -50px; // Negative top and bottom to eliminate gaps
   display: block;
   position: relative;
   z-index: 10;
@@ -287,7 +288,7 @@
 // ── Services Grid ──────────────────────────────
 .tp-services-section {
   background: #ffffff;
-  padding: 6rem 0;
+  padding: 5rem 0 6rem;
   color: #111111;
   position: relative;
   z-index: 1;
@@ -311,7 +312,7 @@
 
 .tp-services-icon-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 3rem;
 }
 
