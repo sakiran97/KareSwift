@@ -165,24 +165,3 @@
   }
 }
 
-/* Dark mode overrides if needed */
-
-  .modal-header {
-    border-bottom-color: rgba(255,255,255,0.1);
-    .close-btn { color: #aaa; &:hover { color: #fff; } }
-  }
-  .modal-body {
-    background: #181825;
-  }
-  .actions-row, .search-results {
-    background: #1e1e2e;
-    border-color: rgba(255,255,255,0.1);
-  }
-  .actions-row .search-wrapper .search-input { color: #fff; }
-  .search-results .result-item {
-    border-bottom-color: rgba(255,255,255,0.05);
-    &:hover { background: rgba(255,255,255,0.05); }
-    .result-details h4 { color: #fff; }
-    .result-details p { color: #aaa; }
-  }
-}

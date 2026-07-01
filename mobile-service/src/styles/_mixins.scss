@@ -11,9 +11,8 @@
   box-shadow: $elevation-1;
 }
 
-// Dark‑mode helper
+// Dark-mode helper disabled to enforce light theme
 @mixin dark-mode {
-  
 }
 
 // Transition utility
