@@ -1,8 +1,10 @@
 <div class="techpro-dashboard">
-  <!-- Hero Section (Dark) -->
+  <!-- Hero Section (Dark, 3 Columns) -->
   <section class="tp-hero">
     <div class="tp-hero-container">
-      <div class="tp-hero-content" scrollAnimate="animate-fade-up">
+      
+      <!-- Left Column -->
+      <div class="tp-hero-left" scrollAnimate="animate-fade-up">
         <h5 class="tp-hero-subtitle">WELCOME TO KARESWIFT</h5>
         <h1 class="tp-hero-title">Don't Delay,<br>Repair Today<span class="tp-dot">.</span></h1>
         
@@ -14,11 +16,28 @@
           <a routerLink="/about">SERVICE TERMS</a>
           <a routerLink="/contact">SUPPORT</a>
         </div>
+
+        <div class="tp-hero-video-btn" (click)="openVideoModal()">
+          <button class="tp-play-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg>
+          </button>
+          <span>Watch Video</span>
+        </div>
+      </div>
+
+      <!-- Center Column: Phone Image -->
+      <div class="tp-hero-center">
+        <div class="tp-hero-phone-wrapper">
+          <img src="assets/images/hero-1.png" alt="Phone Repair" class="tp-hero-image">
+        </div>
       </div>
       
-      <div class="tp-hero-stats" scrollAnimate="animate-fade-left">
-        <h2 class="tp-stat-number">34.5k <span class="tp-plus">+</span></h2>
-        <p class="tp-stat-label">CLIENTS SERVED</p>
+      <!-- Right Column -->
+      <div class="tp-hero-right" scrollAnimate="animate-fade-left">
+        <div class="tp-hero-stats">
+          <h2 class="tp-stat-number">34.5k <span class="tp-plus">+</span></h2>
+          <p class="tp-stat-label">CLIENTS SERVED</p>
+        </div>
         
         <div class="tp-testimonial">
           <div class="tp-testimonial-avatar">
@@ -26,26 +45,12 @@
           </div>
           <p class="tp-testimonial-text">Our experts are ready to diagnose your device for completely free. <strong>Write us!</strong></p>
         </div>
+
+        <a routerLink="/contact" class="tp-hero-repair-link">
+          Get <span class="tp-underline">repair</span> services &rarr;
+        </a>
       </div>
 
-      <!-- Overlapping iPhone Image -->
-      <div class="tp-hero-image-wrapper">
-        <img src="assets/images/hero-1.png" alt="Phone Repair" class="tp-hero-image">
-      </div>
-    </div>
-  </section>
-
-  <!-- Explainer Video Banner (Dark) -->
-  <section class="tp-video-banner">
-    <div class="tp-video-container" scrollAnimate="animate-fade-up">
-      <button class="tp-play-btn" (click)="openVideoModal()">
-        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg>
-      </button>
-      <span class="tp-video-text">Watch Video</span>
-      
-      <a routerLink="/contact" class="tp-get-repair-link">
-        Get <span class="tp-underline">repair</span> services &rarr;
-      </a>
     </div>
   </section>
 

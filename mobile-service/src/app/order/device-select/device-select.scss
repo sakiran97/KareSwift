@@ -26,207 +26,223 @@
   color: var(--color-primary);
 }
 
-// ── Hero Section ──────────────────────────────
+// ── Hero Section (3-Column Layout) ──────────────────────────────
 .tp-hero {
   background: var(--bg-dark-section);
-  color: #ffffff;
-  padding: 6rem 0 0 0;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
   position: relative;
   overflow: hidden;
+  padding-bottom: 8rem; // Extra padding for the overlapping image
 }
 
 .tp-hero-container {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 400px 1fr;
+  align-items: center;
+  gap: 2rem;
+  z-index: 2;
   position: relative;
 }
 
-.tp-hero-content {
-  z-index: 2;
-  padding-bottom: 8rem;
+.tp-hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 2rem;
 
   .tp-hero-subtitle {
-    @extend .tp-subtitle;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
   }
 
   .tp-hero-title {
-    font-size: 4.5rem;
+    font-size: 4rem;
+    font-weight: 800;
     line-height: 1.1;
+    color: var(--text-on-dark);
     margin-bottom: 2rem;
-    font-weight: 800;
-  }
 
-  .tp-hero-desc {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: #ffffff;
-  }
-
-  .tp-hero-text {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.6;
-    max-width: 480px;
-    margin-bottom: 3rem;
-  }
-
-  .tp-hero-links {
-    display: flex;
-    gap: 2rem;
-    
-    a {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      position: relative;
-      @include transition(color);
-
-      &:hover {
-        color: var(--color-primary);
-      }
-    }
-  }
-}
-
-.tp-hero-stats {
-  z-index: 2;
-  padding-top: 4rem;
-  text-align: right;
-
-  .tp-stat-number {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 0.5rem;
-    
-    .tp-plus {
+    .tp-dot {
       color: var(--color-primary);
     }
   }
 
-  .tp-stat-label {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.5);
-    letter-spacing: 1px;
+  .tp-hero-desc {
+    font-size: 1.25rem;
+    color: var(--text-on-dark);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .tp-hero-text {
+    font-size: 1.1rem;
+    color: var(--text-muted-dark);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 400px;
+  }
+
+  .tp-hero-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    a {
+      color: var(--text-muted-dark);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: var(--color-primary);
+        border-bottom-color: var(--color-primary);
+      }
+    }
+  }
+
+  .tp-hero-video-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    
+    .tp-play-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--color-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+      }
+    }
+
+    span {
+      color: var(--text-on-dark);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    &:hover .tp-play-btn {
+      background: var(--color-primary);
+      color: #fff;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.tp-hero-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .tp-hero-phone-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    z-index: 5;
+
+    .tp-hero-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+    }
+  }
+}
+
+.tp-hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-left: 2rem;
+
+  .tp-hero-stats {
     margin-bottom: 4rem;
+
+    .tp-stat-number {
+      font-size: 4.5rem;
+      font-weight: 800;
+      color: var(--text-on-dark);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+
+      .tp-plus {
+        color: var(--color-primary);
+      }
+    }
+
+    .tp-stat-label {
+      color: var(--text-muted-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
   }
 
   .tp-testimonial {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
+    margin-bottom: 4rem;
     text-align: left;
-    max-width: 300px;
-    margin-left: auto;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 350px;
 
-    .tp-testimonial-avatar {
-      width: 50px;
-      height: 50px;
+    .tp-testimonial-avatar img {
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      overflow: hidden;
-      flex-shrink: 0;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.1);
     }
 
     .tp-testimonial-text {
+      color: var(--text-muted-dark);
       font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.8);
       line-height: 1.5;
 
       strong {
-        color: #ffffff;
+        color: var(--text-on-dark);
         display: block;
-        margin-top: 0.5rem;
+        margin-top: 0.25rem;
       }
     }
   }
-}
 
-.tp-hero-image-wrapper {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 0;
-  width: 45%;
-  height: 80%;
-  z-index: 1;
-  border-radius: 20px 0 0 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-
-  .tp-hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-// ── Explainer Video Banner ──────────────────────────────
-.tp-video-banner {
-  background: var(--bg-dark-surface);
-  padding: 1.5rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.tp-video-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  .tp-play-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    svg {
-      width: 20px;
-      height: 20px;
-      margin-left: 3px;
-    }
-
-    &:hover {
-      border-color: #ffffff;
-      transform: scale(1.05);
-    }
-  }
-
-  .tp-video-text {
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-
-  .tp-get-repair-link {
-    margin-left: auto;
-    color: #ffffff;
+  .tp-hero-repair-link {
+    color: var(--text-on-dark);
     text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: all 0.3s ease;
 
     .tp-underline {
       text-decoration: underline;
@@ -237,31 +253,44 @@
 
     &:hover {
       color: var(--color-primary);
-      .tp-underline { text-decoration-color: #ffffff; }
+      .tp-underline { text-decoration-color: var(--text-on-dark); }
+      transform: translateX(5px);
     }
   }
 }
 
-// ── Full Width Image Banner ──────────────────────────────
+// ── Explainer Video Banner ──────────────────────────────
+.tp-video-banner {
+  background: var(--bg-dark-surface);
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+// ── Full Width Image Banner (Overlapping) ──────────────────────────────
 .tp-fullwidth-image {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: -100px auto 0;
   display: block;
-  background: var(--bg-dark-surface);
+  position: relative;
+  z-index: 10;
+  padding: 0 1.5rem;
 
   img {
     width: 100%;
     height: auto;
     display: block;
+    object-fit: cover;
   }
 }
 
 // ── Services Grid ──────────────────────────────
 .tp-services-section {
   background: #ffffff;
-  padding: 8rem 0;
+  padding: 6rem 0;
   color: #111111;
+  position: relative;
+  z-index: 1;
 }
 
 .tp-services-layout {
@@ -308,6 +337,8 @@
     svg {
       width: 48px;
       height: 48px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
   }
 
