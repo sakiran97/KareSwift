@@ -161,7 +161,7 @@
     width: 100%;
     max-width: 450px;
     z-index: 5;
-    margin-bottom: -15rem; // Force it to burst out the bottom of the section
+    transform: translateY(2rem); // Gently push it down to overlap without breaking grid height
 
     .tp-hero-image {
       width: 100%;
@@ -271,18 +271,19 @@
 // ── Full Width Image Banner (Overlapping) ──────────────────────────────
 .tp-fullwidth-image {
   width: 100%;
-  max-width: 100%; // Truly full width
-  margin: -10rem 0 -6rem; // Negative top and bottom to eliminate gaps
+  max-width: 1200px; // Match container
+  margin: -8rem auto 4rem; // Overlap hero, provide space before services
   display: block;
   position: relative;
   z-index: 10;
-  padding: 0; // Removed side padding to touch screen edges
+  padding: 0 1.5rem; // Restore padding to match container bounds
 
   img {
     width: 100%;
-    height: auto;
+    height: 500px; // Constrain height to make it a horizontal banner
     display: block;
     object-fit: cover;
+    border-radius: 12px; // Match standard aesthetic
   }
 }
 
