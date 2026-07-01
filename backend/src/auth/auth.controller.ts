@@ -20,15 +20,15 @@ export class AuthController {
 
     res.cookie('access_token', tokens.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Required for sameSite: 'none'
+      sameSite: 'none', // Allow cross-site requests
       maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Required for sameSite: 'none'
+      sameSite: 'none', // Allow cross-site requests
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -44,15 +44,15 @@ export class AuthController {
 
     res.cookie('access_token', tokens.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Required for sameSite: 'none'
+      sameSite: 'none', // Allow cross-site requests
       maxAge: 15 * 60 * 1000 // 15 minutes
     });
 
     res.cookie('refresh_token', tokens.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Required for sameSite: 'none'
+      sameSite: 'none', // Allow cross-site requests
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -61,8 +61,13 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token');
-    res.clearCookie('refresh_token');
+    const cookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none' as const
+    };
+    res.clearCookie('access_token', cookieOptions);
+    res.clearCookie('refresh_token', cookieOptions);
     return { message: 'Logged out successfully' };
   }
 
