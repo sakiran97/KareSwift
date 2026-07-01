@@ -82,10 +82,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.5);
 
-  @media (prefers-color-scheme: dark) {
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+  
 }
 
 .chat-header {
@@ -97,9 +94,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
 
-  @media (prefers-color-scheme: dark) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
+  
 
   .header-title {
     display: flex;
@@ -142,12 +137,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
         color: #1e293b;
       }
 
-      @media (prefers-color-scheme: dark) {
-        color: #94a3b8;
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
-          color: #f8fafc;
-        }
+      
       }
     }
   }
@@ -197,10 +187,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
       color: #1e293b;
       border-bottom-left-radius: 4px;
 
-      @media (prefers-color-scheme: dark) {
-        background: #1e293b;
-        color: #f8fafc;
-      }
+      
     }
   }
 
@@ -281,9 +268,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
   display: flex;
   gap: 12px;
 
-  @media (prefers-color-scheme: dark) {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
+  
 
   input {
     flex: 1;
@@ -295,14 +280,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
     outline: none;
     transition: all 0.2s;
 
-    @media (prefers-color-scheme: dark) {
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: white;
-
-      &:focus {
-        border-color: #6366f1;
-      }
+    
     }
 
     &:focus {
@@ -334,10 +312,7 @@ $glass-border: rgba(255, 255, 255, 0.3);
       cursor: not-allowed;
       transform: none;
 
-      @media (prefers-color-scheme: dark) {
-        background: #334155;
-        color: #64748b;
-      }
+      
     }
   }
 }

@@ -13,9 +13,7 @@
 
 // Dark‑mode helper
 @mixin dark-mode {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
+  
 }
 
 // Transition utility

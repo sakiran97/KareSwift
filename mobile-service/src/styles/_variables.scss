@@ -35,33 +35,7 @@ $font-family-headings: 'Outfit', sans-serif;
   --autofill-color: #0f172a;
 }
 
-[data-theme="dark"], .dark {
-  // Trust Blue (Slightly brighter for dark mode)
-  --color-primary: hsl(221, 83%, 60%);
-  --color-primary-light: hsl(221, 83%, 70%);
-  --color-primary-dark: hsl(221, 83%, 50%);
 
-  // Tech Cyan
-  --color-secondary: hsl(189, 94%, 50%);
-  --color-secondary-light: hsl(189, 94%, 60%);
-  --color-secondary-dark: hsl(189, 94%, 40%);
-
-  --color-background: hsl(222, 47%, 11%); // Deep modern dark
-  --color-surface: hsl(217, 33%, 17%);
-  --color-surface-variant: hsl(215, 28%, 22%);
-  
-  --color-on-primary: hsl(0, 0%, 100%);
-  --color-on-secondary: hsl(0, 0%, 100%);
-  --color-on-background: hsl(210, 40%, 98%);
-  --color-on-surface: hsl(210, 40%, 96%);
-  --color-text-muted: hsl(215, 20%, 65%);
-  
-  --glass-bg: rgba(30, 41, 59, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-shadow: rgba(0, 0, 0, 0.3);
-  --autofill-bg: #1e293b;
-  --autofill-color: #f8fafc;
-}
 
 $color-primary: var(--color-primary);
 $color-primary-light: var(--color-primary-light);

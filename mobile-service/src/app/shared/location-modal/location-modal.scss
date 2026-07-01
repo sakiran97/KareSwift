@@ -166,11 +166,7 @@
 }
 
 /* Dark mode overrides if needed */
-@media (prefers-color-scheme: dark) {
-  .modal-content {
-    background: #1e1e2e;
-    color: #fff;
-  }
+
   .modal-header {
     border-bottom-color: rgba(255,255,255,0.1);
     .close-btn { color: #aaa; &:hover { color: #fff; } }
