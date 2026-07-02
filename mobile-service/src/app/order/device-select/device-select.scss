@@ -28,11 +28,16 @@
 
 // ── Hero Section (3-Column Layout) ──────────────────────────────
 .tp-hero {
-  background: var(--bg-dark-section);
+  background-color: var(--bg-dark-section);
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23ffffff' stroke-width='0.5' stroke-opacity='0.05' fill='none'%3E%3Cpath d='M40 40 L100 100 L160 40 M100 100 L160 160 L200 100 M100 100 L40 160 M160 40 L200 40 M40 40 L0 80 M40 160 L0 200 M160 160 L200 200' /%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3Ccircle cx='100' cy='100' r='2'/%3E%3Ccircle cx='160' cy='40' r='2'/%3E%3Ccircle cx='160' cy='160' r='2'/%3E%3Ccircle cx='40' cy='160' r='2'/%3E%3Ccircle cx='200' cy='100' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  background-position: center;
   min-height: 90vh;
   display: flex;
   align-items: center;
   position: relative;
+  padding-top: 100px; // Clear the transparent absolute navbar
   padding-bottom: 8rem; // Extra padding for the overlapping image
 }
 
@@ -517,11 +522,115 @@
   width: 100%;
   height: 600px;
   background: transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain; // Changed from cover to fix the clipping issue with baked-in border
+    display: block;
+    object-fit: cover; // Cover completely eliminates the letterboxing and white space
+  }
+}
+
+// ── Dedicated Services Cards ──────────────────────────────
+.tp-services-dedicated {
+  background: #ffffff;
+  padding: 8rem 0;
+}
+
+.tp-section-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  
+  .tp-subtitle {
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  
+  h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #111111;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: #666666;
+    font-size: 1.1rem;
+  }
+}
+
+.tp-services-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tp-service-card {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+
+  .tp-card-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover .tp-card-image img {
+    transform: scale(1.05);
+  }
+
+  .tp-card-content {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      color: #666666;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      flex: 1;
+    }
+
+    .tp-btn-card {
+      background: var(--color-primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: var(--color-primary-dark);
+      }
+    }
   }
 }
 
@@ -551,6 +660,11 @@
   .tp-services-layout {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .tp-services-cards {
+    grid-template-columns: 1fr;
+    padding: 0 1.5rem;
   }
 
   .tp-services-header .tp-title {

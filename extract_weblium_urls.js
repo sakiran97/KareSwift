@@ -1,0 +1,1 @@
+const https = require('https'); https.get('https://phone-repair.weblium.site/', res => { let body = ''; res.on('data', c => body += c); res.on('end', () => { const regex = /https:\/\/res2\.weblium\.site\/res\/[^\s\"')]+/gi; const urls = body.match(regex); console.log(urls ? [...new Set(urls)].join('\n') : 'no urls'); }); });
